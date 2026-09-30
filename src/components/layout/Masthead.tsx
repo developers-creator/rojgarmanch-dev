@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { formatAdBadge, formatBsBadge } from "@/lib/dates";
 import { ADS } from "@/lib/ads";
 import Link from "next/link";
+import { useSettings } from "@/components/providers/SettingsProvider";
+
 
 type MastheadProps = {
   domain: string;
@@ -19,6 +21,8 @@ export function Masthead({ domain }: MastheadProps) {
     return () => window.clearInterval(id);
   }, []);
 
+  const { dark_logo, white_logo } = useSettings();
+
   return (
     <header className="masthead">
       <div className="container masthead__inner">
@@ -30,7 +34,7 @@ export function Masthead({ domain }: MastheadProps) {
           >
             <img
               className="logo logo--color"
-              src="/images/rojgar-manch-logo.svg"
+              src={`${dark_logo ? dark_logo : "/images/rojgar-manch-logo.svg"}`}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
@@ -39,7 +43,7 @@ export function Masthead({ domain }: MastheadProps) {
             />
             <img
               className="logo logo--white"
-              src="/images/rojgar-manch-whitelogo.svg"
+              src={`${white_logo ? white_logo : "/images/rojgar-manch-whitelogo.svg"}`}
               alt="रोजगार मञ्च"
               width={283}
               height={87}

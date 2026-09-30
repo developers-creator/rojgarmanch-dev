@@ -21,9 +21,11 @@ import { Bishwa } from "./Bishwa";
 import { EnglishHeadline } from "./EnglishHeadline";
 import { TV } from "./TV";
 import { Youtube } from "./Youtube";
+import type { BannerNewsData } from "@/types/bannerNews";
 
 type HomePageProps = {
   data: HomePageData;
+  bannerNewsData: BannerNewsData;
 };
 
 function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {
@@ -36,7 +38,8 @@ function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {
   );
 }
 
-export function HomePage({ data }: HomePageProps) {
+export function HomePage({ data, bannerNewsData }: HomePageProps) {
+  console.log("bannerNewsData:", bannerNewsData);
   return (
     <main id="main">
       {/* मुख्य समाचार */}

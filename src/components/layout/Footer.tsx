@@ -5,6 +5,9 @@ import type { SiteInfo } from "@/types/content";
 import { toNepaliDigits } from "@/lib/dates";
 import { Icon, socialIconName } from "@/components/ui/Icon";
 import Link from "next/link";
+import { useSettings } from "@/components/providers/SettingsProvider";
+import { SocialHandle } from "@/types/settings";
+
 
 type FooterProps = {
   site: SiteInfo;
@@ -12,6 +15,46 @@ type FooterProps = {
 
 export function Footer({ site }: FooterProps) {
   const [year, setYear] = useState("२०२६");
+
+
+  const { 
+    darta_no, rojgar_insert_map_url, phone, email, location, social_handles, white_logo, dark_logo,
+    chief_administrator,
+    advisory_editor,
+    editor,
+    assistant_editor,
+    columnists,
+    correspondents,
+  } = useSettings();
+
+  const team_members = [
+    {
+      role: "प्रमुख व्यवस्थापक",
+      name: chief_administrator,
+    },
+    {
+      role: "सल्लाहकार सम्पादक",
+      name: advisory_editor,
+    },
+    {
+      role: "सम्पादक",
+      name: editor,
+    },
+    {
+      role: "सह सम्पादक",
+      name: assistant_editor,
+    },
+    {
+      role: "स्तम्भकार",
+      name: columnists,
+    },
+    {
+      role: "संवाददाता",
+      name: correspondents,
+    },
+  ];
+
+
 
   useEffect(() => {
     setYear(toNepaliDigits(new Date().getFullYear()));
@@ -36,22 +79,24 @@ export function Footer({ site }: FooterProps) {
             <ul className="footer__info">
               <li>
                 <Icon name="id-card" size={14} />
-                <span>{site.registrationNo}</span>
+                <span> {darta_no}</span>
               </li>
               <li>
                 <Icon name="location" size={14} />
-                <span>{site.address}</span>
+                <span>
+                  <Link href={rojgar_insert_map_url} target="_blank">{location}</Link>
+                </span>
               </li>
               <li>
                 <Icon name="phone" size={14} />
-                <a href={`tel:${site.phone.replace(/\s/g, "")}`} itemProp="telephone">
-                  {site.phone}
+                <a href={`tel:${phone.replace(/\s/g, "")}`} itemProp="telephone">
+                  {phone}
                 </a>
               </li>
               <li>
                 <Icon name="envelope" size={14} />
-                <a href={`mailto:${site.email}`} itemProp="email">
-                  {site.email}
+                <a href={`mailto:${email}`} itemProp="email">
+                  {email}
                 </a>
               </li>
             </ul>
@@ -59,15 +104,10 @@ export function Footer({ site }: FooterProps) {
               className="footer__social-icons footer__social-icons--brand"
               aria-label="सोसल मिडिया"
             >
-              {site.social.map((item) => (
-                <li key={item.icon}>
-                  <a
-                    href={item.href}
-                    aria-label={item.label}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <Icon name={socialIconName(item.icon)} size={16} />
+              {social_handles.map((item: SocialHandle) => (
+                <li key={item.choose_media}>
+                  <a href={item.insert_url} target="_blank" rel="noopener noreferrer">
+                    <Icon name={socialIconName(item.choose_media)} size={16} />
                   </a>
                 </li>
               ))}
@@ -95,7 +135,7 @@ export function Footer({ site }: FooterProps) {
               <Link href="/team">हाम्रो समूह</Link>
             </h3>
             <dl className="footer__people">
-              {site.team.map((member) => (
+              {team_members.map((member) => (
                 <div key={member.role}>
                   <dt>{member.role}</dt>
                   <dd>{member.name}</dd>
@@ -118,7 +158,7 @@ export function Footer({ site }: FooterProps) {
           >
             <img
               className="logo logo--color"
-              src="/images/rojgar-manch-logo.svg"
+              src={dark_logo ? dark_logo : "/images/rojgar-manch-logo.svg"}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
@@ -127,7 +167,7 @@ export function Footer({ site }: FooterProps) {
             />
             <img
               className="logo logo--white"
-              src="/images/rojgar-manch-whitelogo.svg"
+              src={white_logo ? white_logo : "/images/rojgar-manch-whitelogo.svg"}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
@@ -136,7 +176,7 @@ export function Footer({ site }: FooterProps) {
             />
           </Link>
           <p className="footer__copy footer__copy--end">
-            Developed by <Link href="#">Webtech Nepal</Link>
+            Developed by <Link href="https://webtechnepal.com/" target="_blank">Webtech Nepal</Link>
           </p>
         </div>
       </div>

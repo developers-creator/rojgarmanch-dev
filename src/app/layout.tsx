@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Mukta } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { SettingsProvider } from "@/components/providers/SettingsProvider";
+import { getSettings } from "@/lib/api";
 import { UiProvider } from "@/components/providers/UiProvider";
 import "./globals.css";
 
@@ -57,11 +59,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { data: settings } = await getSettings();
+
   return (
     <html lang="ne" className={mukta.variable} suppressHydrationWarning>
       <head>
@@ -69,7 +73,9 @@ export default function RootLayout({
       </head>
       <body className={mukta.className}>
         <ThemeProvider>
-          <UiProvider>{children}</UiProvider>
+          <SettingsProvider settings={settings}>
+            <UiProvider>{children}</UiProvider>
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>

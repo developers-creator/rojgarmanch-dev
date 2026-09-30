@@ -3,6 +3,7 @@ import type { SVGProps } from "react";
 export type IconName =
   | "arrow-right"
   | "arrow-up"
+  | "behance"
   | "bell"
   | "briefcase"
   | "chevron-down"
@@ -12,10 +13,12 @@ export type IconName =
   | "clapperboard"
   | "clock"
   | "compress"
+  | "dribbble"
   | "envelope"
   | "expand"
   | "facebook"
   | "file-pdf"
+  | "google"
   | "house"
   | "id-card"
   | "instagram"
@@ -26,10 +29,14 @@ export type IconName =
   | "magnifying-glass-plus"
   | "moon"
   | "phone"
+  | "pinterest"
   | "play"
   | "rotate-left"
   | "share-nodes"
   | "sun"
+  | "tiktok"
+  | "vimeo"
+  | "whatsapp"
   | "x"
   | "xmark"
   | "youtube";
@@ -41,19 +48,25 @@ type IconProps = {
 } & Omit<SVGProps<SVGSVGElement>, "name" | "children">;
 
 const SOCIAL_ICON_MAP: Record<string, IconName> = {
-  "facebook-f": "facebook",
-  facebook: "facebook",
-  "x-twitter": "x",
-  twitter: "x",
-  x: "x",
-  youtube: "youtube",
-  instagram: "instagram",
-  "linkedin-in": "linkedin",
-  linkedin: "linkedin",
+  "fa-facebook-f": "facebook",
+  "fa-twitter": "x",
+  "fa-youtube": "youtube",
+  "fa-instagram": "instagram",
+  "fa-pinterest": "pinterest",
+  "fa-tiktok": "tiktok",
+  "fa-dribbble": "dribbble",
+  "fa-behance": "behance",
+  "fa-linkedin-in": "linkedin",
+  "fa-whatsapp": "whatsapp",
+  "fa-google": "google",
+  "fa-vimeo-v": "vimeo",
 };
 
+// The CMS sends Font Awesome classes, sometimes with a style prefix
+// (e.g. "fab fa-youtube"), so match on the "fa-*" token.
 export function socialIconName(key: string): IconName {
-  return SOCIAL_ICON_MAP[key] ?? "share-nodes";
+  const token = key.split(/\s+/).find((part) => part.startsWith("fa-"));
+  return (token && SOCIAL_ICON_MAP[token]) || "share-nodes";
 }
 
 function paths(name: IconName) {
@@ -288,6 +301,53 @@ function paths(name: IconName) {
           stroke="none"
           d="M22.5 7.2a2.8 2.8 0 0 0-2-2C18.7 4.8 12 4.8 12 4.8s-6.7 0-8.5.4a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1.2 12a29 29 0 0 0 .3 4.8 2.8 2.8 0 0 0 2 2c1.8.4 8.5.4 8.5.4s6.7 0 8.5-.4a2.8 2.8 0 0 0 2-2 29 29 0 0 0 .3-4.8 29 29 0 0 0-.3-4.8ZM9.8 15.5v-7l6.2 3.5-6.2 3.5Z"
         />
+      );
+    case "behance":
+      return (
+        <>
+          <path d="M3 6h5a3 3 0 0 1 0 6H3V6Zm0 6h6a3 3 0 0 1 0 6H3v-6Z" />
+          <path d="M14 7.5h6M13.5 14.5h7a3.5 3.5 0 1 0-3.5 3.5c1.5 0 2.5-.6 3-1.5" />
+        </>
+      );
+    case "dribbble":
+      return (
+        <>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M5.5 6.5c4 3 9 4 13 3M9 3.5c3 4 5 9 5.5 17M3.2 13c5-1 11-.5 16.5 3" />
+        </>
+      );
+    case "google":
+      return (
+        <>
+          <path d="M20 12a8 8 0 1 1-2.3-5.7" />
+          <path d="M20.5 12H12" />
+        </>
+      );
+    case "pinterest":
+      return (
+        <>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M10.5 20l1.8-7.5M9.5 12.5c-.8-2.5 1-4.5 3-4.5 2 0 3 1.5 2.7 3.2-.3 1.7-1.3 3-2.7 3-1 0-1.5-.7-1.5-1.5" />
+        </>
+      );
+    case "tiktok":
+      return (
+        <path
+          fill="currentColor"
+          stroke="none"
+          d="M16.6 3c.3 2.4 1.7 3.9 4 4.1v3.2c-1.5 0-2.9-.5-4-1.2v6.3c0 3.1-2.4 5.6-5.5 5.6S5.5 18.5 5.5 15.4c0-3.4 2.9-5.9 6.2-5.5v3.3c-1.6-.5-3.1.6-3.1 2.2 0 1.3 1 2.3 2.3 2.3 1.4 0 2.4-1 2.4-2.5V3h3.3Z"
+        />
+      );
+    case "vimeo":
+      return (
+        <path d="M3 9l1.5 1c1-1.5 2-2 2.5-1s1 4 2 6.5S10.5 18 12 17s4-4 5-7.5S15.5 6 13.5 8" />
+      );
+    case "whatsapp":
+      return (
+        <>
+          <path d="M3 21l1.65-4.9A9 9 0 1 1 8 19.4L3 21Z" />
+          <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8c-.8-.4-1.6-1.2-2-2l.8-1-1-2L9 9.5Z" />
+        </>
       );
     default:
       return null;

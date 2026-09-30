@@ -9,6 +9,7 @@ import { useTheme } from "@/components/providers/ThemeProvider";
 import { useUi } from "@/components/providers/UiProvider";
 import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
+import { useSettings } from "@/components/providers/SettingsProvider";
 
 type SiteNavProps = {
   flashNews: Post[];
@@ -18,6 +19,7 @@ type SiteNavProps = {
 type NotifyTab = "taja" | "trending";
 
 export function SiteNav({ flashNews, trending }: SiteNavProps) {
+  const { dark_logo, white_logo } = useSettings();
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -349,14 +351,14 @@ export function SiteNav({ flashNews, trending }: SiteNavProps) {
                 >
                   <img
                     className="logo logo--color"
-                    src="/images/rojgar-manch-logo.svg"
+                    src={dark_logo ? dark_logo : "/images/rojgar-manch-logo.svg"}
                     alt="रोजगार मञ्च"
                     width={283}
                     height={87}
                   />
                   <img
                     className="logo logo--white"
-                    src="/images/rojgar-manch-whitelogo.svg"
+                    src={white_logo ? white_logo : "/images/rojgar-manch-whitelogo.svg"}
                     alt="रोजगार मञ्च"
                     width={283}
                     height={87}

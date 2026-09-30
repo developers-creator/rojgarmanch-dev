@@ -1,8 +1,12 @@
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { HomePage } from "@/components/home/HomePage";
+import { getBannerNews } from "@/lib/api";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
-export default function Home() {
+export default async function Home() {
+  const bannerNews = await getBannerNews();
+  // console.log("banner-news:", bannerNews);
+
   const home = getHomePageData();
   const site = getSiteInfo();
 
@@ -12,7 +16,7 @@ export default function Home() {
       trending={home.trending}
       site={site}
     >
-      <HomePage data={home} />
+      <HomePage data={home} bannerNewsData={bannerNews} />
     </SiteChrome>
   );
 }
