@@ -1,0 +1,374 @@
+import { Fragment } from "react";
+import type { Article, ArticleBlock } from "@/data/articles";
+import { getRelatedArticles } from "@/data/articles";
+import { ARTICLE_INLINE_ADS, ARTICLE_RAIL_ADS } from "@/lib/ads";
+import { AdUnit } from "@/components/ui/AdUnit";
+import {
+  ArticleFontControls,
+  ArticleFontProvider,
+  ArticleBody,
+} from "./ArticleFontSize";
+import {
+  ArticleAiSummary,
+  type AiSummaryItem,
+} from "./ArticleAiSummary";
+import { ArticleHeroImage } from "./ArticleHeroImage";
+import { ArticleStickyTitle } from "./ArticleStickyTitle";
+import { ArticleAuthorShare } from "./ArticleAuthorShare";
+import { ArticleInlineAds } from "./ArticleInlineAds";
+import { ArticleMetaRail } from "./ArticleMetaRail";
+import { ArticleRichText } from "./ArticleRichText";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import Link from "next/link";
+
+type ArticlePageProps = {
+  article: Article;
+};
+
+function buildAiSummary(article: Article): AiSummaryItem[] {
+  const items: AiSummaryItem[] = [];
+
+  if (article.deck || article.excerpt) {
+    items.push({
+      title: "मुख्य सारांश",
+      text: article.deck || article.excerpt || article.title,
+    });
+  }
+
+  for (let i = 0; i < article.body.length; i += 1) {
+    const block = article.body[i];
+    if (block.type === "h2") {
+      const next = article.body[i + 1];
+      if (next?.type === "p") {
+        items.push({ title: block.text, text: next.text });
+      } else if (next?.type === "steps") {
+        for (const step of next.items) {
+          items.push({
+            title: step.title,
+            text: `${step.title} — ${step.text}`,
+          });
+        }
+      } else if (next?.type === "ul" || next?.type === "ol") {
+        items.push({
+          title: block.text,
+          text: next.items.join(" · "),
+        });
+      } else {
+        items.push({
+          title: block.text,
+          text: `${block.text} सम्बन्धी विश्लेषण यस लेखमा समेटिएको छ।`,
+        });
+      }
+    }
+  }
+
+  if (items.length < 2) {
+    items.push(
+      {
+        title: "के भयो?",
+        text:
+          article.excerpt ||
+          "यो समाचारले रोजगार र नीतिसँग जोडिएका ताजा विकासलाई समेटेको छ।",
+      },
+      {
+        title: "किन महत्वपूर्ण?",
+        text: "यसले युवा, कामदार र नीति निर्माताको दैनिक निर्णयलाई असर पार्न सक्छ।",
+      },
+      {
+        title: "अर्को कदम",
+        text: "पूर्ण लेख पढेर सन्दर्भ, सुझाव र विश्लेषण बुझ्नुहोस्।",
+      },
+    );
+  }
+
+  return items.slice(0, 5);
+}
+
+function slugifyHeading(text: string) {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 64);
+}
+
+/** Insert a 3-up ad break after the 2nd paragraph, then every 4th paragraph. */
+function shouldInsertInlineAd(blocks: ArticleBlock[], index: number) {
+  const block = blocks[index];
+  if (block.type !== "p" || index === blocks.length - 1) return false;
+
+  const paragraphNumber = blocks
+    .slice(0, index + 1)
+    .filter((item) => item.type === "p").length;
+
+  return paragraphNumber >= 2 && (paragraphNumber - 2) % 4 === 0;
+}
+
+function Block({ block }: { block: ArticleBlock }) {
+  switch (block.type) {
+    case "p":
+      return (
+        <p>
+          <ArticleRichText text={block.text} />
+        </p>
+      );
+    case "h2":
+    case "h3":
+    case "h4":
+    case "h5":
+    case "h6": {
+      const Tag = block.type;
+      const id = block.id || slugifyHeading(block.text);
+      return (
+        <Tag id={id}>
+          <ArticleRichText text={block.text} />
+        </Tag>
+      );
+    }
+    case "figure":
+      return (
+        <figure className="article-figure">
+          <img
+            src={block.src}
+            alt={block.alt}
+            width={1100}
+            height={620}
+            loading="lazy"
+          />
+          {block.caption ? (
+            <figcaption>
+              <ArticleRichText text={block.caption} />
+            </figcaption>
+          ) : null}
+        </figure>
+      );
+    case "ul":
+      return (
+        <ul>
+          {block.items.map((item) => (
+            <li key={item}>
+              <ArticleRichText text={item} />
+            </li>
+          ))}
+        </ul>
+      );
+    case "ol":
+      return (
+        <ol>
+          {block.items.map((item) => (
+            <li key={item}>
+              <ArticleRichText text={item} />
+            </li>
+          ))}
+        </ol>
+      );
+    case "steps":
+      return (
+        <ol className="article-steps">
+          {block.items.map((item, index) => (
+            <li key={item.title}>
+              <h3>
+                <span className="article-steps__num" aria-hidden="true">
+                  {index + 1}.
+                </span>{" "}
+                <ArticleRichText text={item.title} />
+              </h3>
+              <p>
+                <ArticleRichText text={item.text} />
+              </p>
+            </li>
+          ))}
+        </ol>
+      );
+    case "quote":
+    case "blockquote":
+      return (
+        <blockquote className="article-quote">
+          <span className="article-quote__mark" aria-hidden="true">
+            “
+          </span>
+          <p>
+            <ArticleRichText text={block.text} />
+          </p>
+          {block.cite ? <cite>— {block.cite}</cite> : null}
+        </blockquote>
+      );
+    case "table":
+      return (
+        <figure className="article-table">
+          <div className="article-table__scroll">
+            <table>
+              <thead>
+                <tr>
+                  {block.headers.map((header) => (
+                    <th key={header} scope="col">
+                      <ArticleRichText text={header} />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {block.rows.map((row, rowIndex) => (
+                  <tr key={`row-${rowIndex}`}>
+                    {row.map((cell, cellIndex) => (
+                      <td key={`${rowIndex}-${cellIndex}`}>
+                        <ArticleRichText text={cell} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {block.caption ? (
+            <figcaption>
+              <ArticleRichText text={block.caption} />
+            </figcaption>
+          ) : null}
+        </figure>
+      );
+    case "hr":
+      return <hr />;
+    default:
+      return null;
+  }
+}
+
+export function ArticlePage({ article }: ArticlePageProps) {
+  const related = getRelatedArticles(article.slug, 6);
+  const relatedRail = related.slice(0, 3);
+  const relatedMore = related.slice(0, 4);
+  const aiSummary = buildAiSummary(article);
+
+  return (
+    <main id="main" className="article-page">
+      <ArticleFontProvider>
+        <div className="container">
+          <header className="article-hero">
+            <div className="article-hero__copy">
+              <div className="article-title-sentinel" aria-hidden="true" />
+              <div className="article-hero__sticky">
+                <h1 id="article-title">{article.title}</h1>
+
+                {article.deck ? (
+                  <p className="article-hero__deck">{article.deck}</p>
+                ) : (
+                  <p className="article-hero__deck">{article.excerpt}</p>
+                )}
+              </div>
+            </div>
+
+            {article.imageUrl ? (
+              <ArticleHeroImage
+                src={article.imageUrl}
+                alt={article.imageAlt || article.title}
+              />
+            ) : null}
+          </header>
+
+          <div className="article-layout">
+            <ArticleMetaRail
+              author={article.author}
+              authorAvatar={article.authorAvatar}
+              dateLabel={article.dateLabel}
+              dateIso={article.dateIso}
+              title={article.title}
+              href={article.href}
+              comments={article.comments}
+              shares={article.views ?? Math.max(12, (article.comments ?? 1) * 18)}
+            />
+
+            <article className="article-body" aria-labelledby="article-title">
+              <ArticleStickyTitle title={article.title} />
+              <ArticleAiSummary items={aiSummary} />
+
+              {/* Body text only responds to font-size controls */}
+              <ArticleBody>
+                {article.body.map((block, index) => (
+                  <Fragment key={`${block.type}-${index}`}>
+                    <Block block={block} />
+                    {shouldInsertInlineAd(article.body, index) ? (
+                      <ArticleInlineAds ads={ARTICLE_INLINE_ADS} />
+                    ) : null}
+                  </Fragment>
+                ))}
+              </ArticleBody>
+            </article>
+
+            <aside className="article-rail" aria-label="यो पनि हेर्नुहोस्">
+              <div className="article-rail__sticky">
+              <div className="article-rail__ads">
+                  {ARTICLE_RAIL_ADS.map((ad) => (
+                    <AdUnit
+                      key={ad.src}
+                      ad={ad}
+                      variant="aside"
+                      useMobileImage={false}
+                    />
+                  ))}
+                </div>
+                {relatedRail.length ? (
+                  <div className="article-rail__block">
+                    <SectionTitle more={false}>यो पनि हेर्नुहोस्</SectionTitle>
+                    <ul className="article-related">
+                      {relatedRail.map((item) => (
+                        <li key={item.href}>
+                          <Link className="article-related__item" href={item.href}>
+                            <span className="article-related__thumb">
+                              <img
+                                src={item.imageUrl}
+                                alt=""
+                                width={72}
+                                height={72}
+                                loading="lazy"
+                              />
+                            </span>
+                            <span className="article-related__title">{item.title}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                
+              </div>
+            </aside>
+          </div>
+
+          {relatedMore.length ? (
+            <section
+              className="article-more"
+              aria-labelledby="article-more-title"
+            >
+              <SectionTitle href="/category/samachar" moreLabel="सबै हेर्नुहोस्">
+                <span id="article-more-title">सम्बन्धित समाचार</span>
+              </SectionTitle>
+
+              <div className="article-more__grid">
+                {relatedMore.map((item) => (
+                  <article key={item.href} className="article-more__card">
+                    <Link className="article-more__media" href={item.href}>
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.imageAlt || item.title}
+                          width={640}
+                          height={400}
+                          loading="lazy"
+                        />
+                      ) : null}
+                    </Link>
+                    <h3 className="article-more__title">
+                      <Link href={item.href}>{item.title}</Link>
+                    </h3>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </div>
+      </ArticleFontProvider>
+    </main>
+  );
+}

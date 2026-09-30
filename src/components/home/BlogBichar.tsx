@@ -1,0 +1,47 @@
+/** ब्लग / विचार */
+import type { Post } from "@/types/content";
+import { Reveal } from "@/components/motion/Reveal";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import Link from "next/link";
+
+type BlogBicharProps = {
+  items: Post[];
+};
+
+export function BlogBichar({ items }: BlogBicharProps) {
+  return (
+    <section className="teasers" id="vichar" aria-label="ब्लग / विचार">
+      <div className="container">
+        <SectionTitle href="/category/vichar">ब्लग / विचार</SectionTitle>
+        <div className="teasers__grid">
+          {items.map((item, index) => (
+            <Reveal
+              key={item.id}
+              className={`teaser${index ? ` reveal-delay-${Math.min(index, 3)}` : ""}`}
+            >
+              <Link
+                className="teaser__thumb"
+                href={item.href}
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                {item.imageUrl ? (
+                  <img
+                    className="img-cover"
+                    src={item.imageUrl}
+                    alt={item.imageAlt || item.title}
+                    width={84}
+                    height={64}
+                  />
+                ) : null}
+              </Link>
+              <h2 className="teaser__title line-2">
+                <Link href={item.href}>{item.title}</Link>
+              </h2>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
