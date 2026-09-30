@@ -39,7 +39,6 @@ function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {
 }
 
 export function HomePage({ data, bannerNewsData }: HomePageProps) {
-  console.log("bannerNewsData:", bannerNewsData);
   return (
     <main id="main">
       {/* मुख्य समाचार */}

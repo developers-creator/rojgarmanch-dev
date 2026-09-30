@@ -4,6 +4,7 @@ export type SocialHandle = {
 };
 
 export type Settings = {
+  site_title: string;
   dark_logo: string;
   white_logo: string;
   location: string;

@@ -79,7 +79,7 @@ export function Footer({ site }: FooterProps) {
             <ul className="footer__info">
               <li>
                 <Icon name="id-card" size={14} />
-                <span> {darta_no}</span>
+                <span dangerouslySetInnerHTML={{ __html: darta_no }} />
               </li>
               <li>
                 <Icon name="location" size={14} />

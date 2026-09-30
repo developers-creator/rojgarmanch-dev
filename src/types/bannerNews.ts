@@ -15,3 +15,4 @@ export type BannerNewsData = {
   message: string;
   data: BannerNewsItem[];
 };
+
