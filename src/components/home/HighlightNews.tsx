@@ -3,11 +3,27 @@ import type { HighlightStory } from "@/types/content";
 import { ADS } from "@/lib/ads";
 import { AdUnit } from "@/components/ui/AdUnit";
 import Link from "next/link";
+import type { BannerNewsData, BannerNewsItem } from "@/types/bannerNews";
+
 
 type HighlightNewsProps = {
-  story: HighlightStory;
-  more?: HighlightStory[];
+  bannerNewsData?: BannerNewsData;
 };
+
+function toHighlightStory(item: BannerNewsItem): HighlightStory {
+  return {
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    excerpt: item.sub_title || undefined,
+    href: `/${item.slug}`,
+    imageUrl: item.featured_image ?? undefined,
+    imageAlt: item.title,
+    category: item.category_name,
+    author: item.author_name ?? undefined,
+    authorAvatar: item.author_image ?? undefined,
+  };
+}
 
 const HIGHLIGHT_ADS = [ADS.ncell, ADS.worldlink, ADS.hardik] as const;
 
@@ -71,18 +87,18 @@ function HighlightItem({
   );
 }
 
-export function HighlightNews({ story, more = [] }: HighlightNewsProps) {
+export function HighlightNews({ bannerNewsData }: HighlightNewsProps) {
+  const [first, ...rest] = (bannerNewsData?.data ?? []).map(toHighlightStory);
+  if (!first) return null;
+
   const items: {
     story: HighlightStory;
     showImage: boolean;
     headingId?: string;
     priority?: boolean;
   }[] = [
-    { story, showImage: true, headingId: "highlight-title", priority: true },
-    ...more.slice(0, 2).map((item) => ({
-      story: item,
-      showImage: false,
-    })),
+    { story: first, showImage: true, headingId: "highlight-title", priority: true },
+    ...rest.map((story) => ({ story, showImage: false })),
   ];
 
   return (

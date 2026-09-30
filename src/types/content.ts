@@ -78,8 +78,6 @@ export type YoutubeBlock = {
 export type HomePageData = {
   teasers: Post[];
   recent: Post[];
-  highlight: HighlightStory;
-  highlightMore: HighlightStory[];
   feature: Post;
   featurePair: Post[];
   ranked: Post[];

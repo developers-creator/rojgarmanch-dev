@@ -1,6 +1,7 @@
 import type { BannerNewsData } from "@/types/bannerNews";
 import type { SettingsData } from "@/types/settings";
 import { apiFetch } from "./client";
+import type { NewsDetailData } from "@/types/news";
 import type { ContactData } from "@/types/contact";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
@@ -19,3 +20,7 @@ export const getBannerNews = () =>
 
 // Contact
 export const getContact = () => apiFetch<ContactData>(ENDPOINTS.contact);
+
+// Single news article — `slug` is the CMS slug as-is, e.g. "news/2026/09/112895"
+export const getNews = (slug: string) =>
+  apiFetch<NewsDetailData>(`/${slug}`);

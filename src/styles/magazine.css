@@ -7607,9 +7607,9 @@ body.menu-open {
 }
 
 /* Only body copy scales — not headings, summary, or hero text */
-.article-fs-root > p,
-.article-fs-root > ul,
-.article-fs-root > ol,
+:is(.article-fs-root, .article-fs-root > .article-html) > p,
+:is(.article-fs-root, .article-fs-root > .article-html) > ul,
+:is(.article-fs-root, .article-fs-root > .article-html) > ol,
 .article-fs-root .article-quote p,
 .article-fs-root .article-steps p,
 .article-fs-root .article-figure figcaption {
@@ -8834,15 +8834,15 @@ body.menu-open {
   }
 }
 
-.article-fs-root > p {
+:is(.article-fs-root, .article-fs-root > .article-html) > p {
   margin: 0 0 1.25em;
 }
 
-.article-fs-root > h2,
-.article-fs-root > h3,
-.article-fs-root > h4,
-.article-fs-root > h5,
-.article-fs-root > h6 {
+:is(.article-fs-root, .article-fs-root > .article-html) > h2,
+:is(.article-fs-root, .article-fs-root > .article-html) > h3,
+:is(.article-fs-root, .article-fs-root > .article-html) > h4,
+:is(.article-fs-root, .article-fs-root > .article-html) > h5,
+:is(.article-fs-root, .article-fs-root > .article-html) > h6 {
   margin: 1.75em 0 0.7em;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -8851,60 +8851,60 @@ body.menu-open {
   scroll-margin-top: 5.5rem;
 }
 
-.article-fs-root > h2 {
+:is(.article-fs-root, .article-fs-root > .article-html) > h2 {
   font-size: clamp(1.35rem, 2vw, 1.65rem);
 }
 
-.article-fs-root > h3 {
+:is(.article-fs-root, .article-fs-root > .article-html) > h3 {
   margin-top: 1.5em;
   font-size: clamp(1.2rem, 1.7vw, 1.4rem);
 }
 
-.article-fs-root > h4 {
+:is(.article-fs-root, .article-fs-root > .article-html) > h4 {
   margin-top: 1.35em;
   font-size: clamp(1.08rem, 1.4vw, 1.22rem);
 }
 
-.article-fs-root > h5,
-.article-fs-root > h6 {
+:is(.article-fs-root, .article-fs-root > .article-html) > h5,
+:is(.article-fs-root, .article-fs-root > .article-html) > h6 {
   margin-top: 1.25em;
   font-size: 1.05rem;
   font-weight: 600;
 }
 
-.article-fs-root > ul,
-.article-fs-root > ol {
+:is(.article-fs-root, .article-fs-root > .article-html) > ul,
+:is(.article-fs-root, .article-fs-root > .article-html) > ol {
   margin: 0 0 1.35em;
   padding: 0 0 0 1.35rem;
 }
 
-.article-fs-root > ul {
+:is(.article-fs-root, .article-fs-root > .article-html) > ul {
   list-style: disc;
 }
 
-.article-fs-root > ol {
+:is(.article-fs-root, .article-fs-root > .article-html) > ol {
   list-style: decimal;
 }
 
-.article-fs-root > ul li,
-.article-fs-root > ol li {
+:is(.article-fs-root, .article-fs-root > .article-html) > ul li,
+:is(.article-fs-root, .article-fs-root > .article-html) > ol li {
   /* margin: 0 0 0.55em; */
   padding-left: 0.2em;
   line-height: 1.65;
 }
 
-.article-fs-root > ul li:last-child,
-.article-fs-root > ol li:last-child {
+:is(.article-fs-root, .article-fs-root > .article-html) > ul li:last-child,
+:is(.article-fs-root, .article-fs-root > .article-html) > ol li:last-child {
   margin-bottom: 0;
 }
 
-.article-fs-root > ul li::marker,
-.article-fs-root > ol li::marker {
+:is(.article-fs-root, .article-fs-root > .article-html) > ul li::marker,
+:is(.article-fs-root, .article-fs-root > .article-html) > ol li::marker {
   color: var(--rm-primary);
   font-weight: 600;
 }
 
-.article-fs-root > hr,
+:is(.article-fs-root, .article-fs-root > .article-html) > hr,
 .article-hr {
   margin: 2em 0;
   border: 0;

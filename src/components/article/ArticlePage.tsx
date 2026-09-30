@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import type { Article, ArticleBlock } from "@/data/articles";
-import { getRelatedArticles } from "@/data/articles";
 import { ARTICLE_INLINE_ADS, ARTICLE_RAIL_ADS } from "@/lib/ads";
 import { AdUnit } from "@/components/ui/AdUnit";
 import {
@@ -24,65 +23,6 @@ import Link from "next/link";
 type ArticlePageProps = {
   article: Article;
 };
-
-function buildAiSummary(article: Article): AiSummaryItem[] {
-  const items: AiSummaryItem[] = [];
-
-  if (article.deck || article.excerpt) {
-    items.push({
-      title: "मुख्य सारांश",
-      text: article.deck || article.excerpt || article.title,
-    });
-  }
-
-  for (let i = 0; i < article.body.length; i += 1) {
-    const block = article.body[i];
-    if (block.type === "h2") {
-      const next = article.body[i + 1];
-      if (next?.type === "p") {
-        items.push({ title: block.text, text: next.text });
-      } else if (next?.type === "steps") {
-        for (const step of next.items) {
-          items.push({
-            title: step.title,
-            text: `${step.title} — ${step.text}`,
-          });
-        }
-      } else if (next?.type === "ul" || next?.type === "ol") {
-        items.push({
-          title: block.text,
-          text: next.items.join(" · "),
-        });
-      } else {
-        items.push({
-          title: block.text,
-          text: `${block.text} सम्बन्धी विश्लेषण यस लेखमा समेटिएको छ।`,
-        });
-      }
-    }
-  }
-
-  if (items.length < 2) {
-    items.push(
-      {
-        title: "के भयो?",
-        text:
-          article.excerpt ||
-          "यो समाचारले रोजगार र नीतिसँग जोडिएका ताजा विकासलाई समेटेको छ।",
-      },
-      {
-        title: "किन महत्वपूर्ण?",
-        text: "यसले युवा, कामदार र नीति निर्माताको दैनिक निर्णयलाई असर पार्न सक्छ।",
-      },
-      {
-        title: "अर्को कदम",
-        text: "पूर्ण लेख पढेर सन्दर्भ, सुझाव र विश्लेषण बुझ्नुहोस्।",
-      },
-    );
-  }
-
-  return items.slice(0, 5);
-}
 
 function slugifyHeading(text: string) {
   return text
@@ -230,16 +170,22 @@ function Block({ block }: { block: ArticleBlock }) {
       );
     case "hr":
       return <hr />;
+    case "html":
+      return <div
+          className="article-html"
+          dangerouslySetInnerHTML={{ __html: block.html }}
+        />;
     default:
       return null;
   }
 }
 
 export function ArticlePage({ article }: ArticlePageProps) {
-  const related = getRelatedArticles(article.slug, 6);
-  const relatedRail = related.slice(0, 3);
-  const relatedMore = related.slice(0, 4);
-  const aiSummary = buildAiSummary(article);
+  const relatedRail = article.seeAlso ?? [];
+  const relatedMore = article.relatedPosts ?? [];
+  const aiSummary: AiSummaryItem[] = (article.summaryPoints ?? []).map(
+    (text) => ({ title: text, text }),
+  );
 
   return (
     <main id="main" className="article-page">
@@ -315,15 +261,17 @@ export function ArticlePage({ article }: ArticlePageProps) {
                       {relatedRail.map((item) => (
                         <li key={item.href}>
                           <Link className="article-related__item" href={item.href}>
-                            <span className="article-related__thumb">
-                              <img
-                                src={item.imageUrl}
-                                alt=""
-                                width={72}
-                                height={72}
-                                loading="lazy"
-                              />
-                            </span>
+                            {item.imageUrl ? (
+                              <span className="article-related__thumb">
+                                <img
+                                  src={item.imageUrl}
+                                  alt=""
+                                  width={72}
+                                  height={72}
+                                  loading="lazy"
+                                />
+                              </span>
+                            ) : null}
                             <span className="article-related__title">{item.title}</span>
                           </Link>
                         </li>
@@ -352,7 +300,7 @@ export function ArticlePage({ article }: ArticlePageProps) {
                       {item.imageUrl ? (
                         <img
                           src={item.imageUrl}
-                          alt={item.imageAlt || item.title}
+                          alt={item.title}
                           width={640}
                           height={400}
                           loading="lazy"

@@ -42,7 +42,7 @@ export function HomePage({ data, bannerNewsData }: HomePageProps) {
   return (
     <main id="main">
       {/* मुख्य समाचार */}
-      <HighlightNews story={data.highlight} more={data.highlightMore} />
+      <HighlightNews bannerNewsData={bannerNewsData} />
       
       <Samachar items={data.stories} />
 

@@ -8,7 +8,7 @@ type ApiOptions = {
 
 export async function apiFetch<T>(
   endpoint: string,
-  { revalidate = 60, tags }: ApiOptions = {},
+  { revalidate = 5, tags }: ApiOptions = {},
 ): Promise<T> {
   if (!API_URL) throw new Error("NEXT_PUBLIC_API_URL is not set");
 

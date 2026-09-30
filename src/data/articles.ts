@@ -19,7 +19,8 @@ export type ArticleBlock =
       rows: string[][];
       caption?: string;
     }
-  | { type: "hr" };
+  | { type: "hr" }
+  | { type: "html"; html: string };
 
 export type ArticleTopic = {
   label: string;
@@ -27,7 +28,19 @@ export type ArticleTopic = {
   children?: { label: string; href: string }[];
 };
 
+export type ArticleLink = {
+  title: string;
+  href: string;
+  imageUrl?: string;
+};
+
 export type Article = Post & {
+  /** AI-summary bullet points shown above the body. */
+  summaryPoints?: string[];
+  /** "सम्बन्धित समाचार" grid below the article. */
+  relatedPosts?: ArticleLink[];
+  /** "यो पनि हेर्नुहोस्" rail beside the article. */
+  seeAlso?: ArticleLink[];
   readMinutes: number;
   authorAvatar?: string;
   deck?: string;
@@ -384,8 +397,6 @@ function allPosts(): Post[] {
     getCategoryPosts(slug),
   );
   return [
-    home.highlight,
-    ...home.highlightMore,
     home.feature,
     ...home.featurePair,
     ...home.teasers,
