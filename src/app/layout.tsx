@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Mukta } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { SettingsProvider } from "@/components/providers/SettingsProvider";
-import { getSettings } from "@/lib/api";
-import type { Settings } from "@/types/settings";
+import { getSettingsOrEmpty } from "@/lib/api";
 import { UiProvider } from "@/components/providers/UiProvider";
 import "./globals.css";
 
@@ -60,36 +59,12 @@ export const metadata: Metadata = {
   },
 };
 
-const EMPTY_SETTINGS: Settings = {
-  site_title: "",
-  dark_logo: "",
-  white_logo: "",
-  location: "",
-  email: "",
-  phone: "",
-  mobile: "",
-  chief_administrator: "",
-  advisory_editor: "",
-  editor: "",
-  assistant_editor: "",
-  columnists: "",
-  correspondents: "",
-  rojgar_insert_map_url: "",
-  insert_iframe_url: "",
-  darta_no: "",
-  social_handles: [],
-};
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Don't fail the whole build if the CMS is unreachable (e.g. blocks the
-  // build server); pages revalidate and pick up real settings later.
-  const settings = await getSettings()
-    .then((res) => res.data)
-    .catch(() => EMPTY_SETTINGS);
+  const settings = await getSettingsOrEmpty();
 
   return (
     <html lang="ne" className={mukta.variable} suppressHydrationWarning>

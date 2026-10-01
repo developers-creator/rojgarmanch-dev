@@ -25,7 +25,7 @@ import type { BannerNewsData } from "@/types/bannerNews";
 
 type HomePageProps = {
   data: HomePageData;
-  bannerNewsData: BannerNewsData;
+  bannerNewsData?: BannerNewsData;
 };
 
 function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {

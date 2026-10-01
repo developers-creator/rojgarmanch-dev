@@ -4,7 +4,7 @@ import { getBannerNews } from "@/lib/api";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
 export default async function Home() {
-  const bannerNews = await getBannerNews();
+  const bannerNews = await getBannerNews().catch(() => undefined);
   // console.log("banner-news:", bannerNews);
 
   const home = getHomePageData();

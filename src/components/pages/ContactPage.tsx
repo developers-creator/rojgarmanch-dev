@@ -2,7 +2,7 @@ import type { ContactContent } from "@/data/pages";
 import type { SiteInfo } from "@/types/content";
 import { Reveal } from "@/components/motion/Reveal";
 import { Icon, socialIconName } from "@/components/ui/Icon";
-import { getContact, getSettings } from "@/lib/api";
+import { getContact, getSettingsOrEmpty } from "@/lib/api";
 import Link from "next/link";
 
 type ContactPageProps = {
@@ -12,13 +12,13 @@ type ContactPageProps = {
 
 export async function ContactPage({ content, site }: ContactPageProps) {
 
-  const [contactData, settingsData] = await Promise.all([
-    getContact(),
-    getSettings(),
+  const [contactData, settings] = await Promise.all([
+    getContact().catch(() => null),
+    getSettingsOrEmpty(),
   ]);
   const payload = contactData?.data?.payload;
 
-  const { darta_no, rojgar_insert_map_url, phone, email, location, social_handles, site_title, insert_iframe_url } = settingsData.data;
+  const { darta_no, rojgar_insert_map_url, phone, email, location, social_handles, site_title, insert_iframe_url } = settings;
 
   return (
     <main id="main" className="site-page contact-page">
