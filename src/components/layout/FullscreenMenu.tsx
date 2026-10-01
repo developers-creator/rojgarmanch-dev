@@ -43,6 +43,7 @@ export function FullscreenMenu() {
       id="fullscreen-menu"
       aria-hidden={!menuOpen}
     >
+      
       <div className="fs-menu__backdrop" onClick={closeMenu} />
       <div
         className="fs-menu__panel"
