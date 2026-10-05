@@ -3,7 +3,6 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
 import { getArthaRojgarCategories } from "@/lib/api/endpoints";
 import { toPost } from "@/lib/posts";
-import type { Post } from "@/types/content";
 
 /** अर्थ र रोजगार */
 export async function ArthaRojgar() {

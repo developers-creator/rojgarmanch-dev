@@ -16,6 +16,9 @@ export const ENDPOINTS = {
   publication: "/magazine?per_page=1",
   rojgartv: "/category/rojgar-tv?per_page=4",
   reels: "/category/reels?per_page=4",
+  business: "/category/business?per_page=7",
+  nrn: "/category/nrn?per_page=4",
+  pravas: "/category/abroad?per_page=4",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -79,6 +82,18 @@ export const getRojgarTV = () =>
 // Reels
 export const getReels = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.reels);
+
+// Business
+export const getBusiness = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.business);
+
+// NRn
+export const getNRN = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.nrn);
+
+// Pravas
+export const getPravas = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.pravas);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",
