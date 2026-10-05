@@ -1,20 +1,21 @@
 import { LeadListColumn } from "./LeadListColumn";
+import { getEnglishHeadline } from "@/lib/api/endpoints";
+import { toPost } from "@/lib/posts";
 
 /** English Headline */
-export function EnglishHeadline() {
+export async function EnglishHeadline() {
+  const res = await getEnglishHeadline().catch(() => null);
+  const category = res?.data?.category;
+  const items = (res?.data?.posts ?? []).map(toPost);
+  if (!category || !items.length) return null;
+
   return (
     <LeadListColumn
       id="english-headline"
-      title="English Headline"
-      href="/category/english-headline"
-      metaByline="Anya Sharma"
-      leadTitle="What global hiring managers now ask Nepali candidates first"
-      image="1521737604893-d14cc237f11d"
-      items={[
-        ["Five signals your remote role will last", "Samuel Rao"],
-        ["How diaspora networks change a job search", "Lori West"],
-        ["A plain guide to cross-border contracts", "Joan Wallace"],
-      ]}
+      title={category.name}
+      href={`/category/${category.slug}`}
+      lead={items[0]}
+      posts={items.slice(1, 4)}
       delay={2}
     />
   );

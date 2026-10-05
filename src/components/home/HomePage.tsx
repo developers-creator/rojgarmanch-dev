@@ -102,7 +102,7 @@ export function HomePage({ data, bannerNewsData }: HomePageProps) {
       <BannerAd ad={ADS.hbl} />
 
       {/* ब्लग / विचार */}
-      <BlogBichar items={data.teasers} />
+      <BlogBichar />
 
       <BannerAd ad={ADS.ncell} />
 

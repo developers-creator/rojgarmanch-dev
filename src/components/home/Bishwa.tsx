@@ -1,20 +1,21 @@
 import { LeadListColumn } from "./LeadListColumn";
+import { getWorld } from "@/lib/api/endpoints";
+import { toPost } from "@/lib/posts";
 
 /** विश्व */
-export function Bishwa() {
+export async function Bishwa() {
+  const res = await getWorld().catch(() => null);
+  const category = res?.data?.category;
+  const items = (res?.data?.posts ?? []).map(toPost);
+  if (!category || !items.length) return null;
+
   return (
     <LeadListColumn
       id="bishwa"
-      title="विश्व"
-      href="/category/bishwa"
-      metaByline="कबीर सेन"
-      leadTitle="विश्व श्रम बजारमा नेपाली सीप कहाँ बढी मागिँदैछ"
-      image="1486406146926-c627a92ad1ab"
-      items={[
-        ["युरोपमा कामदार नीति फेरिँदा के हेर्ने", "प्रिया नायर"],
-        ["एआईले विश्व रोजगारमा ल्याएको नयाँ रेखा", "रवि थापा"],
-        ["खाडी मुलुकको नयाँ करार मोडेल बुझ्ने तरिका", "मोहन सुवेदी"],
-      ]}
+      title={category.name}
+      href={`/category/${category.slug}`}
+      lead={items[0]}
+      posts={items.slice(1, 4)}
       delay={1}
     />
   );

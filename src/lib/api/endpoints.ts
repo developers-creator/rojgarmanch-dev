@@ -24,6 +24,13 @@ export const ENDPOINTS = {
   feature: "/category/feature?per_page=3",
   sports: "/category/sport?per_page=3",
   travel: "/category/tourism?per_page=3",
+  kala: "/category/art?per_page=4",
+  sahitya: "/category/literature?per_page=4",
+  opinion: "/category/opinion?per_page=6",
+  ramailoSansar: "/category/fun-world?per_page=4",
+  world: "/category/world?per_page=4",
+  englishHeadline: "/category/english-headline?per_page=4",
+
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -119,6 +126,30 @@ export const getSports = () =>
 // travel
 export const getTravel = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.travel);
+
+// kala
+export const getKala = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.kala);
+
+// sahitya
+export const getSahitya = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.sahitya);
+
+// opinion
+export const getOpinion = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.opinion);
+
+// ramailoSansar
+export const getRamailoSansar = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.ramailoSansar);
+
+// world
+export const getWorld = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.world);
+
+// englishHeadline
+export const getEnglishHeadline = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.englishHeadline);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

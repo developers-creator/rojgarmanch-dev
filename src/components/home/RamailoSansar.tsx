@@ -1,20 +1,21 @@
 /** रमाइलो संसार */
+import { toPost } from "@/lib/posts";
 import { LeadListColumn } from "./LeadListColumn";
+import { getRamailoSansar } from "@/lib/api/endpoints";
 
-export function RamailoSansar() {
+export async function RamailoSansar() {
+  const res = await getRamailoSansar().catch(() => null);
+  const category = res?.data?.category;
+  const items = (res?.data?.posts ?? []).map(toPost);
+  if (!category || !items.length) return null;
+
   return (
     <LeadListColumn
       id="ramailo-sansar"
-      title="रमाइलो संसार"
-      href="/category/ramailo-sansar"
-      metaByline="सुजन श्रेष्ठ"
-      leadTitle="किताबबाट नसिकिने करियरका दस सुझाव"
-      image="1485846234645-a62644f84728"
-      items={[
-        ["सामाजिक प्रमाणको प्रभावलाई कम नआँक्नुहोस्", "मीना अधिकारी"],
-        ["स्टार्टअपका आठ प्रारम्भिक समस्या र समाधान", "राजेश थापा"],
-        ["अर्को भर्ना चक्रमा महत्व राख्ने विचारहरू", "अनिता गुरुङ"],
-      ]}
+      title={category.name}
+      href={`/category/${category.slug}`}
+      lead={items[0]}
+      posts={items.slice(1, 4)}
     />
   );
 }

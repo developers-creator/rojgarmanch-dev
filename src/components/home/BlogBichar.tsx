@@ -1,18 +1,20 @@
 /** ब्लग / विचार */
-import type { Post } from "@/types/content";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
+import { getOpinion } from "@/lib/api/endpoints";
+import { toPost } from "@/lib/posts";
 
-type BlogBicharProps = {
-  items: Post[];
-};
+export async function BlogBichar() {
+  const res = await getOpinion().catch(() => null);
+  const category = res?.data?.category;
+  const items = (res?.data?.posts ?? []).map(toPost);
+  if (!category || !items.length) return null;
 
-export function BlogBichar({ items }: BlogBicharProps) {
   return (
     <section className="teasers" id="vichar" aria-label="ब्लग / विचार">
       <div className="container">
-        <SectionTitle href="/category/vichar">ब्लग / विचार</SectionTitle>
+        <SectionTitle href={`/category/${category.slug}`}>{category.name}</SectionTitle>
         <div className="teasers__grid">
           {items.map((item, index) => (
             <Reveal
