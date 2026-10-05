@@ -21,7 +21,9 @@ export const ENDPOINTS = {
   pravas: "/category/abroad?per_page=4",
   webstories: "/category/webstories?per_page=5",
   interview: "/category/interview?per_page=4",
-  feature: "/category/feature?per_page=3"
+  feature: "/category/feature?per_page=3",
+  sports: "/category/sport?per_page=3",
+  travel: "/category/tourism?per_page=3",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -110,6 +112,13 @@ export const getInterview = () =>
 export const getFeature = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.feature);
 
+// sports
+export const getSports = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.sports);
+
+// travel
+export const getTravel = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.travel);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",
