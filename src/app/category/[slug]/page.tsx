@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  getAllCategorySlugs,
-  getCategory,
-  getCategoryPosts,
-} from "@/data/categories";
 import { getHomePageData, getSiteInfo } from "@/data/home";
-import {
-  CATEGORY_PAGE_SIZE,
-  CategoryPage,
-} from "@/components/category/CategoryPage";
+import { getCategoryPosts } from "@/lib/api/endpoints";
+import { toPost } from "@/lib/posts";
+import { CategoryPage } from "@/components/category/CategoryPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
 type PageProps = {
@@ -17,28 +11,27 @@ type PageProps = {
   searchParams: Promise<{ page?: string }>;
 };
 
-export function generateStaticParams() {
-  return getAllCategorySlugs().map((slug) => ({ slug }));
-}
+const parsePage = (raw?: string) =>
+  Math.max(1, Number.parseInt(raw ?? "1", 10) || 1);
+
+const loadCategory = (slug: string, page: number) =>
+  getCategoryPosts(slug, page).catch(() => null);
 
 export async function generateMetadata({
   params,
   searchParams,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { page: pageRaw } = await searchParams;
-  const category = getCategory(slug);
+  const page = parsePage((await searchParams).page);
+  const category = (await loadCategory(slug, page))?.data?.category;
   if (!category) return { title: "श्रेणी फेला परेन" };
 
-  const page = Math.max(1, Number.parseInt(pageRaw ?? "1", 10) || 1);
-  const title =
-    page > 1
-      ? `${category.labelNe} — पृष्ठ ${page} — रोजगार मञ्च`
-      : `${category.labelNe} — रोजगार मञ्च`;
-
   return {
-    title,
-    description: category.description,
+    title:
+      page > 1
+        ? `${category.name} — पृष्ठ ${page} — रोजगार मञ्च`
+        : `${category.name} — रोजगार मञ्च`,
+    description: category.description || undefined,
     alternates: {
       canonical: `https://rojgarmanch.com/category/${category.slug}${
         page > 1 ? `?page=${page}` : ""
@@ -52,19 +45,9 @@ export default async function CategoryRoute({
   searchParams,
 }: PageProps) {
   const { slug } = await params;
-  const { page: pageRaw } = await searchParams;
-  const category = getCategory(slug);
-  if (!category) notFound();
-
-  const allPosts = getCategoryPosts(slug);
-  const totalPages = Math.max(
-    1,
-    Math.ceil(allPosts.length / CATEGORY_PAGE_SIZE),
-  );
-  const requested = Math.max(1, Number.parseInt(pageRaw ?? "1", 10) || 1);
-  const page = Math.min(requested, totalPages);
-  const start = (page - 1) * CATEGORY_PAGE_SIZE;
-  const posts = allPosts.slice(start, start + CATEGORY_PAGE_SIZE);
+  const page = parsePage((await searchParams).page);
+  const res = await loadCategory(slug, page);
+  if (!res?.data) notFound();
 
   const home = getHomePageData();
   const site = getSiteInfo();
@@ -76,10 +59,9 @@ export default async function CategoryRoute({
       site={site}
     >
       <CategoryPage
-        category={category}
-        posts={posts}
-        page={page}
-        totalPages={totalPages}
+        category={res.data.category}
+        posts={res.data.posts.map(toPost)}
+        pagination={res.pagination}
       />
     </SiteChrome>
   );

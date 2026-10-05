@@ -1,3 +1,4 @@
+import { decodeEntities } from "@/lib/text";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { Article, ArticleLink } from "@/data/articles";
@@ -13,7 +14,7 @@ type PageProps = {
 };
 
 const toLink = (item: NewsLink): ArticleLink => ({
-  title: item.title.trim(),
+  title: decodeEntities(item.title.trim()),
   href: `/${item.slug}`,
   imageUrl: item.featured_image ?? undefined,
 });
@@ -28,11 +29,11 @@ async function loadArticle(segments: string[]): Promise<Article | null> {
     return {
       id: news.id,
       slug: news.slug,
-      title: news.title,
+      title: decodeEntities(news.title),
       excerpt: news.excerpt,
       href: `/${news.slug}`,
       imageUrl: news.featured_image ?? undefined,
-      imageAlt: news.title,
+      imageAlt: decodeEntities(news.title),
       author: news.author_name ?? undefined,
       authorAvatar: news.author_image ?? undefined,
       dateLabel: news.date,

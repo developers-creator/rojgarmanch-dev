@@ -1,19 +1,15 @@
-import type { CategoryInfo } from "@/data/categories";
 import type { Post } from "@/types/content";
+import type { NewsCategory, Pagination as PaginationData } from "@/types/news";
 import { Reveal } from "@/components/motion/Reveal";
 import { AdUnit } from "@/components/ui/AdUnit";
-import { Icon } from "@/components/ui/Icon";
+import { Pagination } from "@/components/ui/Pagination";
 import { ADS } from "@/lib/ads";
-import { toNepaliDigits } from "@/lib/dates";
 import Link from "next/link";
 
-export const CATEGORY_PAGE_SIZE = 7;
-
 type CategoryPageProps = {
-  category: CategoryInfo;
+  category: NewsCategory;
   posts: Post[];
-  page: number;
-  totalPages: number;
+  pagination?: PaginationData;
 };
 
 function AuthorByline({ item }: { item: Post }) {
@@ -71,89 +67,10 @@ function PostCard({
   );
 }
 
-function pageHref(slug: string, page: number) {
-  if (page <= 1) return `/category/${slug}`;
-  return `/category/${slug}?page=${page}`;
-}
-
-function Pagination({
-  slug,
-  page,
-  totalPages,
-}: {
-  slug: string;
-  page: number;
-  totalPages: number;
-}) {
-  if (totalPages <= 1) return null;
-
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
-  return (
-    <nav className="category-pagination" aria-label="पृष्ठहरू">
-      {page > 1 ? (
-        <Link
-          className="category-pagination__arrow"
-          href={pageHref(slug, page - 1)}
-          rel="prev"
-          aria-label="अघिल्लो पृष्ठ"
-        >
-          <Icon name="chevron-left" size={14} />
-        </Link>
-      ) : (
-        <span
-          className="category-pagination__arrow is-disabled"
-          aria-disabled="true"
-        >
-          <Icon name="chevron-left" size={14} />
-        </span>
-      )}
-
-      <ol className="category-pagination__pages">
-        {pages.map((n) => (
-          <li key={n}>
-            {n === page ? (
-              <span
-                className="category-pagination__num is-current"
-                aria-current="page"
-              >
-                {toNepaliDigits(n)}
-              </span>
-            ) : (
-              <Link className="category-pagination__num" href={pageHref(slug, n)}>
-                {toNepaliDigits(n)}
-              </Link>
-            )}
-          </li>
-        ))}
-      </ol>
-
-      {page < totalPages ? (
-        <Link
-          className="category-pagination__arrow"
-          href={pageHref(slug, page + 1)}
-          rel="next"
-          aria-label="अर्को पृष्ठ"
-        >
-          <Icon name="chevron-right" size={14} />
-        </Link>
-      ) : (
-        <span
-          className="category-pagination__arrow is-disabled"
-          aria-disabled="true"
-        >
-          <Icon name="chevron-right" size={14} />
-        </span>
-      )}
-    </nav>
-  );
-}
-
 export function CategoryPage({
   category,
   posts,
-  page,
-  totalPages,
+  pagination,
 }: CategoryPageProps) {
   const featured = posts[0];
   const rest = posts.slice(1);
@@ -162,7 +79,7 @@ export function CategoryPage({
     <main id="main" className="category-page">
       <div className="container">
         <header className="category-head">
-          <h1 id="category-title">{category.labelNe}</h1>
+          <h1 id="category-title">{category.name}</h1>
         </header>
 
         {featured ? (
@@ -215,9 +132,8 @@ export function CategoryPage({
         ) : null}
 
         <Pagination
-          slug={category.slug}
-          page={page}
-          totalPages={totalPages}
+          pagination={pagination}
+          basePath={`/category/${category.slug}`}
         />
       </div>
     </main>

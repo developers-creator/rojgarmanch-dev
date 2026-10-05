@@ -1,12 +1,16 @@
 import Link from "next/link";
-import { getPublications } from "@/data/publications";
+import { getPublication } from "@/lib/api/endpoints";
 import { Reveal } from "@/components/motion/Reveal";
+import { publicationSlug } from "@/lib/publication";
+import { decodeEntities } from "@/lib/text";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
 /** प्रकाशन — latest cover; title opens that flipbook */
-export function Publication() {
-  const latest = getPublications()[0];
-  if (!latest) return null;
+export async function Publication() {
+  const publication = await getPublication().catch(() => null);
+  const data = publication?.data?.[0];
+  if (!data) return null;
+  const title = decodeEntities(data.title);
 
   return (
     <section id="publication" aria-labelledby="publication-title">
@@ -19,14 +23,16 @@ export function Publication() {
             <span className="pub-cover__page pub-cover__page--2" aria-hidden="true" />
             <span className="pub-cover__page pub-cover__page--1" aria-hidden="true" />
             <span className="pub-cover__front">
-              <img src={latest.cover} alt="" width={320} height={420} />
+              {data.featured_image ? (
+                <img src={data.featured_image} alt={title} width={320} height={420} />
+              ) : null}
               <span className="pub-cover__shade" aria-hidden="true" />
               <span className="pub-cover__meta">
                 <em>
-                  {latest.kicker} · {latest.date}
+                  {data.sub_title ? `${decodeEntities(data.sub_title)} · ${data.date}` : data.date}
                 </em>
                 <strong>
-                  <Link href={`/publication/${latest.slug}`}>{latest.title}</Link>
+                  <Link href={`/publication/${encodeURIComponent(publicationSlug(data.slug))}`}>{title}</Link>
                 </strong>
               </span>
             </span>

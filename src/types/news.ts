@@ -27,3 +27,71 @@ export type NewsDetailData = {
   message: string;
   data: NewsDetail | null;
 };
+
+export type NewsCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+};
+
+export type NewsCategoryPost = {
+  id: number;
+  title: string;
+  slug: string;
+  featured_image: string | null;
+  sub_heading: string;
+};
+
+export type Pagination = {
+  current_page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  has_next: boolean;
+  has_previous: boolean;
+};
+
+export type NewsCategoryData = {
+  success: boolean;
+  message: string;
+  data: {
+    category: NewsCategory;
+    posts: NewsCategoryPost[];
+  } | null;
+  pagination?: Pagination;
+};
+
+export type Publication = {
+  id: number;
+  title: string;
+  sub_title: string | null;
+  /** Full CMS URL, e.g. "https://cms.rojgarmanch.com/magazine/year-16-issue-1-2083-shrawan-issue/" */
+  slug: string;
+  featured_image: string | null;
+  date: string;
+};
+
+export type PublicationData = {
+  success: boolean;
+  message: string;
+  data: Publication[];
+  pagination?: Pagination;
+};
+
+export type PublicationDetail = {
+  id: number;
+  title: string;
+  slug: string;
+  sub_heading: string | null;
+  featured_image: string | null;
+  pdf: string | null;
+  content: string;
+  date: string;
+};
+
+export type PublicationDetailData = {
+  success: boolean;
+  message: string;
+  data: PublicationDetail | null;
+};

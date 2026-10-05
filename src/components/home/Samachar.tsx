@@ -5,10 +5,8 @@ import { AdUnit } from "@/components/ui/AdUnit";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CareerPlaybook } from "./CareerPlaybook";
 import Link from "next/link";
-
-type SamacharProps = {
-  items: Post[];
-};
+import { getNewsCategories } from "@/lib/api/endpoints";
+import { toPost } from "@/lib/posts";
 
 function NewsRow({ items }: { items: Post[] }) {
   if (!items.length) return null;
@@ -47,7 +45,11 @@ function NewsRow({ items }: { items: Post[] }) {
 }
 
 /** समाचार col-8 board + करियर प्लेबुक col-4 */
-export function Samachar({ items }: SamacharProps) {
+export async function Samachar() {
+  const newsCategories = await getNewsCategories().catch(() => null);
+  const category = newsCategories?.data?.category;
+  const items = (newsCategories?.data?.posts ?? []).map(toPost);
+
   const featured = items[0];
   const side = items.slice(1, 3);
   const row = items.slice(3, 6);
@@ -58,8 +60,8 @@ export function Samachar({ items }: SamacharProps) {
       <div className="container">
         <div className="samachar__grid">
           <div className="samachar__main">
-            <SectionTitle href="/category/samachar">
-              <span id="samachar-title">समाचार</span>
+            <SectionTitle href="/category/news">
+              <span id="samachar-title">{category?.name}</span>
             </SectionTitle>
 
             <div className="samachar-board">

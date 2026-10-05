@@ -44,7 +44,7 @@ export function HomePage({ data, bannerNewsData }: HomePageProps) {
       {/* मुख्य समाचार */}
       <HighlightNews bannerNewsData={bannerNewsData} />
       
-      <Samachar items={data.stories} />
+      <Samachar />
 
       <BannerAd ad={ADS.hardik} />
 

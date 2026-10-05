@@ -1,62 +1,51 @@
 import { CAREER_PLAYBOOK_ADS } from "@/lib/ads";
-import { unsplash as u } from "@/lib/media";
 import { Reveal } from "@/components/motion/Reveal";
 import { AdUnit } from "@/components/ui/AdUnit";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
-
-const tips = [
-  {
-    text: "करियर यात्रामा एकपटकमा एउटा स्पष्ट कदम मात्र लिनुहोस्।",
-    image: "1521737711867-e3b97375f902",
-    featured: true,
-  },
-  {
-    text: "प्रतिक्रिया माग्नुहोस् — आफ्नो प्रगति बाहिरबाट पनि हेर्नुहोस्।",
-  },
-  {
-    text: "रातमा भारी काम घटाउनुहोस्; दिनको मुख्य घण्टामा  काम गर्नुहोस्।",
-  },
-  {
-    text: "साना लक्ष्य राख्नुहोस्, तर नियमित समीक्षा नछोड्नुहोस्।",
-  },
-  {
-    text: "प्रतिक्रिया माग्नुहोस् — आफ्नो प्रगति बाहिरबाट पनि हेर्नुहोस्।",
-  },
-] as const;
+import { decodeEntities } from "@/lib/text";
+import { getCareerPlaybookCategories } from "@/lib/api/endpoints";
 
 /** करियर प्लेबुक — tip column + stacked ads */
-export function CareerPlaybook() {
+export async function CareerPlaybook() {
+  const res = await getCareerPlaybookCategories().catch(() => null);
+  const category = res?.data?.category;
+  const posts = res?.data?.posts ?? [];
+
   return (
     <Reveal className="career-playbook reveal reveal-delay-2">
       <aside>
         <div className="career-playbook__panel">
           <SectionTitle href="#article" more={false}>
-            करियर प्लेबुक
+            {category?.name}
           </SectionTitle>
           <ul className="career-playbook__list">
-            {tips.map((tip, index) =>
-              "featured" in tip && tip.featured ? (
+            {posts.map((post, index) =>
+              index === 0 ? (
                 <li
-                  key={index}
+                  key={post.id}
                   className="career-playbook__item career-playbook__item--feature"
                 >
-                  <Link className="career-playbook__feature" href="#article">
-                    <span className="career-playbook__feature-media">
-                      <img
-                        src={u(tip.image, 640, 360)}
-                        alt=""
-                        width={640}
-                        height={360}
-                        loading="lazy"
-                      />
-                    </span>
-                    <p>{tip.text}</p>
+                  <Link className="career-playbook__feature" href={`/${post.slug}`}>
+                    {post.featured_image ? (
+                      <span className="career-playbook__feature-media">
+                        <img
+                          src={post.featured_image}
+                          alt=""
+                          width={640}
+                          height={360}
+                          loading="lazy"
+                        />
+                      </span>
+                    ) : null}
+                    <p>{decodeEntities(post.title)}</p>
                   </Link>
                 </li>
               ) : (
-                <li key={index} className="career-playbook__item">
-                  <p>{tip.text}</p>
+                <li key={post.id} className="career-playbook__item">
+                  <Link href={`/${post.slug}`}>
+                    <p>{decodeEntities(post.title)}</p>
+                  </Link>
                 </li>
               ),
             )}

@@ -12,7 +12,6 @@ import {
 } from "react";
 import Link from "next/link";
 import HTMLFlipBook from "react-pageflip";
-import type { PublicationIssue } from "@/data/publications";
 import { Icon } from "@/components/ui/Icon";
 
 type FlipApi = {
@@ -48,7 +47,14 @@ const Sheet = forwardRef<
 });
 
 type FlipbookProps = {
-  issue: PublicationIssue;
+  issue: {
+    slug: string;
+    title: string;
+    date: string;
+    pdfHref: string;
+    /** Same-origin URL used for in-browser rendering (CMS has no CORS headers). */
+    pdfSrc: string;
+  };
 };
 
 function canvasToJpegUrl(canvas: HTMLCanvasElement, quality = 0.78) {
@@ -160,7 +166,7 @@ export function Flipbook({ issue }: FlipbookProps) {
       pageUrlsRef.current = [];
 
       try {
-        const images = await renderPdfPages(issue.pdfHref, (done, totalPages) => {
+        const images = await renderPdfPages(issue.pdfSrc, (done, totalPages) => {
           if (!cancelled) {
             setProgress({ done, total: totalPages });
           }
@@ -190,7 +196,7 @@ export function Flipbook({ issue }: FlipbookProps) {
       }
       pageUrlsRef.current = [];
     };
-  }, [issue.pdfHref]);
+  }, [issue.pdfSrc]);
 
   useEffect(() => {
     setPageInput(String(page + 1));
