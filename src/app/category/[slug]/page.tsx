@@ -4,6 +4,7 @@ import { getHomePageData, getSiteInfo } from "@/data/home";
 import { getCategoryPosts } from "@/lib/api/endpoints";
 import { toPost } from "@/lib/posts";
 import { CategoryPage } from "@/components/category/CategoryPage";
+import { WebStories } from "@/components/home/WebStories";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
 type PageProps = {
@@ -58,11 +59,17 @@ export default async function CategoryRoute({
       trending={home.trending}
       site={site}
     >
-      <CategoryPage
-        category={res.data.category}
-        posts={res.data.posts.map(toPost)}
-        pagination={res.pagination}
-      />
+      {slug === "webstories" ? (
+        <main id="main">
+          <WebStories more={false} />
+        </main>
+      ) : (
+        <CategoryPage
+          category={res.data.category}
+          posts={res.data.posts.map(toPost)}
+          pagination={res.pagination}
+        />
+      )}
     </SiteChrome>
   );
 }

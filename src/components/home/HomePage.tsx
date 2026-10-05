@@ -76,7 +76,7 @@ export function HomePage({ data, bannerNewsData }: HomePageProps) {
       <BannerAd ad={ADS.hardik} />
 
       {/* इन्स्टा-स्टाइल स्टोरी */}
-      <WebStories items={data.igStories} />
+      <WebStories />
 
       <BannerAd ad={ADS.hbl} />
 

@@ -98,3 +98,27 @@ export type PublicationDetailData = {
   message: string;
   data: PublicationDetail | null;
 };
+
+export type Webstory = {
+  id: number;
+  title: string;
+  slug: string;
+  featured_image: string | false | null;
+  sub_heading: string;
+  webstories_detail: WebstoryDetail[];
+  webstories_count: number;
+};
+
+export type WebstoryDetail = {
+  webstory_upload_image: string;
+  webstory_title: string;
+};
+export type WebstoryData = {
+  success: boolean;
+  message: string;
+  data: {
+    category: NewsCategory;
+    posts: Webstory[];
+  } | null;
+  pagination?: Pagination;
+};

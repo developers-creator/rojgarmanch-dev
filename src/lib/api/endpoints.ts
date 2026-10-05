@@ -1,7 +1,7 @@
 import type { BannerNewsData } from "@/types/bannerNews";
 import type { Settings, SettingsData } from "@/types/settings";
 import { apiFetch } from "./client";
-import type { NewsDetailData, NewsCategoryData, PublicationData, PublicationDetailData } from "@/types/news";
+import type { NewsDetailData, NewsCategoryData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
 import type { ContactData } from "@/types/contact";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
@@ -19,6 +19,7 @@ export const ENDPOINTS = {
   business: "/category/business?per_page=7",
   nrn: "/category/nrn?per_page=4",
   pravas: "/category/abroad?per_page=4",
+  webstories: "/category/webstories?per_page=5",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -94,6 +95,10 @@ export const getNRN = () =>
 // Pravas
 export const getPravas = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.pravas);
+
+// Webstories
+export const getWebstories = () =>
+  apiFetch<WebstoryData>(ENDPOINTS.webstories);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",
