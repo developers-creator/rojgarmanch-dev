@@ -14,6 +14,8 @@ export const ENDPOINTS = {
   arthaRojgar: "/category/employment?per_page=5",
   employment: "/category/employment?per_page=6",
   publication: "/magazine?per_page=1",
+  rojgartv: "/category/rojgar-tv?per_page=4",
+  reels: "/category/reels?per_page=4",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -69,6 +71,14 @@ export const getPublications = (page = 1) =>
   apiFetch<PublicationData>(
     `/magazine?per_page=${PUBLICATIONS_PER_PAGE}&page=${page}`,
   );
+
+// Rojgar TV
+export const getRojgarTV = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.rojgartv);
+
+// Reels
+export const getReels = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.reels);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

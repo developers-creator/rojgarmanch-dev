@@ -9,5 +9,5 @@ export const toPost = (post: NewsCategoryPost): Post => ({
   title: decodeEntities(post.title),
   excerpt: post.sub_heading ? decodeEntities(post.sub_heading) : undefined,
   href: `/${post.slug}`,
-  imageUrl: post.featured_image ?? undefined,
+  imageUrl: post.featured_image || undefined,
 });

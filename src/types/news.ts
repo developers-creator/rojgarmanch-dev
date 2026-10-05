@@ -39,7 +39,10 @@ export type NewsCategoryPost = {
   id: number;
   title: string;
   slug: string;
-  featured_image: string | null;
+  /** The CMS sends `false` (not null) when a post has no image. */
+  featured_image: string | false | null;
+  video_url?: string | null;
+  reel_video_url?: string | null;
   sub_heading: string;
 };
 
