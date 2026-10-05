@@ -1,28 +1,20 @@
-import { unsplash as u } from "@/lib/media";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
-
-const cards = [
-  {
-    image: "1556761175-b413da4baf72",
-    title: "नयाँ अपरेटिङ मोडेल चाहिने दस संकेत",
-    quote: false,
-  },
-  {
-    image: "1573496359142-b8d87734a5a2",
-    title: "सार्वजनिक रूपमा डेलिभर गर्ने अपरेटरहरूको वर्ष",
-    quote: true,
-  },
-  {
-    image: "1600880292203-757bb62b4baf",
-    title: "आधुनिक उत्पादन शिल्प सिक्ने उत्कृष्ट स्रोत",
-    quote: false,
-  },
-] as const;
+import { getInterview } from "@/lib/api/endpoints";
+import { toPost } from "@/lib/posts";
 
 /** अन्तर्वार्ता — quote hero + 3-up cards */
-export function Antarwarta() {
+export async function Antarwarta() {
+  const res = await getInterview().catch(() => null);
+  const category = res?.data?.category;
+  const items = (res?.data?.posts ?? []).map(toPost);
+
+  if (!items.length) return null;
+
+  const lead = items[0];
+  const list = items.slice(1, 4);
+
   return (
     <Reveal className="reveal">
       <section
@@ -30,24 +22,26 @@ export function Antarwarta() {
         className="iv-board"
         aria-labelledby="antarwarta-title"
       >
-        <SectionTitle href="/category/antarwarta">
-          <span id="antarwarta-title">अन्तर्वार्ता</span>
+        <SectionTitle href={`/category/${category?.slug ?? "interview"}`}>
+          <span id="antarwarta-title">{category?.name}</span>
         </SectionTitle>
 
         <article className="iv-hero">
           <Link
             className="iv-hero__media"
-            href="#article"
+            href={lead.href}
             tabIndex={-1}
             aria-hidden="true"
           >
-            <img
-              src={u("1507003211169-0a1dd7228f2d", 900, 800)}
-              alt=""
-              width={640}
-              height={560}
-              loading="lazy"
-            />
+            {lead.imageUrl ? (
+              <img
+                src={lead.imageUrl}
+                alt=""
+                width={640}
+                height={560}
+                loading="lazy"
+              />
+            ) : null}
           </Link>
           <div className="iv-hero__copy">
             <span className="iv-hero__notch" aria-hidden="true" />
@@ -55,42 +49,40 @@ export function Antarwarta() {
               ”
             </span>
             <h3 className="iv-hero__title">
-              <Link href="#article">
-                स्पष्ट संवाद गर्ने टोलीसँग ग्राहक{" "}
-                बस्ने पन्ध्र कारण
-              </Link>
+              <Link href={lead.href}>{lead.title}</Link>
             </h3>
-            <p className="iv-hero__excerpt">
-              विश्वास, पारदर्शिता र निरन्तर फलोअपले ग्राहक सम्बन्ध बलियो
-              बनाउँछ — अनुभवी अपरेटरहरूको अनुभव।
-            </p>
+            {lead.excerpt ? (
+              <p className="iv-hero__excerpt">{lead.excerpt}</p>
+            ) : null}
           </div>
         </article>
 
         <div className="iv-grid">
-          {cards.map((card) => (
-            <article className="iv-card" key={card.title}>
+          {list.map((item, index) => (
+            <article className="iv-card" key={item.id}>
               <Link
                 className="iv-card__media"
-                href="#article"
+                href={item.href}
                 tabIndex={-1}
                 aria-hidden="true"
               >
-                <img
-                  src={u(card.image, 480, 300)}
-                  alt=""
-                  width={320}
-                  height={200}
-                  loading="lazy"
-                />
-                {card.quote ? (
+                {item.imageUrl ? (
+                  <img
+                    src={item.imageUrl}
+                    alt=""
+                    width={320}
+                    height={200}
+                    loading="lazy"
+                  />
+                ) : null}
+                {index === 1 ? (
                   <span className="iv-card__quote" aria-hidden="true">
                     ”
                   </span>
                 ) : null}
               </Link>
               <h3 className="iv-card__title line-2">
-                <Link href="#article">{card.title}</Link>
+                <Link href={item.href}>{item.title}</Link>
               </h3>
             </article>
           ))}

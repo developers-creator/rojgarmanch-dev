@@ -20,6 +20,8 @@ export const ENDPOINTS = {
   nrn: "/category/nrn?per_page=4",
   pravas: "/category/abroad?per_page=4",
   webstories: "/category/webstories?per_page=5",
+  interview: "/category/interview?per_page=4",
+  feature: "/category/feature?per_page=3"
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -99,6 +101,15 @@ export const getPravas = () =>
 // Webstories
 export const getWebstories = () =>
   apiFetch<WebstoryData>(ENDPOINTS.webstories);
+
+// interview
+export const getInterview = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.interview);
+
+// feature
+export const getFeature = () =>
+  apiFetch<NewsCategoryData>(ENDPOINTS.feature);
+
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",
