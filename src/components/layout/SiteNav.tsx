@@ -321,7 +321,11 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
 
         {/* Bottom Link */}
         <div className="notify__footer">
-          <Link href="/news" className="notify__footer-link">
+          <Link
+            href="/category/news"
+            className="notify__footer-link"
+            onClick={closeNotify}
+          >
             सबै समाचार हेर्नुहोस् <Icon name="arrow-right" size={14} />
           </Link>
         </div>

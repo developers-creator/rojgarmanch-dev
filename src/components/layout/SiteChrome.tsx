@@ -57,9 +57,9 @@ export async function SiteChrome({
 
   return (
     <>
-      <Link className="skip-link" href="#main">
+      {/* <Link className="skip-link" href="#main">
         मुख्य सामग्रीमा जानुहोस्
-      </Link>
+      </Link> */}
       <Masthead domain={site.domain} />
       <SiteNav
         flashNews={latest.length ? latest : flashNews}
