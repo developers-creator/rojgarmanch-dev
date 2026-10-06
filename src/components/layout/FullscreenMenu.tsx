@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getNavBarLinks, getNavMoreLinks } from "@/lib/nav";
 import { useUi } from "@/components/providers/UiProvider";
 import { Icon, socialIconName, type IconName } from "@/components/ui/Icon";
@@ -38,17 +39,19 @@ export function FullscreenMenu({
   const [searchTerms, setSearchTerms] = useState(searchDefaults);
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const { social_handles } = useSettings();
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!searchQuery.trim()) return inputRef.current?.focus();
+    const q = searchQuery.trim();
+    if (!q) return inputRef.current?.focus();
     setSearchTerms((items) =>
-      [searchQuery, ...items.filter((item) => item !== searchQuery)].slice(0, 8)
+      [q, ...items.filter((item) => item !== q)].slice(0, 8)
     );
     closeMenu();
-    document.getElementById("stories")?.scrollIntoView({ behavior: "smooth" });
+    router.push(`/search?q=${encodeURIComponent(q)}`);
   };
 
   if (!menuOpen) return null;

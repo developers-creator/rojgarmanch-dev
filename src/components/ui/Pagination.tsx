@@ -7,6 +7,8 @@ type PaginationProps = {
   pagination?: PaginationData;
   /** Path the `?page=N` query is added to, e.g. "/publication". */
   basePath: string;
+  /** Extra query params kept on every link, e.g. `{ q: "rojgar" }` for search. */
+  query?: Record<string, string>;
 };
 
 /** First, last and a window around the current page; `null` marks a gap. */
@@ -24,11 +26,16 @@ function visiblePages(page: number, total: number): (number | null)[] {
   return out;
 }
 
-export function Pagination({ pagination, basePath }: PaginationProps) {
+export function Pagination({ pagination, basePath, query }: PaginationProps) {
   if (!pagination || pagination.total_pages <= 1) return null;
 
   const { current_page: page, total_pages: totalPages } = pagination;
-  const href = (n: number) => (n <= 1 ? basePath : `${basePath}?page=${n}`);
+  const href = (n: number) => {
+    const params = new URLSearchParams(query);
+    if (n > 1) params.set("page", String(n));
+    const qs = params.toString();
+    return qs ? `${basePath}?${qs}` : basePath;
+  };
 
   const arrow = (dir: "prev" | "next", target: number | null) => {
     const icon = (

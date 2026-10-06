@@ -122,3 +122,22 @@ export type WebstoryData = {
   } | null;
   pagination?: Pagination;
 };
+
+export type SearchResult = {
+  id: number;
+  title: string;
+  sub_title: string;
+  slug: string;
+  category_name: string;
+  featured_image: string | false | null;
+  author_name: string | null;
+  author_slug: string | null;
+  author_image: string | null;
+};
+
+export type SearchData = {
+  success: boolean;
+  message: string;
+  data: SearchResult[];
+  pagination: Pagination;
+};

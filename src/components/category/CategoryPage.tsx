@@ -10,6 +10,12 @@ type CategoryPageProps = {
   category: NewsCategory;
   posts: Post[];
   pagination?: PaginationData;
+  /** Overrides `/category/<slug>` for pagination links (used by search). */
+  basePath?: string;
+  /** Query params kept on pagination links. */
+  query?: Record<string, string>;
+  /** Shown instead of the post grid when there are no posts. */
+  emptyMessage?: string;
 };
 
 function AuthorByline({ item }: { item: Post }) {
@@ -71,6 +77,9 @@ export function CategoryPage({
   category,
   posts,
   pagination,
+  basePath,
+  query,
+  emptyMessage,
 }: CategoryPageProps) {
   const featured = posts[0];
   const rest = posts.slice(1);
@@ -81,6 +90,10 @@ export function CategoryPage({
         <header className="category-head">
           <h1 id="category-title">{category.name}</h1>
         </header>
+
+        {!featured && emptyMessage ? (
+          <p className="category-empty">{emptyMessage}</p>
+        ) : null}
 
         {featured ? (
           <Reveal className="category-feature">
@@ -133,7 +146,8 @@ export function CategoryPage({
 
         <Pagination
           pagination={pagination}
-          basePath={`/category/${category.slug}`}
+          basePath={basePath ?? `/category/${category.slug}`}
+          query={query}
         />
       </div>
     </main>
