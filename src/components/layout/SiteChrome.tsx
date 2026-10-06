@@ -6,6 +6,7 @@ import { FullscreenMenu } from "./FullscreenMenu";
 import { SearchOverlay } from "./SearchOverlay";
 import { BackToTop } from "./BackToTop";
 import { Footer } from "./Footer";
+import { PopupAd } from "./PopupAd";
 import Link from "next/link";
 import { toFrontUrl } from "@/lib/url";
 import { searchToPost, toPost } from "@/lib/posts";
@@ -56,9 +57,10 @@ export async function SiteChrome({
       .catch(() => []),
   ]);
 
-  const headerAds = await getAds()
-    .then((res) => res.data.header_ads)
+  const allAds = await getAds()
+    .then((res) => res.data)
     .catch(() => null);
+  const headerAds = allAds?.header_ads ?? null;
   return (
     <>
       {/* <Link className="skip-link" href="#main">
@@ -78,6 +80,7 @@ export async function SiteChrome({
       {children}
       <Footer site={site} footerMenu={footerMenu} />
       <BackToTop />
+      <PopupAd ads={allAds?.popup_ads} />
     </>
   );
 }

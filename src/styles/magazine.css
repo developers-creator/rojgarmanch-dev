@@ -10529,3 +10529,53 @@ body.menu-open {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
+/* Popup ad */
+.popup-ad {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.popup-ad__box {
+  position: relative;
+  max-width: min(640px, 100%);
+  max-height: 100%;
+}
+
+.popup-ad__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: var(--radius);
+}
+
+.popup-ad__close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  z-index: 1;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+@media (max-width: 575.98px) {
+  .popup-ad__close {
+    top: -8px;
+    right: -4px;
+  }
+}

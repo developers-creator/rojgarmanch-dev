@@ -87,11 +87,22 @@ export type JobsAds = {
   jobs: JobAd[];
 };
 
-export type PopupAds = {
+export type WebPopupAd = {
   web: AdImage;
   web_link: string;
+};
+
+export type MobilePopupAd = {
   mobile: AdImage;
   mobile_link: string;
+};
+
+export type PopupAds = {
+  wen_popup_ads: WebPopupAd[];
+  mobile_popup_ads: MobilePopupAd[];
+  show_popup_on_homepage_only: boolean;
+  /** When true, no popup is shown anywhere. */
+  hide_popup_entirely: boolean;
 };
 
 export type CategoryAds = {
