@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getHomePageData, getSiteInfo } from "@/data/home";
-import { getCategoryPosts } from "@/lib/api/endpoints";
+import {
+  getAds,
+  getCategoryPosts,
+  getSettingsOrEmpty,
+} from "@/lib/api/endpoints";
 import { toPost } from "@/lib/posts";
 import { CategoryPage } from "@/components/category/CategoryPage";
 import { WebStories } from "@/components/home/WebStories";
@@ -47,7 +51,13 @@ export default async function CategoryRoute({
 }: PageProps) {
   const { slug } = await params;
   const page = parsePage((await searchParams).page);
-  const res = await loadCategory(slug, page);
+  const [res, ads, settings] = await Promise.all([
+    loadCategory(slug, page),
+    getAds()
+      .then((r) => r.data.category_ads)
+      .catch(() => null),
+    getSettingsOrEmpty(),
+  ]);
   if (!res?.data) notFound();
 
   const home = getHomePageData();
@@ -68,6 +78,8 @@ export default async function CategoryRoute({
           category={res.data.category}
           posts={res.data.posts.map(toPost)}
           pagination={res.pagination}
+          ad={ads}
+          siteName={settings.site_title}
         />
       )}
     </SiteChrome>

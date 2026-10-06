@@ -94,12 +94,18 @@ export type PopupAds = {
   mobile_link: string;
 };
 
+export type CategoryAds = {
+  cat_ad_image: UploadedAd | false;
+  cat_ad_url: string;
+};
+
 export type Ads = {
   sidebar_ads: SidebarAds;
   header_ads: HeaderAds;
   long_ads: LongAds;
   jobs_ads: JobsAds;
   popup_ads: PopupAds;
+  category_ads: CategoryAds;
 };
 
 export type AdsData = {

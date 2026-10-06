@@ -1,9 +1,9 @@
+import type { CategoryAds } from "@/types/ads";
 import type { Post } from "@/types/content";
 import type { NewsCategory, Pagination as PaginationData } from "@/types/news";
 import { Reveal } from "@/components/motion/Reveal";
-import { AdUnit } from "@/components/ui/AdUnit";
+import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import { Pagination } from "@/components/ui/Pagination";
-import { ADS } from "@/lib/ads";
 import Link from "next/link";
 
 type CategoryPageProps = {
@@ -16,6 +16,10 @@ type CategoryPageProps = {
   query?: Record<string, string>;
   /** Shown instead of the post grid when there are no posts. */
   emptyMessage?: string;
+  /** CMS category ad shown under the featured post; omitted = no ad. */
+  ad?: CategoryAds | null;
+  /** Site name from settings, used as the ad image alt text. */
+  siteName?: string;
 };
 
 function AuthorByline({ item }: { item: Post }) {
@@ -80,6 +84,8 @@ export function CategoryPage({
   basePath,
   query,
   emptyMessage,
+  ad,
+  siteName = "",
 }: CategoryPageProps) {
   const featured = posts[0];
   const rest = posts.slice(1);
@@ -128,7 +134,13 @@ export function CategoryPage({
           </Reveal>
         ) : null}
 
-        <AdUnit ad={ADS.belaco} className="category-inline-ad" />
+        <CmsBannerAd
+          image={ad?.cat_ad_image}
+          href={ad?.cat_ad_url}
+          siteName={siteName}
+          bare
+          className="category-inline-ad"
+        />
 
         {rest.length > 0 ? (
           <section className="category-stream" aria-label="थप सामग्री">
