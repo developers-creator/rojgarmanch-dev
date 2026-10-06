@@ -22,16 +22,14 @@ export type BottomSidebarAd = {
 export type SidebarAds = {
   top_sidebar_ads: TopSidebarAd[];
   bottom_sidebar_ads: BottomSidebarAd[];
-  inner_top_ad: AdImage;
-  inner_top_ad_link: string;
-  inner_bottom_ad: AdImage;
-  inner_bottom_ad_link: string;
-  below_comments_ad: AdImage;
-  below_comments_ad_link: string;
-  before_related_news_left_ad: AdImage;
-  before_related_news_left_ad_link: string;
-  before_related_news_right_ad: AdImage;
-  before_related_news_right_ad_link: string;
+  before_main_title: AdImage;
+  before_main_title_link: string;
+  before_related_news_ad: AdImage;
+  before_related_news_ad_link: string;
+  before_additional_news_first_ad: AdImage;
+  before_additional_news_first_ad_link: string;
+  before_additional_news_second_ad: AdImage;
+  before_additional_news_second_ad_link: string;
 };
 
 export type BelowMenuHomeAd = {

@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import type { Article, ArticleBlock } from "@/data/articles";
-import { ARTICLE_INLINE_ADS, ARTICLE_RAIL_ADS } from "@/lib/ads";
-import { AdUnit } from "@/components/ui/AdUnit";
+import { ARTICLE_INLINE_ADS } from "@/lib/ads";
 import {
   ArticleFontControls,
   ArticleFontProvider,
@@ -18,10 +17,15 @@ import { ArticleInlineAds } from "./ArticleInlineAds";
 import { ArticleMetaRail } from "./ArticleMetaRail";
 import { ArticleRichText } from "./ArticleRichText";
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { CmsImageAd } from "@/components/ui/CmsImageAd";
+import type { SidebarAds } from "@/types/ads";
 import Link from "next/link";
 
 type ArticlePageProps = {
   article: Article;
+  ads?: SidebarAds | null;
+  /** Site name from settings, used as the ad image alt text. */
+  siteName: string;
 };
 
 function slugifyHeading(text: string) {
@@ -180,7 +184,7 @@ function Block({ block }: { block: ArticleBlock }) {
   }
 }
 
-export function ArticlePage({ article }: ArticlePageProps) {
+export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
   const relatedRail = article.seeAlso ?? [];
   const relatedMore = article.relatedPosts ?? [];
   const aiSummary: AiSummaryItem[] = (article.summaryPoints ?? []).map(
@@ -191,6 +195,12 @@ export function ArticlePage({ article }: ArticlePageProps) {
     <main id="main" className="article-page">
       <ArticleFontProvider>
         <div className="container">
+          <CmsImageAd
+            src={ads?.before_main_title}
+            href={ads?.before_main_title_link}
+            siteName={siteName}
+          />
+
           <header className="article-hero">
             <div className="article-hero__copy">
               <div className="article-title-sentinel" aria-hidden="true" />
@@ -244,16 +254,27 @@ export function ArticlePage({ article }: ArticlePageProps) {
 
             <aside className="article-rail" aria-label="यो पनि हेर्नुहोस्">
               <div className="article-rail__sticky">
-              <div className="article-rail__ads">
-                  {ARTICLE_RAIL_ADS.map((ad) => (
-                    <AdUnit
-                      key={ad.src}
-                      ad={ad}
-                      variant="aside"
-                      useMobileImage={false}
-                    />
-                  ))}
+              {ads?.before_additional_news_first_ad ||
+              ads?.before_additional_news_second_ad ? (
+                <div className="article-rail__ads">
+                  <CmsImageAd
+                    src={ads.before_additional_news_first_ad}
+                    href={ads.before_additional_news_first_ad_link}
+                    siteName={siteName}
+                    width={400}
+                    height={300}
+                    variant="aside"
+                  />
+                  <CmsImageAd
+                    src={ads.before_additional_news_second_ad}
+                    href={ads.before_additional_news_second_ad_link}
+                    siteName={siteName}
+                    width={400}
+                    height={300}
+                    variant="aside"
+                  />
                 </div>
+              ) : null}
                 {relatedRail.length ? (
                   <div className="article-rail__block">
                     <SectionTitle more={false}>यो पनि हेर्नुहोस्</SectionTitle>
@@ -283,6 +304,12 @@ export function ArticlePage({ article }: ArticlePageProps) {
               </div>
             </aside>
           </div>
+
+          <CmsImageAd
+            src={ads?.before_related_news_ad}
+            href={ads?.before_related_news_ad_link}
+            siteName={siteName}
+          />
 
           {relatedMore.length ? (
             <section

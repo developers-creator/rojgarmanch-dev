@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import type { Article, ArticleLink } from "@/data/articles";
 import type { NewsLink } from "@/types/news";
 import { getHomePageData, getSiteInfo } from "@/data/home";
-import { getNews } from "@/lib/api";
+import { getAds, getNews, getSettingsOrEmpty } from "@/lib/api";
 import { unwrapCmsWrappers } from "@/lib/cmsHtml";
 import { ArticlePage } from "@/components/article/ArticlePage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
@@ -70,7 +70,13 @@ export async function generateMetadata({
 
 export default async function ArticleRoute({ params }: PageProps) {
   const { slug } = await params;
-  const article = await loadArticle(slug);
+  const [article, ads, settings] = await Promise.all([
+    loadArticle(slug),
+    getAds()
+      .then((res) => res.data.sidebar_ads)
+      .catch(() => null),
+    getSettingsOrEmpty(),
+  ]);
   if (!article) notFound();
 
   const home = getHomePageData();
@@ -82,7 +88,11 @@ export default async function ArticleRoute({ params }: PageProps) {
       trending={home.trending}
       site={site}
     >
-      <ArticlePage article={article} />
+      <ArticlePage
+        article={article}
+        ads={ads}
+        siteName={settings.site_title}
+      />
     </SiteChrome>
   );
 }
