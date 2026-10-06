@@ -1,6 +1,4 @@
 import type { HomePageData } from "@/types/content";
-import { ADS } from "@/lib/ads";
-import { AdUnit } from "@/components/ui/AdUnit";
 import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import { BelowMenuAds } from "./BelowMenuAds";
 import { HighlightNews } from "./HighlightNews";
@@ -34,16 +32,6 @@ type HomePageProps = {
   longAds?: LongAds;
   siteName: string;
 };
-
-function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {
-  return (
-    <div className="ad-band">
-      <div className="container">
-        <AdUnit ad={ad} variant="banner" />
-      </div>
-    </div>
-  );
-}
 
 export function HomePage({
   data,
@@ -83,15 +71,20 @@ export function HomePage({
         <Publication />
       </div>
 
-      <BannerAd ad={ADS.hbl} />
+      <CmsBannerAd
+        image={longAds?.below_artha_ra_rojgar_ad}
+        href={longAds?.below_artha_ra_rojgar_ad_url}
+        siteName={siteName}
+      />
 
       {/* युट्युब — २:१ भिडियो + Shorts */}
       <Youtube data={data.youtube} />
 
-
-      <BannerAd ad={ADS.hbl} />
-
-     
+      <CmsBannerAd
+        image={longAds?.below_rojgar_tv_ad}
+        href={longAds?.below_rojgar_tv_ad_url}
+        siteName={siteName}
+      />
 
       {/* रोजगार — wraps बिजनेस */}
       <Rojgar>
@@ -99,16 +92,30 @@ export function HomePage({
         <VinimayaDar />
       </Rojgar>
 
-      <BannerAd ad={ADS.ncell} />
+      <CmsBannerAd
+        image={longAds?.below_business_ad}
+        href={longAds?.below_business_ad_url}
+        siteName={siteName}
+      />
+
+      
       {/* एनआरएन · प्रवास */}
       <Pravas />
 
-      <BannerAd ad={ADS.hardik} />
+      <CmsBannerAd
+        image={longAds?.below_nrn}
+        href={longAds?.below_nrn_url}
+        siteName={siteName}
+      />
 
       {/* इन्स्टा-स्टाइल स्टोरी */}
       <WebStories />
 
-      <BannerAd ad={ADS.hbl} />
+      <CmsBannerAd
+        image={longAds?.below_webstories}
+        href={longAds?.below_webstories_ad_url}
+        siteName={siteName}
+      />
 
       {/* अन्तर्वार्ता · फिचर */}
       <section className="container split split--iv-feature" aria-label="अन्तर्वार्ता र फिचर">
@@ -116,7 +123,11 @@ export function HomePage({
         <Feature />
       </section>
 
-      <BannerAd ad={ADS.ncell} />
+      <CmsBannerAd
+        image={longAds?.below_interview_ad}
+        href={longAds?.below_interview_ad_url}
+        siteName={siteName}
+      />
 
       {/* खेल · पर्यटन */}
       <section className="container duo-cats" aria-label="खेल र पर्यटन">
@@ -124,17 +135,29 @@ export function HomePage({
         <Paryatan />
       </section>
 
-      <BannerAd ad={ADS.hardik} />
+      <CmsBannerAd
+        image={longAds?.below_sports_news_ad}
+        href={longAds?.below_sports_news_ad_url}
+        siteName={siteName}
+      />
 
       {/* कला · साहित्य */}
       <Kala />
 
-      <BannerAd ad={ADS.hbl} />
+      <CmsBannerAd
+        image={longAds?.below_kala_sahitya_ad}
+        href={longAds?.below_kala_sahitya_ad_url}
+        siteName={siteName}
+      />
 
       {/* ब्लग / विचार */}
       <BlogBichar />
 
-      <BannerAd ad={ADS.ncell} />
+      <CmsBannerAd
+        image={longAds?.below_blog_and_opinions_ad}
+        href={longAds?.below_blog_and_opinions_ad_url}
+        siteName={siteName}
+      />
 
       {/* रमाइलो संसार · विश्व · English Headline */}
       <section className="container triple" aria-label="रमाइलो संसार विश्व">
@@ -142,6 +165,12 @@ export function HomePage({
         <Bishwa />
         <EnglishHeadline />
       </section>
+
+      <CmsBannerAd
+        image={longAds?.above_footer_ad}
+        href={longAds?.above_footer_ad_url}
+        siteName={siteName}
+      />
 
     </main>
   );

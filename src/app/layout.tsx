@@ -71,7 +71,7 @@ export default async function RootLayout({
       <head>
         <link rel="preload" as="image" href={LCP_IMAGE} fetchPriority="high" />
       </head>
-      <body className={mukta.className}>
+      <body className={mukta.className} suppressHydrationWarning>
         <ThemeProvider>
           <SettingsProvider settings={settings}>
             <UiProvider>{children}</UiProvider>
