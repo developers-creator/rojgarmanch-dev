@@ -1,6 +1,7 @@
 import type { HomePageData } from "@/types/content";
 import { ADS } from "@/lib/ads";
 import { AdUnit } from "@/components/ui/AdUnit";
+import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import { BelowMenuAds } from "./BelowMenuAds";
 import { HighlightNews } from "./HighlightNews";
 import { BlogBichar } from "./BlogBichar";
@@ -23,13 +24,14 @@ import { EnglishHeadline } from "./EnglishHeadline";
 import { TV } from "./TV";
 import { Youtube } from "./Youtube";
 import type { BannerNewsData } from "@/types/bannerNews";
-import type { BelowMenuHomeAd, LongHighlightAd } from "@/types/ads";
+import type { BelowMenuHomeAd, LongAds, LongHighlightAd } from "@/types/ads";
 
 type HomePageProps = {
   data: HomePageData;
   bannerNewsData?: BannerNewsData;
   belowMenuAds?: BelowMenuHomeAd[];
   highlightAds?: LongHighlightAd[];
+  longAds?: LongAds;
   siteName: string;
 };
 
@@ -48,6 +50,7 @@ export function HomePage({
   bannerNewsData,
   belowMenuAds,
   highlightAds,
+  longAds,
   siteName,
 }: HomePageProps) {
   return (
@@ -61,9 +64,19 @@ export function HomePage({
         siteName={siteName}
       />
       
+      <CmsBannerAd
+        image={longAds?.before_samachar}
+        href={longAds?.before_news_insert_url}
+        siteName={siteName}
+      />
+
       <Samachar />
 
-      <BannerAd ad={ADS.hardik} />
+      <CmsBannerAd
+        image={longAds?.below_news_ad}
+        href={longAds?.below_news_insert_url}
+        siteName={siteName}
+      />
 
       <div className="container artha-row">
         <ArthaRojgar />

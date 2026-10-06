@@ -27,6 +27,7 @@ export default async function Home() {
         bannerNewsData={bannerNews}
         belowMenuAds={ads?.header_ads.below_menu_home_page}
         highlightAds={ads?.long_ads.long_ads_for_highlight_news}
+        longAds={ads?.long_ads}
         siteName={settings.site_title || site.name}
       />
     </SiteChrome>

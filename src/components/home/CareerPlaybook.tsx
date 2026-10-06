@@ -1,14 +1,24 @@
-import { CAREER_PLAYBOOK_ADS } from "@/lib/ads";
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
-import { AdUnit } from "@/components/ui/AdUnit";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
 import { decodeEntities } from "@/lib/text";
-import { getCareerPlaybookCategories } from "@/lib/api/endpoints";
+import {
+  getAds,
+  getCareerPlaybookCategories,
+  getSettingsOrEmpty,
+} from "@/lib/api/endpoints";
 
 /** करियर प्लेबुक — tip column + stacked ads */
 export async function CareerPlaybook() {
-  const res = await getCareerPlaybookCategories().catch(() => null);
+  const [res, sidebarAds, settings] = await Promise.all([
+    getCareerPlaybookCategories().catch(() => null),
+    getAds()
+      .then((r) => r.data.sidebar_ads.top_sidebar_ads)
+      .catch(() => []),
+    getSettingsOrEmpty(),
+  ]);
+  const ads = sidebarAds.filter((ad) => ad.top_ads);
   const category = res?.data?.category;
   const posts = res?.data?.posts ?? [];
 
@@ -52,16 +62,41 @@ export async function CareerPlaybook() {
           </ul>
         </div>
 
-        <div className="career-playbook__ads" aria-label="विज्ञापन">
-          {CAREER_PLAYBOOK_ADS.map((ad) => (
-            <AdUnit
-              key={ad.src}
-              ad={ad}
-              variant="aside"
-              useMobileImage={false}
-            />
-          ))}
-        </div>
+        {ads.length ? (
+          <div className="career-playbook__ads" aria-label="विज्ञापन">
+            {ads.map((ad) => {
+              const image = (
+                <Image
+                  src={ad.top_ads}
+                  alt={settings.site_title}
+                  width={400}
+                  height={500}
+                  sizes="(max-width: 992px) 100vw, 400px"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              );
+              return (
+                <aside
+                  className="site-ad site-ad--aside"
+                  key={`${ad.top_ads}-${ad.top_link}`}
+                >
+                  {ad.top_link ? (
+                    <Link
+                      className="site-ad__frame"
+                      href={ad.top_link}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                    >
+                      {image}
+                    </Link>
+                  ) : (
+                    <span className="site-ad__frame">{image}</span>
+                  )}
+                </aside>
+              );
+            })}
+          </div>
+        ) : null}
       </aside>
     </Reveal>
   );

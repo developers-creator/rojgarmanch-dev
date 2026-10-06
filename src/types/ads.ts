@@ -54,7 +54,9 @@ export type LongHighlightAd = {
 
 export type LongAds = {
   long_ads_for_highlight_news: LongHighlightAd[];
-  below_news_ad: AdImage;
+  before_samachar: UploadedAd | false;
+  before_news_insert_url: string;
+  below_news_ad: UploadedAd | false;
   below_news_insert_url: string;
   below_artha_ra_rojgar_ad: AdImage;
   below_artha_ra_rojgar_ad_url: string;

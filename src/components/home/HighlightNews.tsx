@@ -1,6 +1,7 @@
 /** मुख्य समाचार — Highlight news */
 import type { HighlightStory } from "@/types/content";
 import Image from "next/image";
+import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import Link from "next/link";
 import type { LongHighlightAd } from "@/types/ads";
 import type { BannerNewsData, BannerNewsItem } from "@/types/bannerNews";
@@ -28,9 +29,6 @@ function toHighlightStory(item: BannerNewsItem): HighlightStory {
     authorAvatar: item.author_image ?? undefined,
   };
 }
-
-/** The CMS sends the 150px thumbnail; drop the "-150x100" suffix for the original. */
-const fullSizeUrl = (url: string) => url.replace(/-\d+x\d+(?=\.\w+$)/, "");
 
 function HighlightItem({
   story,
@@ -90,46 +88,6 @@ function HighlightItem({
   );
 }
 
-function HighlightAd({
-  ad,
-  siteName,
-}: {
-  ad: LongHighlightAd;
-  siteName: string;
-}) {
-  const image = (
-    <Image
-      src={fullSizeUrl(ad.long_highlight_upload_ad.url)}
-      alt={siteName}
-      width={1100}
-      height={100}
-      sizes="(max-width: 1100px) 100vw, 1100px"
-      style={{ width: "100%", height: "auto" }}
-    />
-  );
-
-  return (
-    <div className="ad-band">
-      <div className="container">
-        <aside className="site-ad site-ad--banner" aria-label="विज्ञापन">
-          {ad.long_highlight_insert_url ? (
-            <Link
-              className="site-ad__frame"
-              href={ad.long_highlight_insert_url}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-            >
-              {image}
-            </Link>
-          ) : (
-            <span className="site-ad__frame">{image}</span>
-          )}
-        </aside>
-      </div>
-    </div>
-  );
-}
-
 export function HighlightNews({
   bannerNewsData,
   ads = [],
@@ -168,7 +126,11 @@ export function HighlightNews({
             </div>
           </div>
           {cmsAds[index] ? (
-            <HighlightAd ad={cmsAds[index]} siteName={siteName} />
+            <CmsBannerAd
+              image={cmsAds[index].long_highlight_upload_ad}
+              href={cmsAds[index].long_highlight_insert_url}
+              siteName={siteName}
+            />
           ) : null}
         </div>
       ))}
