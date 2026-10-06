@@ -7,15 +7,15 @@ import { Icon, socialIconName } from "@/components/ui/Icon";
 import Link from "next/link";
 import { useSettings } from "@/components/providers/SettingsProvider";
 import { SocialHandle } from "@/types/settings";
-
+import type { MenuItem } from "@/types/menu";
 
 type FooterProps = {
   site: SiteInfo;
+  footerMenu?: MenuItem[];
 };
 
-export function Footer({ site }: FooterProps) {
+export function Footer({ site, footerMenu = [] }: FooterProps) {
   const [year, setYear] = useState("२०२६");
-
 
   const { 
     darta_no, rojgar_insert_map_url, phone, email, location, social_handles, white_logo, dark_logo,
@@ -26,6 +26,17 @@ export function Footer({ site }: FooterProps) {
     columnists,
     correspondents,
   } = useSettings();
+
+  // Prefer the CMS footer menu; fall back to the static links if it is empty.
+  const quickLinks: Pick<MenuItem, "id" | "title" | "url" | "target">[] =
+    footerMenu.length
+      ? footerMenu
+      : site.quickLinks.map((l, i) => ({
+          id: i,
+          title: l.label,
+          url: l.href,
+          target: "",
+        }));
 
   const team_members = [
     {
@@ -119,9 +130,15 @@ export function Footer({ site }: FooterProps) {
               क्विक लिंक
             </h3>
             <ul className="footer__quick">
-              {site.quickLinks.map((link) => (
-                <li key={`${link.href}-${link.label}`}>
-                  <Link href={link.href}>{link.label}</Link>
+              {quickLinks.map((link) => (
+                <li key={link.id}>
+                  <Link
+                    href={link.url}
+                    target={link.target || undefined}
+                    rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+                  >
+                    {link.title}
+                  </Link>
                 </li>
               ))}
             </ul>

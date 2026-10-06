@@ -3,6 +3,7 @@ import type { Settings, SettingsData } from "@/types/settings";
 import { apiFetch } from "./client";
 import type { NewsDetailData, NewsCategoryData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
 import type { ContactData } from "@/types/contact";
+import type { MenuData } from "@/types/menu";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
 export const ENDPOINTS = {
@@ -30,7 +31,8 @@ export const ENDPOINTS = {
   ramailoSansar: "/category/fun-world?per_page=4",
   world: "/category/world?per_page=4",
   englishHeadline: "/category/english-headline?per_page=4",
-
+  headerMenu: "/menu/menu-1",
+  footerMenu: "/menu/footer-menu",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -150,6 +152,14 @@ export const getWorld = () =>
 // englishHeadline
 export const getEnglishHeadline = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.englishHeadline);
+
+// headerMenu
+export const getHeaderMenu = () =>
+  apiFetch<MenuData>(ENDPOINTS.headerMenu);
+
+// footerMenu
+export const getFooterMenu = () =>
+  apiFetch<MenuData>(ENDPOINTS.footerMenu);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

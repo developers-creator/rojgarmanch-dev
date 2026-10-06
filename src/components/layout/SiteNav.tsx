@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Post } from "@/types/content";
+import type { MenuItem } from "@/types/menu";
 import { getNavBarLinks } from "@/lib/nav";
 import { formatAdBadge, formatBsBadge } from "@/lib/dates";
 import { useTheme } from "@/components/providers/ThemeProvider";
@@ -14,12 +15,35 @@ import { useSettings } from "@/components/providers/SettingsProvider";
 type SiteNavProps = {
   flashNews: Post[];
   trending: Post[];
+  headerMenu?: MenuItem[];
 };
 
 type NotifyTab = "taja" | "trending";
 
-export function SiteNav({ flashNews, trending }: SiteNavProps) {
+const pathOf = (url: string) => {
+  try {
+    return new URL(url, "http://x").pathname.replace(/(.)\/+$/, "$1");
+  } catch {
+    return url;
+  }
+};
+
+export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) {
   const { dark_logo, white_logo } = useSettings();
+  // Prefer the CMS header menu; fall back to the static nav links if it is empty.
+  const navLinks: { id: string | number; href: string; label: string; target?: string }[] =
+    headerMenu.length
+      ? headerMenu.map((m) => ({
+          id: m.id,
+          href: m.url,
+          label: m.title,
+          target: m.target,
+        }))
+      : getNavBarLinks().map((l) => ({
+          id: l.href,
+          href: l.href,
+          label: l.labelNe,
+        }));
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -374,20 +398,22 @@ export function SiteNav({ flashNews, trending }: SiteNavProps) {
               </div>
 
               <nav className="nav" aria-label="मुख्य मेनु">
-                {getNavBarLinks().map((link) => {
+                {navLinks.map((link) => {
+                  const linkPath = pathOf(link.href);
                   const isActive =
-                    link.href === "/"
+                    linkPath === "/"
                       ? pathname === "/"
-                      : pathname === link.href ||
-                        pathname.startsWith(`${link.href}/`);
+                      : pathname === linkPath ||
+                        pathname.startsWith(`${linkPath}/`);
                   return (
                     <Link
                       className={`nav__link${isActive ? " is-active" : ""}`}
                       href={link.href}
                       aria-current={isActive ? "page" : undefined}
-                      key={link.href}
+                      target={link.target || undefined}
+                      key={link.id}
                     >
-                      {link.labelNe}
+                      {link.label}
                     </Link>
                   );
                 })}

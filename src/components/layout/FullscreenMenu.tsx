@@ -3,8 +3,10 @@
 import { useRef, useState } from "react";
 import { getNavBarLinks, getNavMoreLinks } from "@/lib/nav";
 import { useUi } from "@/components/providers/UiProvider";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { Icon, socialIconName, type IconName } from "@/components/ui/Icon";
 import Link from "next/link";
+import { useSettings } from "../providers/SettingsProvider";
+import { SocialHandle } from "@/types/settings";
 
 const searchDefaults = ["रोजगार", "सीप", "लोक सेवा", "वैदेशिक रोजगार", "आईटी", "तालिम"];
 
@@ -21,6 +23,8 @@ export function FullscreenMenu() {
   const [searchTerms, setSearchTerms] = useState(searchDefaults);
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { social_handles } = useSettings();
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
@@ -153,16 +157,16 @@ export function FullscreenMenu() {
     <div className="fs-menu__socials-wrapper">
       <span className="fs-menu__socials-title">Follow Us:</span>
       <div className="fs-menu__socials">
-        {socialLinks.map((item) => (
+        {social_handles.map((item: SocialHandle) => (
           <a
-            key={item.name}
-            href={item.href}
+            key={item.choose_media}
+            href={item.insert_url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={item.name}
+            aria-label={item.choose_media}
             className="fs-menu__social-link"
           >
-            <Icon name={item.icon} size={18} />
+            <Icon name={socialIconName(item.choose_media)} size={18} />
           </a>
         ))}
       </div>
