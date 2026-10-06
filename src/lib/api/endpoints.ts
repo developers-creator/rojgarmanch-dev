@@ -1,7 +1,7 @@
 import type { BannerNewsData } from "@/types/bannerNews";
 import type { Settings, SettingsData } from "@/types/settings";
 import { apiFetch } from "./client";
-import type { NewsDetailData, NewsCategoryData, SearchData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
+import type { NewsDetailData, NewsCategoryData, SearchData, TrendingData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
 import type { ContactData } from "@/types/contact";
 import type { MenuData } from "@/types/menu";
 
@@ -35,6 +35,7 @@ export const ENDPOINTS = {
   footerMenu: "/menu/footer-menu",
   additionalMenu: "/menu/additional-menu",
   search: "/search",
+  trending: "/trending",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -200,3 +201,6 @@ export const searchNews = (q: string, page = 1, perPage = 10) =>
     `${ENDPOINTS.search}?q=${encodeURIComponent(q)}&page=${page}&per_page=${perPage}`,
     { revalidate: 60 },
   );
+
+// Trending (popular) news
+export const getTrending = () => apiFetch<TrendingData>(ENDPOINTS.trending);

@@ -223,7 +223,7 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
   }, [notifyOpen, isDesktop]);
 
   const renderNotifyPanel = (mode: "dropdown" | "fullscreen") => {
-    const activeList = flashNews && flashNews.length > 0 ? flashNews : trending;
+    const activeList = notifyTab === "trending" ? trending : flashNews;
 
     return (
       <div
@@ -282,7 +282,11 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
               {activeList && activeList.length > 0 ? (
                 activeList.map((item) => (
                   <li key={item.id} className="notify__item">
-                    <Link className="notify__link" href={item.href || "#"}>
+                    <Link
+                      className="notify__link"
+                      href={item.href || "#"}
+                      onClick={closeNotify}
+                    >
                       {item.imageUrl ? (
                         <img
                           className="notify__thumb"

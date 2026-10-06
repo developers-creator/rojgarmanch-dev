@@ -8,8 +8,15 @@ import { BackToTop } from "./BackToTop";
 import { Footer } from "./Footer";
 import Link from "next/link";
 import { toFrontUrl } from "@/lib/url";
+import { searchToPost, toPost } from "@/lib/posts";
 import type { MenuItem } from "@/types/menu";
-import { getAdditionalMenu, getFooterMenu, getHeaderMenu } from "@/lib/api/endpoints";
+import {
+  getAdditionalMenu,
+  getFooterMenu,
+  getHeaderMenu,
+  getNewsCategories,
+  getTrending,
+} from "@/lib/api/endpoints";
 
 type SiteChromeProps = {
   children: ReactNode;
@@ -30,7 +37,7 @@ export async function SiteChrome({
   trending,
   site,
 }: SiteChromeProps) {
-  const [headerMenu, additionalMenu, footerMenu] = await Promise.all([
+  const [headerMenu, additionalMenu, footerMenu, latest, popular] = await Promise.all([
     getHeaderMenu()
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []),
@@ -39,6 +46,12 @@ export async function SiteChrome({
       .catch(() => []),
     getFooterMenu()
       .then((res) => res.data.items.map(toFrontItem))
+      .catch(() => []),
+    getNewsCategories()
+      .then((res) => (res.data?.posts ?? []).map(toPost))
+      .catch(() => []),
+    getTrending()
+      .then((res) => res.data.map(searchToPost))
       .catch(() => []),
   ]);
 
@@ -49,8 +62,8 @@ export async function SiteChrome({
       </Link>
       <Masthead domain={site.domain} />
       <SiteNav
-        flashNews={flashNews}
-        trending={trending}
+        flashNews={latest.length ? latest : flashNews}
+        trending={popular.length ? popular : trending}
         headerMenu={headerMenu}
       />
       <FullscreenMenu

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { getNavBarLinks, getNavMoreLinks } from "@/lib/nav";
 import { useUi } from "@/components/providers/UiProvider";
@@ -40,18 +40,28 @@ export function FullscreenMenu({
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const wasPending = useRef(false);
+
+  // Keep the menu open (showing a spinner) until the results page has rendered.
+  useEffect(() => {
+    if (wasPending.current && !isPending) closeMenu();
+    wasPending.current = isPending;
+  }, [isPending, closeMenu]);
 
   const { social_handles } = useSettings();
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
+    if (isPending) return;
     const q = searchQuery.trim();
     if (!q) return inputRef.current?.focus();
     setSearchTerms((items) =>
       [q, ...items.filter((item) => item !== q)].slice(0, 8)
     );
-    closeMenu();
-    router.push(`/search?q=${encodeURIComponent(q)}`);
+    startTransition(() => {
+      router.push(`/search?q=${encodeURIComponent(q)}`);
+    });
   };
 
   if (!menuOpen) return null;
@@ -121,7 +131,16 @@ export function FullscreenMenu({
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
             />
-            <button className="search-box__submit" type="submit" aria-label="Search">
+            <button
+              className="search-box__submit"
+              type="submit"
+              aria-label="Search"
+              aria-busy={isPending}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <span className="search-spinner" aria-hidden="true" />
+              ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -138,6 +157,7 @@ export function FullscreenMenu({
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
+              )}
             </button>
           </form>
 

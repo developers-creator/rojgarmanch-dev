@@ -44,6 +44,8 @@ export type NewsCategoryPost = {
   video_url?: string | null;
   reel_video_url?: string | null;
   sub_heading: string;
+  /** Nepali date label, e.g. "अशोज ९, २०८३". */
+  date?: string;
 };
 
 export type Pagination = {
@@ -140,4 +142,10 @@ export type SearchData = {
   message: string;
   data: SearchResult[];
   pagination: Pagination;
+};
+
+export type TrendingData = {
+  success: boolean;
+  message: string;
+  data: SearchResult[];
 };
