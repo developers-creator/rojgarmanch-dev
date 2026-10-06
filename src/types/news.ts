@@ -12,6 +12,8 @@ export type NewsDetail = {
   featured_image: string | null;
   excerpt: string;
   content: string;
+  category_name: string;
+  category_slug: string;
   /** Keys are sparse ("0", "2", "3"), so treat as a record, not an array. */
   summary_points: Record<string, string> | null;
   date: string;

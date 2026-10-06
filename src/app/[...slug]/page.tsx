@@ -37,6 +37,8 @@ async function loadArticle(segments: string[]): Promise<Article | null> {
       author: news.author_name ?? undefined,
       authorAvatar: news.author_image ?? undefined,
       dateLabel: news.date,
+      category: news.category_name,
+      categorySlug: news.category_slug,
       readMinutes: 3,
       topics: [],
       body: [{ type: "html", html: unwrapCmsWrappers(news.content) }],

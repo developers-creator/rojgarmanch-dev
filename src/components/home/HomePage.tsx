@@ -1,6 +1,7 @@
 import type { HomePageData } from "@/types/content";
 import { ADS } from "@/lib/ads";
 import { AdUnit } from "@/components/ui/AdUnit";
+import { BelowMenuAds } from "./BelowMenuAds";
 import { HighlightNews } from "./HighlightNews";
 import { BlogBichar } from "./BlogBichar";
 import { WebStories } from "./WebStories";
@@ -22,10 +23,14 @@ import { EnglishHeadline } from "./EnglishHeadline";
 import { TV } from "./TV";
 import { Youtube } from "./Youtube";
 import type { BannerNewsData } from "@/types/bannerNews";
+import type { BelowMenuHomeAd, LongHighlightAd } from "@/types/ads";
 
 type HomePageProps = {
   data: HomePageData;
   bannerNewsData?: BannerNewsData;
+  belowMenuAds?: BelowMenuHomeAd[];
+  highlightAds?: LongHighlightAd[];
+  siteName: string;
 };
 
 function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {
@@ -38,11 +43,23 @@ function BannerAd({ ad }: { ad: (typeof ADS)[keyof typeof ADS] }) {
   );
 }
 
-export function HomePage({ data, bannerNewsData }: HomePageProps) {
+export function HomePage({
+  data,
+  bannerNewsData,
+  belowMenuAds,
+  highlightAds,
+  siteName,
+}: HomePageProps) {
   return (
     <main id="main">
+      <BelowMenuAds ads={belowMenuAds} siteName={siteName} />
+
       {/* मुख्य समाचार */}
-      <HighlightNews bannerNewsData={bannerNewsData} />
+      <HighlightNews
+        bannerNewsData={bannerNewsData}
+        ads={highlightAds}
+        siteName={siteName}
+      />
       
       <Samachar />
 

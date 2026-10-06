@@ -12,6 +12,7 @@ import { searchToPost, toPost } from "@/lib/posts";
 import type { MenuItem } from "@/types/menu";
 import {
   getAdditionalMenu,
+  getAds,
   getFooterMenu,
   getHeaderMenu,
   getNewsCategories,
@@ -55,12 +56,15 @@ export async function SiteChrome({
       .catch(() => []),
   ]);
 
+  const headerAds = await getAds()
+    .then((res) => res.data.header_ads)
+    .catch(() => null);
   return (
     <>
       {/* <Link className="skip-link" href="#main">
         मुख्य सामग्रीमा जानुहोस्
       </Link> */}
-      <Masthead domain={site.domain} />
+      <Masthead domain={site.domain} headerAds={headerAds} />
       <SiteNav
         flashNews={latest.length ? latest : flashNews}
         trending={popular.length ? popular : trending}

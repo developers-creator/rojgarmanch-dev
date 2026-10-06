@@ -289,7 +289,11 @@ export function ArticlePage({ article }: ArticlePageProps) {
               className="article-more"
               aria-labelledby="article-more-title"
             >
-              <SectionTitle href="/category/samachar" moreLabel="सबै हेर्नुहोस्">
+              <SectionTitle
+                href={`/category/${article.categorySlug}`}
+                more={Boolean(article.categorySlug)}
+                moreLabel="सबै हेर्नुहोस्"
+              >
                 <span id="article-more-title">सम्बन्धित समाचार</span>
               </SectionTitle>
 

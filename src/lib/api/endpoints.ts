@@ -4,6 +4,7 @@ import { apiFetch } from "./client";
 import type { NewsDetailData, NewsCategoryData, SearchData, TrendingData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
 import type { ContactData } from "@/types/contact";
 import type { MenuData } from "@/types/menu";
+import type { AdsData } from "@/types/ads";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
 export const ENDPOINTS = {
@@ -36,6 +37,7 @@ export const ENDPOINTS = {
   additionalMenu: "/menu/additional-menu",
   search: "/search",
   trending: "/trending",
+  ads: "/ads",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -167,6 +169,10 @@ export const getFooterMenu = () =>
 // additionalMenu
 export const getAdditionalMenu = () =>
   apiFetch<MenuData>(ENDPOINTS.additionalMenu);
+
+// ads
+export const getAds = () =>
+  apiFetch<AdsData>(ENDPOINTS.ads);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

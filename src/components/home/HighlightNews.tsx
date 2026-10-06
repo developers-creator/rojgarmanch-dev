@@ -1,13 +1,17 @@
 /** मुख्य समाचार — Highlight news */
 import type { HighlightStory } from "@/types/content";
-import { ADS } from "@/lib/ads";
-import { AdUnit } from "@/components/ui/AdUnit";
+import Image from "next/image";
 import Link from "next/link";
+import type { LongHighlightAd } from "@/types/ads";
 import type { BannerNewsData, BannerNewsItem } from "@/types/bannerNews";
 
 
 type HighlightNewsProps = {
   bannerNewsData?: BannerNewsData;
+  /** CMS long ads; ad N is shown once, under news N. */
+  ads?: LongHighlightAd[];
+  /** Site name from settings, used as the ad image alt text. */
+  siteName: string;
 };
 
 function toHighlightStory(item: BannerNewsItem): HighlightStory {
@@ -25,7 +29,8 @@ function toHighlightStory(item: BannerNewsItem): HighlightStory {
   };
 }
 
-const HIGHLIGHT_ADS = [ADS.ncell, ADS.worldlink, ADS.hardik] as const;
+/** The CMS sends the 150px thumbnail; drop the "-150x100" suffix for the original. */
+const fullSizeUrl = (url: string) => url.replace(/-\d+x\d+(?=\.\w+$)/, "");
 
 function HighlightItem({
   story,
@@ -50,13 +55,12 @@ function HighlightItem({
 
       <div className="highlight__meta">
         {story.authorAvatar ? (
-          <img
+          <Image
             className="highlight__avatar"
             src={story.authorAvatar}
-            alt=""
+            alt={story.author ?? ""}
             width={28}
             height={28}
-            decoding="async"
             loading={priority ? "eager" : "lazy"}
           />
         ) : null}
@@ -67,15 +71,14 @@ function HighlightItem({
 
       {showImage && story.imageUrl ? (
         <Link className="highlight__media" href={story.href}>
-          <img
+          <Image
             className="img-cover"
             src={story.imageUrl}
             alt={story.imageAlt || story.title}
             width={960}
             height={540}
-            decoding="async"
-            loading={priority ? "eager" : "lazy"}
-            fetchPriority={priority ? "high" : "auto"}
+            sizes="(max-width: 992px) 100vw, 960px"
+            preload={priority}
           />
         </Link>
       ) : null}
@@ -87,7 +90,52 @@ function HighlightItem({
   );
 }
 
-export function HighlightNews({ bannerNewsData }: HighlightNewsProps) {
+function HighlightAd({
+  ad,
+  siteName,
+}: {
+  ad: LongHighlightAd;
+  siteName: string;
+}) {
+  const image = (
+    <Image
+      src={fullSizeUrl(ad.long_highlight_upload_ad.url)}
+      alt={siteName}
+      width={1100}
+      height={100}
+      sizes="(max-width: 1100px) 100vw, 1100px"
+      style={{ width: "100%", height: "auto" }}
+    />
+  );
+
+  return (
+    <div className="ad-band">
+      <div className="container">
+        <aside className="site-ad site-ad--banner" aria-label="विज्ञापन">
+          {ad.long_highlight_insert_url ? (
+            <Link
+              className="site-ad__frame"
+              href={ad.long_highlight_insert_url}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+            >
+              {image}
+            </Link>
+          ) : (
+            <span className="site-ad__frame">{image}</span>
+          )}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+export function HighlightNews({
+  bannerNewsData,
+  ads = [],
+  siteName,
+}: HighlightNewsProps) {
+  const cmsAds = ads.filter((ad) => ad.long_highlight_upload_ad?.url);
   const [first, ...rest] = (bannerNewsData?.data ?? []).map(toHighlightStory);
   if (!first) return null;
 
@@ -119,14 +167,9 @@ export function HighlightNews({ bannerNewsData }: HighlightNewsProps) {
               />
             </div>
           </div>
-          <div className="ad-band">
-            <div className="container">
-              <AdUnit
-                ad={HIGHLIGHT_ADS[index % HIGHLIGHT_ADS.length]}
-                variant="banner"
-              />
-            </div>
-          </div>
+          {cmsAds[index] ? (
+            <HighlightAd ad={cmsAds[index]} siteName={siteName} />
+          ) : null}
         </div>
       ))}
     </section>

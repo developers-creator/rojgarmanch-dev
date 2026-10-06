@@ -42,6 +42,8 @@ export type Article = Post & {
   /** "यो पनि हेर्नुहोस्" rail beside the article. */
   seeAlso?: ArticleLink[];
   readMinutes: number;
+  /** CMS category slug, used for the "सबै हेर्नुहोस्" archive link. */
+  categorySlug?: string;
   authorAvatar?: string;
   deck?: string;
   views?: number;

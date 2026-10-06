@@ -2,16 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { formatAdBadge, formatBsBadge } from "@/lib/dates";
-import { ADS } from "@/lib/ads";
 import Link from "next/link";
 import { useSettings } from "@/components/providers/SettingsProvider";
+import { HeaderAds } from "@/types/ads";
 
 
 type MastheadProps = {
   domain: string;
+  headerAds?: HeaderAds | null;
 };
 
-export function Masthead({ domain }: MastheadProps) {
+/** Display size of the header banner (matches the uploaded HBL creative). */
+const HEADER_AD_WIDTH = 810;
+const HEADER_AD_HEIGHT = 100;
+
+export function Masthead({ domain, headerAds }: MastheadProps) {
   const [dates, setDates] = useState({ ad: "—", bs: "—" });
   const [showBs, setShowBs] = useState(true);
 
@@ -21,7 +26,23 @@ export function Masthead({ domain }: MastheadProps) {
     return () => window.clearInterval(id);
   }, []);
 
-  const { dark_logo, white_logo } = useSettings();
+  const { dark_logo, white_logo, site_title } = useSettings();
+  const adImage = headerAds?.header_ad_right || null;
+  const adLink = headerAds?.header_ad_right_link || "";
+
+  const adPicture = adImage ? (
+    <picture>
+      <source media="(max-width: 767px)" srcSet="/images/mobile-ad.gif" />
+      <img
+        src={adImage}
+        alt={site_title}
+        width={HEADER_AD_WIDTH}
+        height={HEADER_AD_HEIGHT}
+        decoding="async"
+        loading="lazy"
+      />
+    </picture>
+  ) : null;
 
   return (
     <header className="masthead">
@@ -78,19 +99,17 @@ export function Masthead({ domain }: MastheadProps) {
             </div>
           </div>
         </div>
-        <div className="masthead__ads" aria-label="विज्ञापन">
-          <picture>
-            <source media="(max-width: 767px)" srcSet="/images/mobile-ad.gif" />
-            <img
-              src={ADS.hbl.src}
-              alt={ADS.hbl.alt}
-              width={ADS.hbl.width}
-              height={ADS.hbl.height}
-              decoding="async"
-              loading="lazy"
-            />
-          </picture>
-        </div>
+        {adPicture ? (
+          <div className="masthead__ads" aria-label="विज्ञापन">
+            {adLink ? (
+              <Link href={adLink} target="_blank" rel="noopener noreferrer sponsored">
+                {adPicture}
+              </Link>
+            ) : (
+              adPicture
+            )}
+          </div>
+        ) : null}
       </div>
     </header>
   );
