@@ -9,7 +9,7 @@ import { Footer } from "./Footer";
 import Link from "next/link";
 import { toFrontUrl } from "@/lib/url";
 import type { MenuItem } from "@/types/menu";
-import { getFooterMenu, getHeaderMenu } from "@/lib/api/endpoints";
+import { getAdditionalMenu, getFooterMenu, getHeaderMenu } from "@/lib/api/endpoints";
 
 type SiteChromeProps = {
   children: ReactNode;
@@ -30,8 +30,11 @@ export async function SiteChrome({
   trending,
   site,
 }: SiteChromeProps) {
-  const [headerMenu, footerMenu] = await Promise.all([
+  const [headerMenu, additionalMenu, footerMenu] = await Promise.all([
     getHeaderMenu()
+      .then((res) => res.data.items.map(toFrontItem))
+      .catch(() => []),
+    getAdditionalMenu()
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []),
     getFooterMenu()
@@ -50,7 +53,10 @@ export async function SiteChrome({
         trending={trending}
         headerMenu={headerMenu}
       />
-      <FullscreenMenu />
+      <FullscreenMenu
+        headerMenu={headerMenu}
+        additionalMenu={additionalMenu}
+      />
       <SearchOverlay />
       {children}
       <Footer site={site} footerMenu={footerMenu} />

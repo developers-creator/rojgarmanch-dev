@@ -33,6 +33,7 @@ export const ENDPOINTS = {
   englishHeadline: "/category/english-headline?per_page=4",
   headerMenu: "/menu/menu-1",
   footerMenu: "/menu/footer-menu",
+  additionalMenu: "/menu/additional-menu",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -160,6 +161,10 @@ export const getHeaderMenu = () =>
 // footerMenu
 export const getFooterMenu = () =>
   apiFetch<MenuData>(ENDPOINTS.footerMenu);
+
+// additionalMenu
+export const getAdditionalMenu = () =>
+  apiFetch<MenuData>(ENDPOINTS.additionalMenu);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

@@ -7,18 +7,33 @@ import { Icon, socialIconName, type IconName } from "@/components/ui/Icon";
 import Link from "next/link";
 import { useSettings } from "../providers/SettingsProvider";
 import { SocialHandle } from "@/types/settings";
+import type { MenuItem } from "@/types/menu";
 
 const searchDefaults = ["रोजगार", "सीप", "लोक सेवा", "वैदेशिक रोजगार", "आईटी", "तालिम"];
 
-const socialLinks: { name: string; href: string; icon: IconName }[] = [
-  { name: "Facebook", href: "https://facebook.com", icon: "facebook" },
-  { name: "X (Twitter)", href: "https://twitter.com", icon: "x" },
-  { name: "Instagram", href: "https://instagram.com", icon: "instagram" },
-  { name: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
-  { name: "YouTube", href: "https://youtube.com", icon: "youtube" },
-];
+type FullscreenMenuProps = {
+  headerMenu?: MenuItem[];
+  additionalMenu?: MenuItem[];
+};
 
-export function FullscreenMenu() {
+type FsLink = { id: string | number; href: string; label: string; sub: string; target?: string };
+
+const fromMenu = (items: MenuItem[]): FsLink[] =>
+  items.map((m) => ({
+    id: m.id,
+    href: m.url,
+    label: m.title,
+    sub: m.description,
+    target: m.target,
+  }));
+
+const fromStatic = (links: ReturnType<typeof getNavBarLinks>): FsLink[] =>
+  links.map((l) => ({ id: l.href, href: l.href, label: l.labelNe, sub: l.labelEn }));
+
+export function FullscreenMenu({
+  headerMenu = [],
+  additionalMenu = [],
+}: FullscreenMenuProps) {
   const { menuOpen, closeMenu } = useUi();
   const [searchTerms, setSearchTerms] = useState(searchDefaults);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,8 +53,13 @@ export function FullscreenMenu() {
 
   if (!menuOpen) return null;
 
-  const barLinks = getNavBarLinks();
-  const moreLinks = getNavMoreLinks();
+  // Prefer the CMS menus; fall back to the static links when a menu is empty.
+  const barLinks = headerMenu.length
+    ? fromMenu(headerMenu)
+    : fromStatic(getNavBarLinks());
+  const moreLinks = additionalMenu.length
+    ? fromMenu(additionalMenu)
+    : fromStatic(getNavMoreLinks());
 
   return (
     <div
@@ -124,11 +144,12 @@ export function FullscreenMenu() {
                 className="fs-menu__link"
                 href={link.href}
                 style={{ ["--i" as string]: index }}
+                target={link.target || undefined}
                 onClick={closeMenu}
-                key={link.href}
+                key={link.id}
               >
-                <span>{link.labelNe}</span>
-                <small>{link.labelEn}</small>
+                <span>{link.label}</span>
+                <small>{link.sub}</small>
               </Link>
             ))}
             {moreLinks.length ? (
@@ -139,11 +160,12 @@ export function FullscreenMenu() {
                     className="fs-menu__link"
                     href={link.href}
                     style={{ ["--i" as string]: barLinks.length + index }}
+                    target={link.target || undefined}
                     onClick={closeMenu}
-                    key={link.href}
+                    key={link.id}
                   >
-                    <span>{link.labelNe}</span>
-                    <small>{link.labelEn}</small>
+                    <span>{link.label}</span>
+                    <small>{link.sub}</small>
                   </Link>
                 ))}
               </>
