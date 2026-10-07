@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getHomePageData, getSiteInfo } from "@/data/home";
-import { getContactContent } from "@/data/pages";
 import { ContactPage } from "@/components/pages/ContactPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
 export default function ContactRoute() {
   const home = getHomePageData();
   const site = getSiteInfo();
-  const content = getContactContent();
 
   return (
     <SiteChrome
@@ -22,7 +20,7 @@ export default function ContactRoute() {
       trending={home.trending}
       site={site}
     >
-      <ContactPage content={content} site={site} />
+      <ContactPage />
     </SiteChrome>
   );
 }

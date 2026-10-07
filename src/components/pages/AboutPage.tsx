@@ -1,41 +1,46 @@
-import type { AboutContent } from "@/data/pages";
 import { Reveal } from "@/components/motion/Reveal";
+import { getAbout } from "@/lib/api/endpoints";
 
-type AboutPageProps = {
-  content: AboutContent;
-};
+export async function AboutPage() {
+  const aboutData = (await getAbout().catch(() => null))?.data;
+  const payload = aboutData?.payload;
+  // The API content starts with its own <h1>; the page heading already renders the title.
+  const lead = (payload?.content ?? "").replace(/<h1[\s\S]*?<\/h1>/i, "").trim();
+  const values = payload?.why_us_details ?? [];
 
-export function AboutPage({ content }: AboutPageProps) {
   return (
     <main id="main" className="site-page about-page">
       <div className="container">
         <div className="about-layout">
           <header className="about-head">
-            <h1 id="about-title">{content.titleNe}</h1>
-            <p className="about-head__lead">{content.lead}</p>
+            <h1 id="about-title">{aboutData?.title}</h1>
+            {lead ? (
+              <div
+                className="about-head__lead"
+                dangerouslySetInnerHTML={{ __html: lead }}
+              />
+            ) : null}
           </header>
 
-          <section className="about-body" aria-label="हाम्रो कथा">
-            {content.story.map((block, index) => (
-              <Reveal
-                key={block.title}
-                className={`about-body__block${index ? ` reveal-delay-${Math.min(index, 3)}` : ""}`}
-              >
-                <h2>{block.title}</h2>
-                {block.paragraphs.map((paragraph) => (
-                  <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                ))}
+          {payload?.about_main_description ? (
+            <section className="about-body" aria-label="हाम्रो कथा">
+              <Reveal className="about-body__block">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: payload.about_main_description,
+                  }}
+                />
               </Reveal>
-            ))}
-          </section>
+            </section>
+          ) : null}
         </div>
 
-        {content.values.length > 0 ? (
+        {values.length > 0 ? (
           <ul className="about-points" aria-label="हाम्रा मूल्यहरू">
-            {content.values.map((item) => (
-              <li key={item.title}>
-                <strong>{item.title}</strong>
-                <span>{item.text}</span>
+            {values.map((item) => (
+              <li key={item.why_title}>
+                <strong>{item.why_title}</strong>
+                <span>{item.why_short_description.trim()}</span>
               </li>
             ))}
           </ul>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getHomePageData, getSiteInfo } from "@/data/home";
-import { getAboutContent } from "@/data/pages";
 import { AboutPage } from "@/components/pages/AboutPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
 export default function AboutRoute() {
   const home = getHomePageData();
   const site = getSiteInfo();
-  const content = getAboutContent();
 
   return (
     <SiteChrome
@@ -22,7 +20,7 @@ export default function AboutRoute() {
       trending={home.trending}
       site={site}
     >
-      <AboutPage content={content} />
+      <AboutPage />
     </SiteChrome>
   );
 }

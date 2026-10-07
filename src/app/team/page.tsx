@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getHomePageData, getSiteInfo } from "@/data/home";
-import { getTeamMembers } from "@/data/pages";
 import { TeamPage } from "@/components/pages/TeamPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
@@ -13,7 +12,6 @@ export const metadata: Metadata = {
 export default function TeamRoute() {
   const home = getHomePageData();
   const site = getSiteInfo();
-  const members = getTeamMembers();
 
   return (
     <SiteChrome
@@ -21,7 +19,7 @@ export default function TeamRoute() {
       trending={home.trending}
       site={site}
     >
-      <TeamPage members={members} />
+      <TeamPage />
     </SiteChrome>
   );
 }

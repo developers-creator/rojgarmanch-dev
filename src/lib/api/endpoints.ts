@@ -5,6 +5,8 @@ import type { NewsDetailData, NewsCategoryData, SearchData, TrendingData, Websto
 import type { ContactData } from "@/types/contact";
 import type { MenuData } from "@/types/menu";
 import type { AdsData } from "@/types/ads";
+import type { TeamPageResponse } from "@/types/team";
+import type { AboutPageResponse, DefaultPageResponse } from "@/types/page";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
 export const ENDPOINTS = {
@@ -38,6 +40,10 @@ export const ENDPOINTS = {
   search: "/search",
   trending: "/trending",
   ads: "/ads",
+  team: "/page/team",
+  about: "/page/about",
+  privacyPolicy: "/page/privacy-policy",
+  termsAndConditions: "/page/terms-of-use",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -173,6 +179,22 @@ export const getAdditionalMenu = () =>
 // ads
 export const getAds = () =>
   apiFetch<AdsData>(ENDPOINTS.ads);
+
+// team
+export const getTeam = () =>
+  apiFetch<TeamPageResponse>(ENDPOINTS.team);
+
+// about
+export const getAbout = () =>
+  apiFetch<AboutPageResponse>(ENDPOINTS.about);
+
+// privacy-policy
+export const getPrivacyPolicy = () =>
+  apiFetch<DefaultPageResponse>(ENDPOINTS.privacyPolicy);
+
+// terms of use
+export const getTermsOfUse = () =>
+  apiFetch<DefaultPageResponse>(ENDPOINTS.termsAndConditions);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

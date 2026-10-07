@@ -1,33 +1,34 @@
-import type { TeamMember } from "@/types/content";
 import { Reveal } from "@/components/motion/Reveal";
+import { getTeam } from "@/lib/api/endpoints";
 
-type TeamPageProps = {
-  members: TeamMember[];
-};
+export async function TeamPage() {
+  const teamData = (await getTeam().catch(() => null))?.data;
+  const members = teamData?.payload?.team ?? [];
 
-export function TeamPage({ members }: TeamPageProps) {
   return (
     <main id="main" className="site-page team-page">
       <div className="container">
         <header className="site-page__head">
-          <p className="site-page__en">Our team</p>
-          <h1 id="team-title">हाम्रो समूह</h1>
-          <p className="site-page__lead">
-            सम्पादकीय कक्षदेखि फिल्ड संवाददातासम्म — रोजगार मञ्च बनाउने टोली।
-          </p>
+          <h1 id="team-title">{teamData?.title}</h1>
+          {teamData?.payload?.content ? (
+            <div
+              className="site-page__lead"
+              dangerouslySetInnerHTML={{ __html: teamData.payload.content }}
+            />
+          ) : null}
         </header>
 
         <section className="team-grid" aria-label="टोली सदस्य">
           {members.map((member, index) => (
             <Reveal
-              key={`${member.role}-${member.name}`}
+              key={`${member.id}-${member.title}`}
               className={`team-card${index ? ` reveal-delay-${Math.min((index % 3) + 1, 3)}` : ""}`}
             >
               <div className="team-card__media">
-                {member.avatarUrl ? (
+                {member.image ? (
                   <img
-                    src={member.avatarUrl}
-                    alt={member.name}
+                    src={member.image}
+                    alt={member.title}
                     width={480}
                     height={480}
                     loading={index < 4 ? "eager" : "lazy"}
@@ -39,9 +40,9 @@ export function TeamPage({ members }: TeamPageProps) {
                 )}
               </div>
               <div className="team-card__body">
-                <p className="team-card__role">{member.role}</p>
-                <h2 className="team-card__name">{member.name}</h2>
-                {member.bio ? <p className="team-card__bio">{member.bio}</p> : null}
+                <p className="team-card__role">{member.positions.join(", ")}</p>
+                <h2 className="team-card__name">{member.title}</h2>
+                {member.content ? <div className="team-card__bio" dangerouslySetInnerHTML={{ __html: member.content }} /> : null}
               </div>
             </Reveal>
           ))}

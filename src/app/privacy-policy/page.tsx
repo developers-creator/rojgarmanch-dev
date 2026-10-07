@@ -1,0 +1,26 @@
+import type { Metadata } from "next";
+import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getPrivacyPolicy } from "@/lib/api";
+import { LegalPage } from "@/components/pages/LegalPage";
+import { SiteChrome } from "@/components/layout/SiteChrome";
+
+export const metadata: Metadata = {
+  title: "गोपनीयता नीति — रोजगार मञ्च",
+  description: "रोजगार मञ्चको गोपनीयता नीति।",
+  alternates: { canonical: "https://rojgarmanch.com/privacy-policy" },
+};
+
+export default function PrivacyPolicyRoute() {
+  const home = getHomePageData();
+  const site = getSiteInfo();
+
+  return (
+    <SiteChrome
+      flashNews={home.flashNews}
+      trending={home.trending}
+      site={site}
+    >
+      <LegalPage eyebrow="Privacy Policy" load={getPrivacyPolicy} />
+    </SiteChrome>
+  );
+}

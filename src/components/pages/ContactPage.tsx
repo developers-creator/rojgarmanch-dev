@@ -1,30 +1,31 @@
-import type { ContactContent } from "@/data/pages";
-import type { SiteInfo } from "@/types/content";
 import { Reveal } from "@/components/motion/Reveal";
 import { Icon, socialIconName } from "@/components/ui/Icon";
 import { getContact, getSettingsOrEmpty } from "@/lib/api";
 import Link from "next/link";
 
-type ContactPageProps = {
-  content: ContactContent;
-  site: SiteInfo;
-};
-
-export async function ContactPage({ content, site }: ContactPageProps) {
-
+export async function ContactPage() {
   const [contactData, settings] = await Promise.all([
     getContact().catch(() => null),
     getSettingsOrEmpty(),
   ]);
   const payload = contactData?.data?.payload;
 
-  const { darta_no, rojgar_insert_map_url, phone, email, location, social_handles, site_title, insert_iframe_url } = settings;
+  const {
+    darta_no = "",
+    rojgar_insert_map_url = "",
+    phone = "",
+    email = "",
+    location = "",
+    site_title = "",
+    insert_iframe_url = "",
+  } = settings;
+  const social_handles = settings.social_handles ?? [];
 
   return (
     <main id="main" className="site-page contact-page">
       <div className="container">
         <header className="site-page__head">
-          <p className="site-page__en">{content.titleEn}</p>
+          <p className="site-page__en">Contact</p>
           <h1 id="contact-title">{payload?.title ?? ""}</h1>
           <div
             className="site-page__lead"
@@ -36,24 +37,36 @@ export async function ContactPage({ content, site }: ContactPageProps) {
           <Reveal className="contact-details">
             <h2 className="contact-details__title">{site_title}</h2>
             <ul className="contact-details__list">
-              <li>
-                <Icon name="id-card" size={16} />
+              {darta_no ? (
+                <li>
+                  <Icon name="id-card" size={16} />
                   <span dangerouslySetInnerHTML={{ __html: darta_no }} />
-              </li>
-              <li>
-                <Icon name="location" size={16} />
-                <span>
-                  <Link href={rojgar_insert_map_url} target="_blank">{location}</Link>
-                </span>
-              </li>
-              <li>
-                <Icon name="phone" size={16} />
-                <a href={`tel:${phone.replace(/\s/g, "")}`}>{phone}</a>
-              </li>
-              <li>
-                <Icon name="envelope" size={16} />
-                <a href={`mailto:${email}`}>{email}</a>
-              </li>
+                </li>
+              ) : null}
+              {location ? (
+                <li>
+                  <Icon name="location" size={16} />
+                  <span>
+                    {rojgar_insert_map_url ? (
+                      <Link href={rojgar_insert_map_url} target="_blank">{location}</Link>
+                    ) : (
+                      location
+                    )}
+                  </span>
+                </li>
+              ) : null}
+              {phone ? (
+                <li>
+                  <Icon name="phone" size={16} />
+                  <a href={`tel:${phone.replace(/\s/g, "")}`}>{phone}</a>
+                </li>
+              ) : null}
+              {email ? (
+                <li>
+                  <Icon name="envelope" size={16} />
+                  <a href={`mailto:${email}`}>{email}</a>
+                </li>
+              ) : null}
             </ul>
 
             <ul className="contact-details__social" aria-label="सोसल मिडिया">
@@ -72,16 +85,18 @@ export async function ContactPage({ content, site }: ContactPageProps) {
             </ul>
           </Reveal>
 
-          <Reveal className="contact-map reveal-delay-1">
-            <iframe
-              className="contact-map__frame"
-              title={`${site.address} — Google Map`}
-              src={insert_iframe_url}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
-          </Reveal>
+          {insert_iframe_url ? (
+            <Reveal className="contact-map reveal-delay-1">
+              <iframe
+                className="contact-map__frame"
+                title={`${location || site_title} — Google Map`}
+                src={insert_iframe_url}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </Reveal>
+          ) : null}
         </div>
       </div>
     </main>
