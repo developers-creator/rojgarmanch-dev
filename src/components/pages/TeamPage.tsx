@@ -1,3 +1,4 @@
+import { fillImgAlt } from "@/lib/cmsHtml";
 import { Reveal } from "@/components/motion/Reveal";
 import { getTeam } from "@/lib/api/endpoints";
 
@@ -42,7 +43,7 @@ export async function TeamPage() {
               <div className="team-card__body">
                 <p className="team-card__role">{member.positions.join(", ")}</p>
                 <h2 className="team-card__name">{member.title}</h2>
-                {member.content ? <div className="team-card__bio" dangerouslySetInnerHTML={{ __html: member.content }} /> : null}
+                {member.content ? <div className="team-card__bio" dangerouslySetInnerHTML={{ __html: fillImgAlt(member.content, member.title) }} /> : null}
               </div>
             </Reveal>
           ))}

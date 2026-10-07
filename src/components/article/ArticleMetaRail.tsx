@@ -56,7 +56,7 @@ export function ArticleMetaRail({
               <img
                 className="article-meta__avatar"
                 src={authorAvatar}
-                alt=""
+                alt={name}
                 width={72}
                 height={72}
               />

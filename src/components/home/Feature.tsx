@@ -36,7 +36,7 @@ export async function Feature() {
               <img
                 className="feature-spot__cover"
                 src={lead.imageUrl}
-                alt=""
+                alt={lead.title}
                 width={900}
                 height={560}
                 loading="lazy"
@@ -62,7 +62,7 @@ export async function Feature() {
                   <span className="feature-spot__thumb">
                     <img
                       src={item.imageUrl}
-                      alt=""
+                      alt={item.title}
                       width={88}
                       height={66}
                       loading="lazy"

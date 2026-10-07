@@ -41,7 +41,7 @@ export async function CareerPlaybook() {
                       <span className="career-playbook__feature-media">
                         <img
                           src={post.featured_image}
-                          alt=""
+                          alt={decodeEntities(post.title) || settings.site_title}
                           width={640}
                           height={360}
                           loading="lazy"

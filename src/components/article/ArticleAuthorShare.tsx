@@ -24,7 +24,7 @@ export function ArticleAuthorShare({
           <img
             className="article-author-card__avatar"
             src={authorAvatar}
-            alt=""
+            alt={name}
             width={72}
             height={72}
           />

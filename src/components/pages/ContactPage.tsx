@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/motion/Reveal";
+import { fillImgAlt } from "@/lib/cmsHtml";
 import { Icon, socialIconName } from "@/components/ui/Icon";
 import { getContact, getSettingsOrEmpty } from "@/lib/api";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export async function ContactPage() {
           <h1 id="contact-title">{payload?.title ?? ""}</h1>
           <div
             className="site-page__lead"
-            dangerouslySetInnerHTML={{ __html: payload?.content ?? "" }}
+            dangerouslySetInnerHTML={{ __html: fillImgAlt(payload?.content ?? "", payload?.title || site_title) }}
           />
         </header>
 

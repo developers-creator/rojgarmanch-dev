@@ -70,7 +70,7 @@ export function LeadListColumn({
             <img
               className="img-cover"
               src={imageSrc}
-              alt=""
+              alt={headline}
               width={640}
               height={400}
               loading="lazy"

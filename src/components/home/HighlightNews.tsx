@@ -56,7 +56,7 @@ function HighlightItem({
           <Image
             className="highlight__avatar"
             src={story.authorAvatar}
-            alt={story.author ?? ""}
+            alt={story.author || story.title}
             width={28}
             height={28}
             loading={priority ? "eager" : "lazy"}

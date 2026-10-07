@@ -286,7 +286,7 @@ export function WebStoriesRail({ title, href, items }: WebStoriesRailProps) {
                   <img
                     className="ig-stories__cover"
                     src={cover}
-                    alt=""
+                    alt={title}
                     width={360}
                     height={640}
                     loading="lazy"
@@ -339,7 +339,7 @@ export function WebStoriesRail({ title, href, items }: WebStoriesRailProps) {
 
             <div className="ig-stories__top">
               <div className="ig-stories__who">
-                <img src={story.avatarUrl} alt="" width={36} height={36} />
+                <img src={story.avatarUrl} alt={story.label} width={36} height={36} />
                 <span>{story.label}</span>
               </div>
               <button

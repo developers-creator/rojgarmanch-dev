@@ -19,6 +19,7 @@ import { ArticleRichText } from "./ArticleRichText";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CmsImageAd } from "@/components/ui/CmsImageAd";
 import type { SidebarAds } from "@/types/ads";
+import { fillImgAlt } from "@/lib/cmsHtml";
 import Link from "next/link";
 
 type ArticlePageProps = {
@@ -49,7 +50,7 @@ function shouldInsertInlineAd(blocks: ArticleBlock[], index: number) {
   return paragraphNumber >= 2 && (paragraphNumber - 2) % 4 === 0;
 }
 
-function Block({ block }: { block: ArticleBlock }) {
+function Block({ block, fallbackAlt }: { block: ArticleBlock; fallbackAlt: string }) {
   switch (block.type) {
     case "p":
       return (
@@ -75,7 +76,7 @@ function Block({ block }: { block: ArticleBlock }) {
         <figure className="article-figure">
           <img
             src={block.src}
-            alt={block.alt}
+            alt={block.alt || fallbackAlt}
             width={1100}
             height={620}
             loading="lazy"
@@ -177,7 +178,7 @@ function Block({ block }: { block: ArticleBlock }) {
     case "html":
       return <div
           className="article-html"
-          dangerouslySetInnerHTML={{ __html: block.html }}
+          dangerouslySetInnerHTML={{ __html: fillImgAlt(block.html, fallbackAlt) }}
         />;
     default:
       return null;
@@ -243,7 +244,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
               <ArticleBody>
                 {article.body.map((block, index) => (
                   <Fragment key={`${block.type}-${index}`}>
-                    <Block block={block} />
+                    <Block block={block} fallbackAlt={article.title || siteName} />
                     {shouldInsertInlineAd(article.body, index) ? (
                       <ArticleInlineAds ads={ARTICLE_INLINE_ADS} />
                     ) : null}
@@ -286,7 +287,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
                               <span className="article-related__thumb">
                                 <img
                                   src={item.imageUrl}
-                                  alt=""
+                                  alt={item.title}
                                   width={72}
                                   height={72}
                                   loading="lazy"

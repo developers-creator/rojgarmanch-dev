@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/motion/Reveal";
+import { fillImgAlt } from "@/lib/cmsHtml";
 import { getAbout } from "@/lib/api/endpoints";
 
 export async function AboutPage() {
@@ -17,7 +18,7 @@ export async function AboutPage() {
             {lead ? (
               <div
                 className="about-head__lead"
-                dangerouslySetInnerHTML={{ __html: lead }}
+                dangerouslySetInnerHTML={{ __html: fillImgAlt(lead, aboutData?.title ?? "") }}
               />
             ) : null}
           </header>
@@ -27,7 +28,7 @@ export async function AboutPage() {
               <Reveal className="about-body__block">
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: payload.about_main_description,
+                    __html: fillImgAlt(payload.about_main_description, aboutData?.title ?? ""),
                   }}
                 />
               </Reveal>

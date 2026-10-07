@@ -36,7 +36,7 @@ export async function Antarwarta() {
             {lead.imageUrl ? (
               <img
                 src={lead.imageUrl}
-                alt=""
+                alt={lead.title}
                 width={640}
                 height={560}
                 loading="lazy"
@@ -69,7 +69,7 @@ export async function Antarwarta() {
                 {item.imageUrl ? (
                   <img
                     src={item.imageUrl}
-                    alt=""
+                    alt={item.title}
                     width={320}
                     height={200}
                     loading="lazy"

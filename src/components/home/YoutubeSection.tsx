@@ -40,7 +40,7 @@ function WatchEmbed({
     >
       <img
         src={thumb(video.youtubeId, "hq")}
-        alt=""
+        alt={video.title}
         width={1280}
         height={720}
         loading="lazy"
@@ -79,7 +79,7 @@ function SideVideo({
       <span className="yt-block__side-media">
         <img
           src={thumb(video.youtubeId, "mq")}
-          alt=""
+          alt={video.title}
           width={320}
           height={180}
           loading="lazy"
@@ -189,7 +189,7 @@ function VideoPopup({
                     <span className="yt-popup__side-thumb">
                       <img
                         src={thumb(video.youtubeId, "mq")}
-                        alt=""
+                        alt={video.title}
                         width={320}
                         height={180}
                         loading="lazy"
@@ -228,7 +228,7 @@ function ShortCard({ item, onOpen }: { item: YtShort; onOpen: () => void }) {
     >
       <img
         src={thumb(item.youtubeId, "hq")}
-        alt=""
+        alt={item.title}
         width={540}
         height={960}
         loading="lazy"
@@ -382,7 +382,7 @@ function ShortsPopup({
                   <img
                     className="shorts-popup__player"
                     src={thumb(item.youtubeId, "hq")}
-                    alt=""
+                    alt={item.title}
                     width={540}
                     height={960}
                   />

@@ -34,7 +34,7 @@ export async function Business() {
             {lead.imageUrl ? (
               <img
                 src={lead.imageUrl}
-                alt=""
+                alt={lead.title}
                 width={640}
                 height={440}
                 loading="lazy"
@@ -56,7 +56,7 @@ export async function Business() {
                   <span className="biz-item__thumb">
                     <img
                       src={item.imageUrl}
-                      alt=""
+                      alt={item.title}
                       width={120}
                       height={80}
                       loading="lazy"

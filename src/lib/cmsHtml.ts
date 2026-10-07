@@ -34,3 +34,19 @@ export function unwrapCmsWrappers(html: string): string {
   }
   return out + html.slice(last);
 }
+
+/**
+ * CMS bodies often carry <img> tags with no alt (or an empty one). Fill those
+ * with `fallback` (the page title, then the site title) so every image has text.
+ */
+export function fillImgAlt(html: string, fallback: string): string {
+  if (!fallback) return html;
+  const safe = fallback.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+
+  return html.replace(/<img\b[^>]*>/gi, (tag) => {
+    const alt = /\balt\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(tag);
+    if (!alt) return tag.replace(/<img\b/i, `<img alt="${safe}"`);
+    if ((alt[1] ?? alt[2] ?? "").trim()) return tag;
+    return tag.replace(alt[0], `alt="${safe}"`);
+  });
+}

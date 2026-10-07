@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { fillImgAlt } from "@/lib/cmsHtml";
 import { Reveal } from "@/components/motion/Reveal";
 import type { DefaultPageResponse } from "@/types/page";
 
@@ -23,7 +24,7 @@ export async function LegalPage({ eyebrow, load }: LegalPageProps) {
         </header>
 
         <Reveal className="legal-content">
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div dangerouslySetInnerHTML={{ __html: fillImgAlt(content, title) }} />
         </Reveal>
       </div>
     </main>

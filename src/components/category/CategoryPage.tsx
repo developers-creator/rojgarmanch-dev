@@ -31,7 +31,7 @@ function AuthorByline({ item }: { item: Post }) {
         <img
           className="category-author__avatar"
           src={item.authorAvatar}
-          alt=""
+          alt={item.author || item.title}
           width={36}
           height={36}
         />
