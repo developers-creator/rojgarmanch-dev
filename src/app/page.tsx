@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, loadSeo } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { HomePage } from "@/components/home/HomePage";
@@ -17,6 +17,8 @@ export default async function Home() {
       .then((res) => res.data)
       .catch(() => null),
     getSettingsOrEmpty(),
+    // Warm the memoized SEO request so <JsonLd> doesn't start it after the rest.
+    loadSeo("/"),
   ]);
   // console.log("banner-news:", bannerNews);
 

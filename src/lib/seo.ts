@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { getSeo } from "@/lib/api";
 import { decodeEntities } from "@/lib/text";
@@ -6,15 +7,18 @@ import type { Seo } from "@/types/seo";
 export const SITE_URL = "https://rojgarmanch.com";
 const CMS_ORIGIN = "https://cms.rojgarmanch.com";
 
-/** Never throws: SEO is an enhancement, pages must render without it. */
-export async function loadSeo(path: string): Promise<Seo | null> {
+/**
+ * Never throws: SEO is an enhancement, pages must render without it.
+ * Memoized per request so the metadata, JSON-LD and page code share one call.
+ */
+export const loadSeo = cache(async (path: string): Promise<Seo | null> => {
   try {
     const res = await getSeo(path);
     return res.success ? res.data : null;
   } catch {
     return null;
   }
-}
+});
 
 function plainText(value: string | undefined) {
   return decodeEntities((value ?? "").replace(/<[^>]*>/g, " "))

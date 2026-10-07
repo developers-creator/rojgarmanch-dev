@@ -6,7 +6,7 @@ import {
   getCategoryPosts,
   getSettingsOrEmpty,
 } from "@/lib/api/endpoints";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, loadSeo } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { toPost } from "@/lib/posts";
 import { CategoryPage } from "@/components/category/CategoryPage";
@@ -30,7 +30,12 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = parsePage((await searchParams).page);
-  const category = (await loadCategory(slug, page))?.data?.category;
+  // Start the SEO request alongside the category instead of after it.
+  const [res] = await Promise.all([
+    loadCategory(slug, page),
+    loadSeo(`category/${slug}`),
+  ]);
+  const category = res?.data?.category;
   if (!category) return { title: "श्रेणी फेला परेन" };
 
   return buildPageMetadata(
@@ -63,6 +68,8 @@ export default async function CategoryRoute({
       .then((r) => r.data.category_ads)
       .catch(() => null),
     getSettingsOrEmpty(),
+    // Warm the memoized SEO request so <JsonLd> doesn't start it after the rest.
+    loadSeo(`category/${slug}`),
   ]);
   if (!res?.data) notFound();
 

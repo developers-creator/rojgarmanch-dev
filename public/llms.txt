@@ -1,0 +1,51 @@
+# रोजगार मञ्च (Rojgar Manch)
+
+> रोजगार मञ्च नेपाली युवा, कामदार र पेशेवरहरूका लागि रोजगार, सीप, नीति र करियर केन्द्रित डिजिटल पत्रिका हो। हामी समाचार मात्र होइन — निर्णय गर्न सघाउने सन्दर्भ पनि दिन्छौं। (Rojgar Manch is a Nepali digital magazine on employment, skills, policy and careers, run by Rojgar Media Pvt. Ltd.)
+
+Rojgar Manch publishes news, analysis, interviews, features and practical guides on the labour market, training, entrepreneurship and foreign employment. Content comes from field reporting, expert interviews, document study and editorial review, with fact-checking, source verification and language editing before publication. Advertising and sponsored content are clearly separated from editorial content. The site is written in Nepali. It is not a recruitment agency, an employer or a foreign employment service provider.
+
+Audience: students, first-time job seekers, professionals changing careers, entrepreneurs, workers going abroad, and readers interested in labour policy, including stories from districts and the diaspora.
+
+## About
+
+- [हाम्रो बारेमा (About)](https://rojgarmanch.com/about): who we are, our purpose, how we work, our readers, and our editorial responsibility
+- [हाम्रो समूह (Team)](https://rojgarmanch.com/team): editorial team and field correspondents
+- [सम्पर्क (Contact)](https://rojgarmanch.com/contact): address, phone, email and map
+
+## Content
+
+- [गृहपृष्ठ (Home)](https://rojgarmanch.com/): latest and featured stories
+- [समाचार (News)](https://rojgarmanch.com/category/news): news
+- [रोजगार (Employment)](https://rojgarmanch.com/category/employment): jobs and the labour market
+- [बिजनेस (Business)](https://rojgarmanch.com/category/business): business and economy
+- [अन्तर्वार्ता (Interview)](https://rojgarmanch.com/category/interview): interviews
+- [फिचर (Feature)](https://rojgarmanch.com/category/feature): features
+- [प्रवास (Abroad)](https://rojgarmanch.com/category/abroad): foreign employment and life abroad
+- [एनआरएन (NRN)](https://rojgarmanch.com/category/nrn): non-resident Nepalis
+- [विचार (Opinion)](https://rojgarmanch.com/category/opinion): opinion and analysis
+
+## Policies
+
+- [गोपनीयता नीति (Privacy Policy)](https://rojgarmanch.com/privacy-policy)
+- [प्रयोगका सर्तहरू (Terms of Use)](https://rojgarmanch.com/terms-of-use): content use, copyright and corrections
+
+## Publisher
+
+- Rojgar Media Pvt. Ltd. (रोजगार मिडिया प्रा.लि.)
+- Department of Information registration no.: २००६/०७७/०७८
+- Address: Gyaneshwor, Kathmandu, Nepal
+- Phone: +977 1 4531043
+- Email: rojgarmanch@gmail.com
+
+## Team
+
+- प्रमुख व्यवस्थापक (Chief Administrator): फणिन्द्र दाहाल
+- सल्लाहकार सम्पादक (Advisory Editor): युवराज नयाँघरे
+- सम्पादक (Editor): सुमन गिरी
+- सह सम्पादक (Assistant Editor): उत्तम भट्टराई
+- स्तम्भकार (Columnists): हरिराम पौडेल, शम्भू सुस्केरा
+- संवाददाता (Correspondents): हेमन्त राज गौतम, हरि बहादुर थापा, पर्वत बिक, मोहन सुवेदी
+
+## Optional
+
+- [Sitemap](https://rojgarmanch.com/sitemap.xml)
