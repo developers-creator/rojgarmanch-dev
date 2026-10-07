@@ -5,6 +5,8 @@ import type { Article, ArticleLink } from "@/data/articles";
 import type { NewsLink } from "@/types/news";
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { getAds, getNews, getSettingsOrEmpty } from "@/lib/api";
+import { buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { unwrapCmsWrappers } from "@/lib/cmsHtml";
 import { ArticlePage } from "@/components/article/ArticlePage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
@@ -58,14 +60,15 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const path = slug.join("/");
   const article = await loadArticle(slug);
   if (!article) return { title: "लेख फेला परेन" };
 
-  return {
+  return buildPageMetadata(path, {
     title: `${article.title} — रोजगार मञ्च`,
     description: article.deck || article.excerpt || article.title,
     alternates: { canonical: `https://rojgarmanch.com${article.href}` },
-  };
+  });
 }
 
 export default async function ArticleRoute({ params }: PageProps) {
@@ -88,6 +91,7 @@ export default async function ArticleRoute({ params }: PageProps) {
       trending={home.trending}
       site={site}
     >
+      <JsonLd path={slug.join("/")} />
       <ArticlePage
         article={article}
         ads={ads}

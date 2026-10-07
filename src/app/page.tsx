@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { HomePage } from "@/components/home/HomePage";
 import { getAds, getBannerNews, getSettingsOrEmpty } from "@/lib/api";
 import { SiteChrome } from "@/components/layout/SiteChrome";
+
+// Falls back to the defaults in layout.tsx when the SEO API is unreachable.
+export const generateMetadata = (): Promise<Metadata> =>
+  buildPageMetadata("/", {});
 
 export default async function Home() {
   const [bannerNews, ads, settings] = await Promise.all([
@@ -22,6 +29,7 @@ export default async function Home() {
       trending={home.trending}
       site={site}
     >
+      <JsonLd path="/" />
       <HomePage
         data={home}
         bannerNewsData={bannerNews}

@@ -6,6 +6,8 @@ import {
   getCategoryPosts,
   getSettingsOrEmpty,
 } from "@/lib/api/endpoints";
+import { buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { toPost } from "@/lib/posts";
 import { CategoryPage } from "@/components/category/CategoryPage";
 import { WebStories } from "@/components/home/WebStories";
@@ -31,18 +33,22 @@ export async function generateMetadata({
   const category = (await loadCategory(slug, page))?.data?.category;
   if (!category) return { title: "श्रेणी फेला परेन" };
 
-  return {
-    title:
-      page > 1
-        ? `${category.name} — पृष्ठ ${page} — रोजगार मञ्च`
-        : `${category.name} — रोजगार मञ्च`,
-    description: category.description || undefined,
-    alternates: {
-      canonical: `https://rojgarmanch.com/category/${category.slug}${
-        page > 1 ? `?page=${page}` : ""
-      }`,
+  return buildPageMetadata(
+    `category/${slug}`,
+    {
+      title:
+        page > 1
+          ? `${category.name} — पृष्ठ ${page} — रोजगार मञ्च`
+          : `${category.name} — रोजगार मञ्च`,
+      description: category.description || undefined,
+      alternates: {
+        canonical: `https://rojgarmanch.com/category/${category.slug}${
+          page > 1 ? `?page=${page}` : ""
+        }`,
+      },
     },
-  };
+    { page },
+  );
 }
 
 export default async function CategoryRoute({
@@ -69,6 +75,7 @@ export default async function CategoryRoute({
       trending={home.trending}
       site={site}
     >
+      <JsonLd path={`category/${slug}`} />
       {slug === "webstories" ? (
         <main id="main">
           <WebStories more={false} />

@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { ContactPage } from "@/components/pages/ContactPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
-export const metadata: Metadata = {
+const fallbackMetadata: Metadata = {
   title: "सम्पर्क — रोजगार मञ्च",
   description:
     "रोजगार मञ्चसँग सम्पर्क गर्नुहोस् — ठेगाना, फोन, इमेल र सन्देश फारम।",
   alternates: { canonical: "https://rojgarmanch.com/contact" },
 };
+
+export const generateMetadata = (): Promise<Metadata> =>
+  buildPageMetadata("contact", fallbackMetadata);
 
 export default function ContactRoute() {
   const home = getHomePageData();
@@ -21,6 +26,7 @@ export default function ContactRoute() {
       site={site}
     >
       <ContactPage />
+      <JsonLd path="contact" />
     </SiteChrome>
   );
 }

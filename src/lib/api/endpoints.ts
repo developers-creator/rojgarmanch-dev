@@ -6,6 +6,7 @@ import type { ContactData } from "@/types/contact";
 import type { MenuData } from "@/types/menu";
 import type { AdsData } from "@/types/ads";
 import type { TeamPageResponse } from "@/types/team";
+import type { SeoResponse } from "@/types/seo";
 import type { AboutPageResponse, DefaultPageResponse } from "@/types/page";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
@@ -195,6 +196,10 @@ export const getPrivacyPolicy = () =>
 // terms of use
 export const getTermsOfUse = () =>
   apiFetch<DefaultPageResponse>(ENDPOINTS.termsAndConditions);
+
+// SEO — `path` is the page's path on the CMS (e.g. "about", "category/news").
+export const getSeo = (path: string) =>
+  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, { revalidate: 300 });
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",
