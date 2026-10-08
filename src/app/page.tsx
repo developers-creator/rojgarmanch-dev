@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { buildPageMetadata, loadSeo } from "@/lib/seo";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import { SchemaScript } from "@/components/seo/SchemaScript";
+import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { HomePage } from "@/components/home/HomePage";
 import { getAds, getBannerNews, getSettingsOrEmpty } from "@/lib/api";
@@ -17,8 +18,6 @@ export default async function Home() {
       .then((res) => res.data)
       .catch(() => null),
     getSettingsOrEmpty(),
-    // Warm the memoized SEO request so <JsonLd> doesn't start it after the rest.
-    loadSeo("/"),
   ]);
   // console.log("banner-news:", bannerNews);
 
@@ -31,7 +30,9 @@ export default async function Home() {
       trending={home.trending}
       site={site}
     >
-      <JsonLd path="/" />
+      <SchemaScript
+        data={graph(organizationSchema(settings), websiteSchema(settings))}
+      />
       <HomePage
         data={home}
         bannerNewsData={bannerNews}

@@ -9,7 +9,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 const fallbackMetadata: Metadata = {
   title: "गोपनीयता नीति — रोजगार मञ्च",
   description: "रोजगार मञ्चको गोपनीयता नीति।",
-  alternates: { canonical: "https://rojgarmanch.com/privacy-policy" },
+  alternates: { canonical: "https://rojgarmanch.com/privacy-policy/" },
 };
 
 export const generateMetadata = (): Promise<Metadata> =>

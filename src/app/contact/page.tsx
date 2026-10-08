@@ -9,7 +9,7 @@ const fallbackMetadata: Metadata = {
   title: "सम्पर्क — रोजगार मञ्च",
   description:
     "रोजगार मञ्चसँग सम्पर्क गर्नुहोस् — ठेगाना, फोन, इमेल र सन्देश फारम।",
-  alternates: { canonical: "https://rojgarmanch.com/contact" },
+  alternates: { canonical: "https://rojgarmanch.com/contact/" },
 };
 
 export const generateMetadata = (): Promise<Metadata> =>

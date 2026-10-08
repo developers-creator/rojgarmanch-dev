@@ -5,8 +5,9 @@ import type { Article, ArticleLink } from "@/data/articles";
 import type { NewsLink } from "@/types/news";
 import { getHomePageData, getSiteInfo } from "@/data/home";
 import { getAds, getNews, getSettingsOrEmpty } from "@/lib/api";
-import { buildPageMetadata, loadSeo } from "@/lib/seo";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPageMetadata, loadSeo, pageUrlFor } from "@/lib/seo";
+import { SchemaScript } from "@/components/seo/SchemaScript";
+import { breadcrumbSchema, graph, newsArticleSchema } from "@/lib/schema";
 import { unwrapCmsWrappers } from "@/lib/cmsHtml";
 import { ArticlePage } from "@/components/article/ArticlePage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
@@ -68,19 +69,19 @@ export async function generateMetadata({
   return buildPageMetadata(path, {
     title: `${article.title} — रोजगार मञ्च`,
     description: article.deck || article.excerpt || article.title,
-    alternates: { canonical: `https://rojgarmanch.com${article.href}` },
+    alternates: { canonical: pageUrlFor(article.href) },
   });
 }
 
 export default async function ArticleRoute({ params }: PageProps) {
   const { slug } = await params;
-  const [article, ads, settings] = await Promise.all([
+  const [article, ads, settings, seo] = await Promise.all([
     loadArticle(slug),
     getAds()
       .then((res) => res.data.sidebar_ads)
       .catch(() => null),
     getSettingsOrEmpty(),
-    // Warm the memoized SEO request so <JsonLd> doesn't start it after the rest.
+    // Memoized with generateMetadata; supplies the ISO publish/modify times.
     loadSeo(slug.join("/")),
   ]);
   if (!article) notFound();
@@ -94,7 +95,30 @@ export default async function ArticleRoute({ params }: PageProps) {
       trending={home.trending}
       site={site}
     >
-      <JsonLd path={slug.join("/")} />
+      <SchemaScript
+        data={graph(
+          newsArticleSchema(
+            {
+              path: slug.join("/"),
+              title: article.title,
+              description: article.excerpt,
+              image: article.imageUrl,
+              published: seo?.article_published_time,
+              modified: seo?.article_modified_time,
+              author: article.author,
+              categoryName: article.category,
+            },
+            settings,
+          ),
+          breadcrumbSchema([
+            { name: "होम", path: "/" },
+            ...(article.category && article.categorySlug
+              ? [{ name: article.category, path: `category/${article.categorySlug}` }]
+              : []),
+            { name: article.title },
+          ]),
+        )}
+      />
       <ArticlePage
         article={article}
         ads={ads}

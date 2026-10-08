@@ -8,6 +8,7 @@ import type { AdsData } from "@/types/ads";
 import type { TeamPageResponse } from "@/types/team";
 import type { SeoResponse } from "@/types/seo";
 import type { AboutPageResponse, DefaultPageResponse } from "@/types/page";
+import type { SitemapResponse } from "@/types/sitemap";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
 export const ENDPOINTS = {
@@ -45,6 +46,7 @@ export const ENDPOINTS = {
   about: "/page/about",
   privacyPolicy: "/page/privacy-policy",
   termsAndConditions: "/page/terms-of-use",
+  sitemap: "/sitemap",
 } as const;
 
 // Response types are `unknown` until the payloads are typed.
@@ -200,6 +202,10 @@ export const getTermsOfUse = () =>
 // SEO — `path` is the page's path on the CMS (e.g. "about", "category/news").
 export const getSeo = (path: string) =>
   apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, { revalidate: 300 });
+
+// Sitemap
+export const getSitemap = () =>
+  apiFetch<SitemapResponse>(ENDPOINTS.sitemap);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",

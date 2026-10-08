@@ -8,7 +8,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 const fallbackMetadata: Metadata = {
   title: "हाम्रो समूह — रोजगार मञ्च",
   description: "रोजगार मञ्चको सम्पादकीय टोली र संवाददाताहरू।",
-  alternates: { canonical: "https://rojgarmanch.com/team" },
+  alternates: { canonical: "https://rojgarmanch.com/team/" },
 };
 
 export const generateMetadata = (): Promise<Metadata> =>

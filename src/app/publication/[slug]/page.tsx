@@ -31,7 +31,7 @@ export async function generateMetadata({
     title: `${title} — फ्लिपबुक`,
     description: [title, issue.sub_heading, issue.date].filter(Boolean).join(" · "),
     alternates: {
-      canonical: `https://rojgarmanch.com/publication/${encodeURIComponent(issue.slug)}`,
+      canonical: `https://rojgarmanch.com/publication/${encodeURIComponent(issue.slug)}/`,
     },
   };
 }

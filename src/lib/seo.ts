@@ -5,6 +5,12 @@ import { decodeEntities } from "@/lib/text";
 import type { Seo } from "@/types/seo";
 
 export const SITE_URL = "https://rojgarmanch.com";
+/** Absolute, trailing-slashed URL for a site path (`""`, `"/"` → homepage). */
+export const pageUrlFor = (path: string) => {
+  const clean = path.replace(/^\/+|\/+$/g, "");
+  return clean ? `${SITE_URL}/${clean}/` : `${SITE_URL}/`;
+};
+
 const CMS_ORIGIN = "https://cms.rojgarmanch.com";
 
 /**
@@ -55,7 +61,7 @@ export async function buildPageMetadata(
   const seo = await loadSeo(path);
   if (!seo) return fallback;
 
-  const url = `${SITE_URL}/${path.replace(/^\//, "")}`;
+  const url = pageUrlFor(path);
   // Paginated listings: each page is its own canonical URL and gets a suffix.
   const pageUrl = page > 1 ? `${url}?page=${page}` : url;
   const pageSuffix = page > 1 ? ` — पृष्ठ ${page}` : "";

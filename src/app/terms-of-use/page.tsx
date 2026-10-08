@@ -9,7 +9,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 const fallbackMetadata: Metadata = {
   title: "प्रयोगका सर्तहरू — रोजगार मञ्च",
   description: "रोजगार मञ्च प्रयोग गर्दा लागू हुने सर्त तथा नियमहरू।",
-  alternates: { canonical: "https://rojgarmanch.com/terms-of-use" },
+  alternates: { canonical: "https://rojgarmanch.com/terms-of-use/" },
 };
 
 export const generateMetadata = (): Promise<Metadata> =>

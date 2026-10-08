@@ -7,7 +7,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 export const metadata: Metadata = {
   title: "प्रकाशन — रोजगार मञ्च",
   description: "रोजगार मञ्चका सबै मासिक प्रकाशन र फ्लिपबुक अंकहरू।",
-  alternates: { canonical: "https://rojgarmanch.com/publication" },
+  alternates: { canonical: "https://rojgarmanch.com/publication/" },
 };
 
 type PageProps = {

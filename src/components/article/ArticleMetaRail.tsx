@@ -25,7 +25,7 @@ export function ArticleMetaRail({
   shares = 0,
 }: ArticleMetaRailProps) {
   const name = author || "सम्पादकीय टोली";
-  const pageUrl = `https://rojgarmanch.com${href.startsWith("/") ? href : `/${href}`}`;
+  const pageUrl = `https://rojgarmanch.com${href.startsWith("/") ? href : `/${href}`}${href.endsWith("/") ? "" : "/"}`;
   const encodedUrl = encodeURIComponent(pageUrl);
   const encodedTitle = encodeURIComponent(title);
 

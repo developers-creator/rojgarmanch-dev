@@ -7,7 +7,8 @@ import {
   getSettingsOrEmpty,
 } from "@/lib/api/endpoints";
 import { buildPageMetadata, loadSeo } from "@/lib/seo";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { SchemaScript } from "@/components/seo/SchemaScript";
+import { breadcrumbSchema, graph } from "@/lib/schema";
 import { toPost } from "@/lib/posts";
 import { CategoryPage } from "@/components/category/CategoryPage";
 import { WebStories } from "@/components/home/WebStories";
@@ -47,7 +48,7 @@ export async function generateMetadata({
           : `${category.name} — रोजगार मञ्च`,
       description: category.description || undefined,
       alternates: {
-        canonical: `https://rojgarmanch.com/category/${category.slug}${
+        canonical: `https://rojgarmanch.com/category/${category.slug}/${
           page > 1 ? `?page=${page}` : ""
         }`,
       },
@@ -68,8 +69,6 @@ export default async function CategoryRoute({
       .then((r) => r.data.category_ads)
       .catch(() => null),
     getSettingsOrEmpty(),
-    // Warm the memoized SEO request so <JsonLd> doesn't start it after the rest.
-    loadSeo(`category/${slug}`),
   ]);
   if (!res?.data) notFound();
 
@@ -82,7 +81,14 @@ export default async function CategoryRoute({
       trending={home.trending}
       site={site}
     >
-      <JsonLd path={`category/${slug}`} />
+      <SchemaScript
+        data={graph(
+          breadcrumbSchema([
+            { name: "होम", path: "/" },
+            { name: res.data.category.name },
+          ]),
+        )}
+      />
       {slug === "webstories" ? (
         <main id="main">
           <WebStories more={false} />
