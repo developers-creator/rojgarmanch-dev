@@ -256,7 +256,8 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
             <aside className="article-rail" aria-label="यो पनि हेर्नुहोस्">
               <div className="article-rail__sticky">
               {ads?.before_additional_news_first_ad ||
-              ads?.before_additional_news_second_ad ? (
+              ads?.before_additional_news_second_ad ||
+              ads?.before_additional_news_third_ad ? (
                 <div className="article-rail__ads">
                   <CmsImageAd
                     src={ads.before_additional_news_first_ad}
@@ -269,6 +270,14 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
                   <CmsImageAd
                     src={ads.before_additional_news_second_ad}
                     href={ads.before_additional_news_second_ad_link}
+                    siteName={siteName}
+                    width={400}
+                    height={300}
+                    variant="aside"
+                  />
+                  <CmsImageAd
+                    src={ads.before_additional_news_third_ad}
+                    href={ads.before_additional_news_third_ad_link}
                     siteName={siteName}
                     width={400}
                     height={300}
@@ -347,6 +356,12 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
               </div>
             </section>
           ) : null}
+
+          <CmsImageAd
+            src={ads?.after_related_news}
+            href={ads?.after_related_news_link}
+            siteName={siteName}
+          />
         </div>
       </ArticleFontProvider>
     </main>

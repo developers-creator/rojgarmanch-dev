@@ -1,4 +1,5 @@
 import type { BannerNewsData } from "@/types/bannerNews";
+import { cache } from "react";
 import type { Settings, SettingsData } from "@/types/settings";
 import { apiFetch } from "./client";
 import type { NewsDetailData, NewsCategoryData, SearchData, TrendingData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
@@ -60,8 +61,11 @@ export const getBannerNews = () =>
 export const getContact = () => apiFetch<ContactData>(ENDPOINTS.contact);
 
 // Single news article — `slug` is the CMS slug as-is, e.g. "news/2026/09/112895"
-export const getNews = (slug: string) =>
-  apiFetch<NewsDetailData>(`/${slug}`);
+// Uncached across requests so edits show immediately; `cache` shares one fetch
+// between generateMetadata and the page.
+export const getNews = cache((slug: string) =>
+  apiFetch<NewsDetailData>(`/${slug}`, { revalidate: 0 }),
+);
 
 // News category listing
 export const getNewsCategories = () =>
@@ -180,8 +184,11 @@ export const getAdditionalMenu = () =>
   apiFetch<MenuData>(ENDPOINTS.additionalMenu);
 
 // ads
-export const getAds = () =>
-  apiFetch<AdsData>(ENDPOINTS.ads);
+// Never cached across requests, so ad changes show immediately; `cache` only
+// dedupes the several calls made while rendering one page.
+export const getAds = cache(() =>
+  apiFetch<AdsData>(ENDPOINTS.ads, { revalidate: 0 }),
+);
 
 // team
 export const getTeam = () =>

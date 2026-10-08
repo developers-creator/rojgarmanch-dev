@@ -30,6 +30,10 @@ export type SidebarAds = {
   before_additional_news_first_ad_link: string;
   before_additional_news_second_ad: UploadedAd | false;
   before_additional_news_second_ad_link: string;
+  before_additional_news_third_ad: UploadedAd | false;
+  before_additional_news_third_ad_link: string;
+  after_related_news: UploadedAd | false;
+  after_related_news_link: string;
 };
 
 export type BelowMenuHomeAd = {
