@@ -23,11 +23,15 @@ const absolute = (url: string | null | undefined) => {
   return url.startsWith("http") ? url : `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
 };
 
+/** Settings may hold `mailto:` / `tel:` URIs; schema.org wants the bare value. */
+const stripScheme = (v: string) => v.replace(/^(mailto|tel):/i, "").trim();
+
 const siteName = (s: Settings) => text(s.site_title) || FALLBACK_NAME;
 
 export function organizationSchema(s: Settings): Json {
   const sameAs = s.social_handles.map((h) => h.insert_url).filter(Boolean);
-  const telephone = s.phone || s.mobile;
+  const email = stripScheme(s.email);
+  const telephone = stripScheme(s.phone || s.mobile);
   return {
     "@type": "NewsMediaOrganization",
     "@id": ORGANIZATION_ID,
@@ -35,7 +39,7 @@ export function organizationSchema(s: Settings): Json {
     legalName: LEGAL_NAME,
     url: `${SITE_URL}/`,
     logo: { "@type": "ImageObject", url: LOGO_URL },
-    ...(s.email && { email: s.email }),
+    ...(email && { email }),
     ...(telephone && { telephone }),
     ...(s.darta_no && { identifier: s.darta_no }),
     address: {

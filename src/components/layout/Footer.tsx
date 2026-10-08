@@ -117,7 +117,12 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
             >
               {social_handles.map((item: SocialHandle) => (
                 <li key={item.choose_media}>
-                  <a href={item.insert_url} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={item.insert_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${item.choose_media} मा हामीलाई फलो गर्नुहोस्`}
+                  >
                     <Icon name={socialIconName(item.choose_media)} size={16} />
                   </a>
                 </li>

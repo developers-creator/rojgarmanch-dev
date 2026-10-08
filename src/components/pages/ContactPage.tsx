@@ -75,7 +75,7 @@ export async function ContactPage() {
                 <li key={item.choose_media}>
                   <a
                     href={item.insert_url}
-                    aria-label={item.choose_media}
+                    aria-label={`${item.choose_media} मा हामीलाई फलो गर्नुहोस्`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
