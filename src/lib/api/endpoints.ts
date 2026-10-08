@@ -61,10 +61,9 @@ export const getBannerNews = () =>
 export const getContact = () => apiFetch<ContactData>(ENDPOINTS.contact);
 
 // Single news article — `slug` is the CMS slug as-is, e.g. "news/2026/09/112895"
-// Uncached across requests so edits show immediately; `cache` shares one fetch
-// between generateMetadata and the page.
+// `cache` shares one fetch between generateMetadata and the page.
 export const getNews = cache((slug: string) =>
-  apiFetch<NewsDetailData>(`/${slug}`, { revalidate: 0 }),
+  apiFetch<NewsDetailData>(`/${slug}`),
 );
 
 // News category listing
@@ -184,11 +183,8 @@ export const getAdditionalMenu = () =>
   apiFetch<MenuData>(ENDPOINTS.additionalMenu);
 
 // ads
-// Never cached across requests, so ad changes show immediately; `cache` only
-// dedupes the several calls made while rendering one page.
-export const getAds = cache(() =>
-  apiFetch<AdsData>(ENDPOINTS.ads, { revalidate: 0 }),
-);
+// `cache` dedupes the several calls made while rendering one page.
+export const getAds = cache(() => apiFetch<AdsData>(ENDPOINTS.ads));
 
 // team
 export const getTeam = () =>

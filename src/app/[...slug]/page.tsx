@@ -12,7 +12,7 @@ import { unwrapCmsWrappers } from "@/lib/cmsHtml";
 import { ArticlePage } from "@/components/article/ArticlePage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
-// Always rendered per request so edited posts show up right away; data fetches
+// Always rendered per request so edits show up right away; data fetches
 // still cache for a few seconds (apiFetch).
 export const dynamic = "force-dynamic";
 
