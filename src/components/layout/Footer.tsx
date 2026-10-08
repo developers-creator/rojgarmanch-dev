@@ -75,8 +75,6 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
     <footer
       className="footer"
       id="about"
-      itemScope
-      itemType="https://schema.org/NewsMediaOrganization"
     >
       <div className="container footer__inner">
         <div className="footer__cols">
@@ -84,7 +82,7 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
             className="footer__col footer__col--brand"
             aria-labelledby="footer-org"
           >
-            <h2 className="footer__title" id="footer-org" itemProp="name">
+            <h2 className="footer__title" id="footer-org">
               {site.name}
             </h2>
             <ul className="footer__info">
@@ -100,13 +98,13 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
               </li>
               <li>
                 <Icon name="phone" size={14} />
-                <a href={`tel:${phone.replace(/\s/g, "")}`} itemProp="telephone">
+                <a href={`tel:${phone.replace(/\s/g, "")}`}>
                   {phone}
                 </a>
               </li>
               <li>
                 <Icon name="envelope" size={14} />
-                <a href={`mailto:${email}`} itemProp="email">
+                <a href={`mailto:${email}`}>
                   {email}
                 </a>
               </li>
