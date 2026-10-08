@@ -22,13 +22,13 @@ export type BottomSidebarAd = {
 export type SidebarAds = {
   top_sidebar_ads: TopSidebarAd[];
   bottom_sidebar_ads: BottomSidebarAd[];
-  before_main_title: AdImage;
+  before_main_title: UploadedAd | false;
   before_main_title_link: string;
-  before_related_news_ad: AdImage;
+  before_related_news_ad: UploadedAd | false;
   before_related_news_ad_link: string;
-  before_additional_news_first_ad: AdImage;
+  before_additional_news_first_ad: UploadedAd | false;
   before_additional_news_first_ad_link: string;
-  before_additional_news_second_ad: AdImage;
+  before_additional_news_second_ad: UploadedAd | false;
   before_additional_news_second_ad_link: string;
 };
 

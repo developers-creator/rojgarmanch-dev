@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { UploadedAd } from "@/types/ads";
+import { fullSizeUrl } from "@/lib/media";
 
 type CmsBannerAdProps = {
   /** Image object from the CMS ads API. */
@@ -16,7 +17,6 @@ type CmsBannerAdProps = {
 };
 
 /** The CMS sends the 150px thumbnail; drop the "-150x100" suffix for the original. */
-const fullSizeUrl = (url: string) => url.replace(/-\d+x\d+(?=\.\w+$)/, "");
 
 /** Full-width banner for a CMS ad; renders nothing when the slot is empty. */
 export function CmsBannerAd({

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { AdImage } from "@/types/ads";
+import type { AdImage, UploadedAd } from "@/types/ads";
+import { fullSizeUrl } from "@/lib/media";
 
 type CmsImageAdProps = {
-  /** Image URL from the CMS ads API; `false`/empty means the slot is unused. */
-  src: AdImage | null | undefined;
+  /** Image from the CMS ads API (URL or uploaded-image object); `false`/empty means the slot is unused. */
+  src: AdImage | UploadedAd | null | undefined;
   href?: string;
   /** Site name from settings, used as the image alt text. */
   siteName: string;
@@ -23,11 +24,12 @@ export function CmsImageAd({
   height = 110,
   variant = "banner",
 }: CmsImageAdProps) {
-  if (!src) return null;
+  const url = typeof src === "string" ? src : src ? fullSizeUrl(src.url) : "";
+  if (!url) return null;
 
   const image = (
     <Image
-      src={src}
+      src={url}
       alt={siteName}
       width={width}
       height={height}
