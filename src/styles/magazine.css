@@ -2768,10 +2768,28 @@ body.menu-open {
   gap: var(--space-5);
 }
 
+/* Posts take two columns; the CMS ad fills the third. */
+.teasers__layout {
+  display: grid;
+  gap: var(--space-5);
+}
+
 @media (min-width: 768px) {
-  .teasers__grid {
-    grid-template-columns: repeat(3, 1fr);
+  .teasers__layout {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-6);
+  }
+
+  .teasers__grid {
+    grid-column: span 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+    align-content: start;
+  }
+
+  .teasers__layout > .teasers__ad {
+    padding-block: 0;
+    align-self: start;
   }
 }
 
@@ -5735,37 +5753,16 @@ body.menu-open {
   min-width: 0;
 }
 
-@media (min-width: 1080px) {
-  .fx-widget {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+/* Right column of the business split: forex on top, CMS ad underneath. */
+.split__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
 
-  .fx-widget aside {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    height: 100%;
-  }
-
-  .fx-widget .section-title {
-    flex-shrink: 0;
-  }
-
-  .fx-widget__card {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .fx-widget__table-wrap {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-  }
+.split__aside .site-ad--banner {
+  padding-block: 0;
 }
 
 .fx-widget__card {
@@ -5802,8 +5799,10 @@ body.menu-open {
   opacity: 0.92;
 }
 
+/* Compact, scrollable rates table; the header stays visible while scrolling. */
 .fx-widget__table-wrap {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 300px;
 }
 
 .fx-widget__table {
@@ -5822,6 +5821,10 @@ body.menu-open {
 }
 
 .fx-widget__table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: color-mix(in srgb, var(--rm-primary) 5%, var(--rm-bg-card));
   padding-top: 7px;
   padding-bottom: 6px;
   color: var(--color-text-heading);

@@ -83,7 +83,7 @@ export const getEmploymentCategories = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.employment);
 
 // Any category listing, paginated — `slug` is the CMS category slug, e.g. "employment"
-export const CATEGORY_PER_PAGE = 7;
+export const CATEGORY_PER_PAGE = 25;
 
 export const getCategoryPosts = (slug: string, page = 1) =>
   apiFetch<NewsCategoryData>(

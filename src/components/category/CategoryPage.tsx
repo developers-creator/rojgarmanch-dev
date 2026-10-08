@@ -160,6 +160,7 @@ export function CategoryPage({
           pagination={pagination}
           basePath={basePath ?? `/category/${category.slug}`}
           query={query}
+          pathStyle={!basePath}
         />
       </div>
     </main>

@@ -104,7 +104,16 @@ export function HomePage({
       {/* रोजगार — wraps बिजनेस */}
       <Rojgar>
         <Business />
-        <VinimayaDar />
+        <div className="split__aside">
+          <VinimayaDar />
+          <CmsBannerAd
+            bare
+            image={longAds?.beside_business}
+            href={longAds?.beside_business_url}
+            siteName={siteName}
+            sizes="(max-width: 1080px) 100vw, 420px"
+          />
+        </div>
       </Rojgar>
 
       <CmsBannerAd
@@ -166,7 +175,13 @@ export function HomePage({
       />
 
       {/* ब्लग / विचार */}
-      <BlogBichar />
+      <BlogBichar
+        ad={{
+          image: longAds?.beside_blog_and_opinions,
+          href: longAds?.beside_blog_and_opinions_url,
+        }}
+        siteName={siteName}
+      />
 
       <CmsBannerAd
         image={longAds?.below_blog_and_opinions_ad}

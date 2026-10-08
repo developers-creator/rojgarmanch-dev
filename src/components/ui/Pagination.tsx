@@ -9,6 +9,8 @@ type PaginationProps = {
   basePath: string;
   /** Extra query params kept on every link, e.g. `{ q: "rojgar" }` for search. */
   query?: Record<string, string>;
+  /** Use `<basePath>/page/N/` links instead of the `?page=N` query. */
+  pathStyle?: boolean;
 };
 
 /** First, last and a window around the current page; `null` marks a gap. */
@@ -26,11 +28,15 @@ function visiblePages(page: number, total: number): (number | null)[] {
   return out;
 }
 
-export function Pagination({ pagination, basePath, query }: PaginationProps) {
+export function Pagination({ pagination, basePath, query, pathStyle }: PaginationProps) {
   if (!pagination || pagination.total_pages <= 1) return null;
 
   const { current_page: page, total_pages: totalPages } = pagination;
   const href = (n: number) => {
+    if (pathStyle) {
+      const base = basePath.replace(/\/+$/, "");
+      return n > 1 ? `${base}/page/${n}/` : `${base}/`;
+    }
     const params = new URLSearchParams(query);
     if (n > 1) params.set("page", String(n));
     const qs = params.toString();

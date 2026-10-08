@@ -62,8 +62,8 @@ export async function buildPageMetadata(
   if (!seo) return fallback;
 
   const url = pageUrlFor(path);
-  // Paginated listings: each page is its own canonical URL and gets a suffix.
-  const pageUrl = page > 1 ? `${url}?page=${page}` : url;
+  // Paginated listings: each page is its own canonical URL (`…/page/2/`) and gets a suffix.
+  const pageUrl = page > 1 ? `${url}page/${page}/` : url;
   const pageSuffix = page > 1 ? ` — पृष्ठ ${page}` : "";
   const title = plainText(seo.title) ? plainText(seo.title) + pageSuffix : undefined;
   const description =

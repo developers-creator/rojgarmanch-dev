@@ -83,6 +83,10 @@ export type LongAds = {
   below_kala_sahitya_ad_url: string;
   below_blog_and_opinions_ad: UploadedAd | false;
   below_blog_and_opinions_ad_url: string;
+  beside_business: UploadedAd | false;
+  beside_business_url: string;
+  beside_blog_and_opinions: UploadedAd | false;
+  beside_blog_and_opinions_url: string;
   above_footer_ad: UploadedAd | false;
   above_footer_ad_url: string;
 };
