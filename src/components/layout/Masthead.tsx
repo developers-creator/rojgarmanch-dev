@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { formatAdBadge, formatBsBadge } from "@/lib/dates";
 import Link from "next/link";
 import { useSettings } from "@/components/providers/SettingsProvider";
@@ -27,21 +27,37 @@ export function Masthead({ domain, headerAds }: MastheadProps) {
   }, []);
 
   const { dark_logo, white_logo, site_title } = useSettings();
-  const adImage = headerAds?.header_ad_right || null;
-  const adLink = headerAds?.header_ad_right_link || "";
+  const rightImage = headerAds?.header_ad_right || null;
+  const leftImage = headerAds?.header_ad_left || null;
 
-  const adPicture = adImage ? (
-    <picture>
-      <source media="(max-width: 767px)" srcSet="/images/mobile-ad.gif" />
-      <img
-        src={adImage}
-        alt={site_title}
-        width={HEADER_AD_WIDTH}
-        height={HEADER_AD_HEIGHT}
-        decoding="async"
-        loading="lazy"
-      />
-    </picture>
+  const wrapLink = (node: ReactNode, href?: string) =>
+    href ? (
+      <Link href={href} target="_blank" rel="noopener noreferrer sponsored">
+        {node}
+      </Link>
+    ) : (
+      node
+    );
+
+  const leftAd = leftImage ? (
+    <img
+      src={leftImage}
+      alt={site_title}
+      height={HEADER_AD_HEIGHT}
+      decoding="async"
+      loading="lazy"
+    />
+  ) : null;
+
+  const rightAd = rightImage ? (
+    <img
+      src={rightImage}
+      alt={site_title}
+      width={HEADER_AD_WIDTH}
+      height={HEADER_AD_HEIGHT}
+      decoding="async"
+      loading="lazy"
+    />
   ) : null;
 
   return (
@@ -99,15 +115,18 @@ export function Masthead({ domain, headerAds }: MastheadProps) {
             </div>
           </div>
         </div>
-        {adPicture ? (
+        {leftAd || rightAd ? (
           <div className="masthead__ads" aria-label="विज्ञापन">
-            {adLink ? (
-              <Link href={adLink} target="_blank" rel="noopener noreferrer sponsored">
-                {adPicture}
-              </Link>
-            ) : (
-              adPicture
-            )}
+            {leftAd ? (
+              <div className="masthead__ad masthead__ad--left">
+                {wrapLink(leftAd, headerAds?.header_ad_left_link)}
+              </div>
+            ) : null}
+            {rightAd ? (
+              <div className="masthead__ad masthead__ad--right">
+                {wrapLink(rightAd, headerAds?.header_ad_right_link)}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

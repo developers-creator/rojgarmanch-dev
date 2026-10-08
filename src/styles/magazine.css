@@ -722,6 +722,32 @@ article:hover .img-cover {
   border-radius: var(--radius);
   /* height: 115px; */
   width: auto;
+  max-width: 100%;
+}
+
+.masthead__ad {
+  min-width: 0;
+}
+
+.masthead__ad a {
+  display: block;
+}
+
+/* Mobile: left and right ads share one row, each taking an equal half. */
+@media (max-width: 767px) {
+  .masthead__ads {
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+  .masthead__ad {
+    flex: 1 1 0;
+  }
+
+  .masthead__ads img {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .ad-slot {
