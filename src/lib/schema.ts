@@ -7,6 +7,8 @@ type Json = Record<string, unknown>;
 const FALLBACK_NAME = "रोजगार मञ्च";
 const LEGAL_NAME = "Rojgar Media Pvt. Ltd.";
 const LOGO_URL = `${SITE_URL}/images/rojgar-manch-logo.png`;
+// rojgar-manch-logo.png is 512×512.
+const LOGO: Json = { "@type": "ImageObject", url: LOGO_URL, width: 512, height: 512 };
 // Gyaneshwor, Kathmandu
 const GEO = { latitude: 27.7104045, longitude: 85.3324544 };
 
@@ -30,7 +32,6 @@ const siteName = (s: Settings) => text(s.site_title) || FALLBACK_NAME;
 
 export function organizationSchema(s: Settings): Json {
   const sameAs = s.social_handles.map((h) => h.insert_url).filter(Boolean);
-  const email = stripScheme(s.email);
   const telephone = stripScheme(s.phone || s.mobile);
   return {
     "@type": "NewsMediaOrganization",
@@ -38,8 +39,7 @@ export function organizationSchema(s: Settings): Json {
     name: siteName(s),
     legalName: LEGAL_NAME,
     url: `${SITE_URL}/`,
-    logo: { "@type": "ImageObject", url: LOGO_URL },
-    ...(email && { email }),
+    logo: LOGO,
     ...(telephone && { telephone }),
     ...(s.darta_no && { identifier: s.darta_no }),
     address: {
@@ -115,7 +115,7 @@ export function newsArticleSchema(a: NewsArticleInput, s: Settings): Json {
       "@type": "Organization",
       "@id": ORGANIZATION_ID,
       name: siteName(s),
-      logo: { "@type": "ImageObject", url: LOGO_URL },
+      logo: LOGO,
     },
     ...(a.categoryName && { articleSection: text(a.categoryName) }),
     inLanguage: "ne",

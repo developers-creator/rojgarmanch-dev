@@ -104,5 +104,7 @@ export function schemaJson(seo: Seo | null): string | null {
   return JSON.stringify(seo.schema)
     .split(CMS_ORIGIN)
     .join(SITE_URL)
+    // The CMS emits `mailto:` URIs, which schema.org rejects for `email`.
+    .replace(/"mailto:([^"]+)"/g, '"$1"')
     .replace(/</g, "\\u003c");
 }
