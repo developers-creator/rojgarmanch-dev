@@ -201,7 +201,7 @@ export const getTermsOfUse = () =>
 
 // SEO — `path` is the page's path on the CMS (e.g. "about", "category/news").
 export const getSeo = (path: string) =>
-  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, { revalidate: 300 });
+  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`);
 
 // Sitemap
 export const getSitemap = () =>

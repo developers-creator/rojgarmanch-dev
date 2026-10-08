@@ -1,5 +1,6 @@
 import type { HomePageData } from "@/types/content";
 import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
+import { CmsBannerAdPair } from "@/components/ui/CmsBannerAdPair";
 import { BelowMenuAds } from "./BelowMenuAds";
 import { HighlightNews } from "./HighlightNews";
 import { BlogBichar } from "./BlogBichar";
@@ -28,7 +29,7 @@ type HomePageProps = {
   data: HomePageData;
   bannerNewsData?: BannerNewsData;
   belowMenuAds?: BelowMenuHomeAd[];
-  highlightAds?: LongHighlightAd[];
+  highlightAds?: LongHighlightAd[] | false;
   longAds?: LongAds;
   siteName: string;
 };
@@ -62,9 +63,15 @@ export function HomePage({
 
       <Samachar />
 
-      <CmsBannerAd
-        image={longAds?.below_news_ad}
-        href={longAds?.below_news_insert_url}
+      <CmsBannerAdPair
+        left={{
+          image: longAds?.below_news_ad_left,
+          href: longAds?.below_news_left_insert_url,
+        }}
+        right={{
+          image: longAds?.below_news_ad_right,
+          href: longAds?.below_news_right_insert_url,
+        }}
         siteName={siteName}
       />
 
@@ -73,9 +80,15 @@ export function HomePage({
         <Publication />
       </div>
 
-      <CmsBannerAd
-        image={longAds?.below_artha_ra_rojgar_ad}
-        href={longAds?.below_artha_ra_rojgar_ad_url}
+      <CmsBannerAdPair
+        left={{
+          image: longAds?.below_artha_ra_rojgar_ad_left,
+          href: longAds?.below_artha_ra_rojgar_ad_url_left,
+        }}
+        right={{
+          image: longAds?.below_artha_ra_rojgar_ad_right,
+          href: longAds?.below_artha_ra_rojgar_ad_url_right,
+        }}
         siteName={siteName}
       />
 

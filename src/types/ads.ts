@@ -51,13 +51,18 @@ export type LongHighlightAd = {
 };
 
 export type LongAds = {
-  long_ads_for_highlight_news: LongHighlightAd[];
+  /** `false` when no highlight ads are set. */
+  long_ads_for_highlight_news: LongHighlightAd[] | false;
   before_samachar: UploadedAd | false;
   before_news_insert_url: string;
-  below_news_ad: UploadedAd | false;
-  below_news_insert_url: string;
-  below_artha_ra_rojgar_ad: UploadedAd | false;
-  below_artha_ra_rojgar_ad_url: string;
+  below_news_ad_left: UploadedAd | false;
+  below_news_left_insert_url: string;
+  below_news_ad_right: UploadedAd | false;
+  below_news_right_insert_url: string;
+  below_artha_ra_rojgar_ad_left: UploadedAd | false;
+  below_artha_ra_rojgar_ad_url_left: string;
+  below_artha_ra_rojgar_ad_right: UploadedAd | false;
+  below_artha_ra_rojgar_ad_url_right: string;
   below_rojgar_tv_ad: UploadedAd | false;
   below_rojgar_tv_ad_url: string;
   below_business_ad: UploadedAd | false;

@@ -11,6 +11,8 @@ type CmsBannerAdProps = {
   /** Skip the full-width band + container wrapper (when already inside one). */
   bare?: boolean;
   className?: string;
+  /** `sizes` hint for the image; defaults to a full-width banner. */
+  sizes?: string;
 };
 
 /** The CMS sends the 150px thumbnail; drop the "-150x100" suffix for the original. */
@@ -23,6 +25,7 @@ export function CmsBannerAd({
   siteName,
   bare = false,
   className = "",
+  sizes = "(max-width: 1100px) 100vw, 1100px",
 }: CmsBannerAdProps) {
   if (!image || !image.url) return null;
 
@@ -32,7 +35,7 @@ export function CmsBannerAd({
       alt={siteName}
       width={1100}
       height={100}
-      sizes="(max-width: 1100px) 100vw, 1100px"
+      sizes={sizes}
       style={{ width: "100%", height: "auto" }}
     />
   );

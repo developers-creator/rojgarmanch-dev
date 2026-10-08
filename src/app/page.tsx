@@ -7,6 +7,10 @@ import { HomePage } from "@/components/home/HomePage";
 import { getAds, getBannerNews, getSettingsOrEmpty } from "@/lib/api";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
+// Rendered per request: a statically cached homepage kept serving stale posts
+// and ads on Vercel. Data fetches still cache for a few seconds (apiFetch).
+export const dynamic = "force-dynamic";
+
 // Falls back to the defaults in layout.tsx when the SEO API is unreachable.
 export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("/", {});

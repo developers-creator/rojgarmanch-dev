@@ -335,6 +335,22 @@ h6 {
   padding-block: 0;
 }
 
+/* Two ads in one row, equal halves (also on mobile). */
+.ad-pair {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(8px, 2vw, 24px);
+}
+
+.ad-pair .site-ad {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ad-pair .site-ad--banner {
+  padding-block: 0;
+}
+
 .below-menu-ads .container {
   display: flex;
   flex-direction: column;

@@ -10,7 +10,7 @@ import type { BannerNewsData, BannerNewsItem } from "@/types/bannerNews";
 type HighlightNewsProps = {
   bannerNewsData?: BannerNewsData;
   /** CMS long ads; ad N is shown once, under news N. */
-  ads?: LongHighlightAd[];
+  ads?: LongHighlightAd[] | false;
   /** Site name from settings, used as the ad image alt text. */
   siteName: string;
 };
@@ -93,7 +93,7 @@ export function HighlightNews({
   ads = [],
   siteName,
 }: HighlightNewsProps) {
-  const cmsAds = ads.filter((ad) => ad.long_highlight_upload_ad?.url);
+  const cmsAds = (Array.isArray(ads) ? ads : []).filter((ad) => ad.long_highlight_upload_ad?.url);
   const [first, ...rest] = (bannerNewsData?.data ?? []).map(toHighlightStory);
   if (!first) return null;
 
