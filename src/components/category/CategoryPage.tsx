@@ -93,6 +93,14 @@ export function CategoryPage({
   return (
     <main id="main" className="category-page">
       <div className="container">
+        <CmsBannerAd
+          image={ad?.cat_ad_image}
+          href={ad?.cat_ad_url}
+          siteName={siteName}
+          bare
+          className="category-inline-ad"
+        />
+
         <header className="category-head">
           <h1 id="category-title">{category.name}</h1>
         </header>
@@ -133,14 +141,6 @@ export function CategoryPage({
             </Link>
           </Reveal>
         ) : null}
-
-        <CmsBannerAd
-          image={ad?.cat_ad_image}
-          href={ad?.cat_ad_url}
-          siteName={siteName}
-          bare
-          className="category-inline-ad"
-        />
 
         {rest.length > 0 ? (
           <section className="category-stream" aria-label="थप सामग्री">

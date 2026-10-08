@@ -6859,7 +6859,9 @@ body.menu-open {
 }
 
 .category-inline-ad {
-  margin: 0 0 clamp(2rem, 4vw, 3rem);
+  margin: 0 0 clamp(1rem, 2.5vw, 1.75rem);
+  /* First thing on the page, so skip the banner's own top gap. */
+  padding-top: 0;
 }
 
 .category-inline-ad .site-ad__frame {
@@ -7435,8 +7437,13 @@ body.menu-open {
 
 /* Article detail — split hero + rail + body */
 .article-page {
-  padding: clamp(1.5rem, 4vw, 2.75rem) 0 var(--space-11);
+  padding: clamp(0.75rem, 2vw, 1.25rem) 0 var(--space-11);
   background: var(--color-surface-page);
+}
+
+/* The ad above the title sits closer to the header. */
+.article-page .container > .site-ad--banner:first-child {
+  padding-top: 0;
 }
 
 .article-body__sticky-title {
