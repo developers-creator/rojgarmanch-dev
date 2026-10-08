@@ -1,8 +1,20 @@
 "use client";
 
 import { useCallback } from "react";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  LinkedinShareButton,
+  LinkedinIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+} from "next-share";
 import { Icon } from "@/components/ui/Icon";
 import { ArticleFontControls } from "./ArticleFontSize";
+
+const SHARE_ICON_SIZE = 42;
 
 type ArticleMetaRailProps = {
   author?: string;
@@ -11,8 +23,6 @@ type ArticleMetaRailProps = {
   dateIso?: string;
   title: string;
   href: string;
-  comments?: number;
-  shares?: number;
 };
 
 export function ArticleMetaRail({
@@ -22,12 +32,9 @@ export function ArticleMetaRail({
   dateIso,
   title,
   href,
-  shares = 0,
 }: ArticleMetaRailProps) {
   const name = author || "सम्पादकीय टोली";
   const pageUrl = `https://rojgarmanch.com${href.startsWith("/") ? href : `/${href}`}${href.endsWith("/") ? "" : "/"}`;
-  const encodedUrl = encodeURIComponent(pageUrl);
-  const encodedTitle = encodeURIComponent(title);
 
   const onNativeShare = useCallback(async () => {
     const url =
@@ -80,39 +87,32 @@ export function ArticleMetaRail({
         </div>
 
         <div className="article-meta__row article-meta__row--share">
-          <div className="article-meta__shares">
-            <strong>{shares}</strong>
-            <span>Shares</span>
-          </div>
-
           <div className="article-meta__social" aria-label="सेयर गर्नुहोस्">
-            <a
-              className="article-meta__social-btn article-meta__social-btn--facebook"
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <FacebookShareButton
+              url={pageUrl}
+              quote={title}
               aria-label="Facebook मा सेयर"
             >
-              <Icon name="facebook" size={14} />
-            </a>
-            <a
-              className="article-meta__social-btn article-meta__social-btn--x"
-              href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              <FacebookIcon size={SHARE_ICON_SIZE} round />
+            </FacebookShareButton>
+            <TwitterShareButton
+              url={pageUrl}
+              title={title}
               aria-label="X मा सेयर"
             >
-              <Icon name="x" size={14} />
-            </a>
-            <a
-              className="article-meta__social-btn article-meta__social-btn--linkedin"
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn मा सेयर"
+              <TwitterIcon size={SHARE_ICON_SIZE} round />
+            </TwitterShareButton>
+            <LinkedinShareButton url={pageUrl} aria-label="LinkedIn मा सेयर">
+              <LinkedinIcon size={SHARE_ICON_SIZE} round />
+            </LinkedinShareButton>
+            <WhatsappShareButton
+              url={pageUrl}
+              title={title}
+              separator=" - "
+              aria-label="WhatsApp मा सेयर"
             >
-              <Icon name="linkedin" size={14} />
-            </a>
+              <WhatsappIcon size={SHARE_ICON_SIZE} round />
+            </WhatsappShareButton>
             <button
               type="button"
               className="article-meta__social-btn article-meta__social-btn--native"

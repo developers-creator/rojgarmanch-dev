@@ -232,8 +232,6 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
               dateIso={article.dateIso}
               title={article.title}
               href={article.href}
-              comments={article.comments}
-              shares={article.views ?? Math.max(12, (article.comments ?? 1) * 18)}
             />
 
             <article className="article-body" aria-labelledby="article-title">
