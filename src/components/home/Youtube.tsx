@@ -37,8 +37,6 @@ export async function Youtube({ data }: YoutubeProps) {
       ? [{ id: String(post.id), youtubeId: id, title: decodeEntities(post.title) }]
       : [];
   });
-  if (!videos.length) return null;
-
   const shorts = (reelsRes?.data?.posts ?? []).flatMap((post): YtShort[] => {
     const id = youtubeId(post.reel_video_url);
     return id
@@ -46,11 +44,13 @@ export async function Youtube({ data }: YoutubeProps) {
       : [];
   });
 
+  if (!videos.length && !shorts.length) return null;
+
   return (
     <YoutubeSection
       title={category?.name ?? "रोजगार टिभी"}
       reelsTitle={reelsRes?.data?.category.name ?? "रिल्स"}
-      data={{ ...data, videos, featuredId: videos[0].id, shorts }}
+      data={{ ...data, videos, featuredId: videos[0]?.id ?? "", shorts }}
     />
   );
 }

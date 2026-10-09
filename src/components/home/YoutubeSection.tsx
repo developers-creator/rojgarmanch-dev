@@ -438,10 +438,10 @@ export function YoutubeSection({ title, reelsTitle, data }: YoutubeSectionProps)
     closeShorts();
   };
 
-  if (!videos.length) return null;
+  if (!videos.length && !shorts.length) return null;
 
   const featured = videos.find((v) => v.id === activeId) ?? videos[0];
-  const rest = videos.filter((v) => v.id !== featured.id);
+  const rest = featured ? videos.filter((v) => v.id !== featured.id) : [];
 
   const openVideo = (id: string) => {
     setActiveId(id);
@@ -450,7 +450,12 @@ export function YoutubeSection({ title, reelsTitle, data }: YoutubeSectionProps)
 
   return (
     <section className="yt-block container" id="youtube" aria-label="युट्युब र रिल्स">
-      <div className="yt-block__layout">
+      <div
+        className={`yt-block__layout${
+          videos.length && shorts.length ? "" : " yt-block__layout--single"
+        }`}
+      >
+        {featured ? (
         <div className="yt-block__col">
           <SectionTitle href={data.channelUrl ?? "https://www.youtube.com"}>
             <span id="youtube-title">{title}</span>
@@ -478,7 +483,9 @@ export function YoutubeSection({ title, reelsTitle, data }: YoutubeSectionProps)
             ) : null}
           </Reveal>
         </div>
+        ) : null}
 
+        {shorts.length ? (
         <div className="yt-block__col">
           <SectionTitle
             href={
@@ -499,6 +506,7 @@ export function YoutubeSection({ title, reelsTitle, data }: YoutubeSectionProps)
             </div>
           </Reveal>
         </div>
+        ) : null}
       </div>
 
       {videoPopupOpen ? (

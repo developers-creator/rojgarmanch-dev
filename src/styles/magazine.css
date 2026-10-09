@@ -10799,3 +10799,10 @@ body.menu-open {
 .notify-trend:hover .notify-trend__title {
   color: #c50010;
 }
+
+/* Only one of रोजगार टिभी / रिल्स has content: use the full width */
+@media (min-width: 900px) {
+  .yt-block__layout.yt-block__layout--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
