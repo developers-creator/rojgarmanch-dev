@@ -12,12 +12,14 @@ import {
   WhatsappIcon,
 } from "next-share";
 import { Icon } from "@/components/ui/Icon";
+import { AuthorLink } from "@/components/ui/AuthorLink";
 import { ArticleFontControls } from "./ArticleFontSize";
 
 const SHARE_ICON_SIZE = 42;
 
 type ArticleMetaRailProps = {
   author?: string;
+  authorSlug?: string;
   authorAvatar?: string;
   dateLabel?: string;
   dateIso?: string;
@@ -27,6 +29,7 @@ type ArticleMetaRailProps = {
 
 export function ArticleMetaRail({
   author,
+  authorSlug,
   authorAvatar,
   dateLabel,
   dateIso,
@@ -59,6 +62,7 @@ export function ArticleMetaRail({
       <div className="article-meta__sticky">
         <div className="article-meta__row article-meta__row--author">
           <div className="article-meta__author">
+            <AuthorLink slug={authorSlug} label={name} className="article-meta__avatar-link">
             {authorAvatar ? (
               <img
                 className="article-meta__avatar"
@@ -72,8 +76,11 @@ export function ArticleMetaRail({
                 {name.slice(0, 1)}
               </span>
             )}
+            </AuthorLink>
             <div className="article-meta__author-copy">
-              <p className="article-meta__name">{name}</p>
+              <p className="article-meta__name">
+                <AuthorLink slug={authorSlug}>{name}</AuthorLink>
+              </p>
               {dateLabel ? (
                 <time className="article-meta__date" dateTime={dateIso}>
                   <Icon name="clock" size={12} />

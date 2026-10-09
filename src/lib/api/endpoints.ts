@@ -10,6 +10,7 @@ import type { TeamPageResponse } from "@/types/team";
 import type { SeoResponse } from "@/types/seo";
 import type { AboutPageResponse, DefaultPageResponse } from "@/types/page";
 import type { SitemapResponse } from "@/types/sitemap";
+import type { AuthorPostsData } from "@/types/author";
 
 // Add new endpoints here: one line for the path, one function to fetch it.
 export const ENDPOINTS = {
@@ -88,6 +89,14 @@ export const CATEGORY_PER_PAGE = 25;
 export const getCategoryPosts = (slug: string, page = 1) =>
   apiFetch<NewsCategoryData>(
     `/category/${encodeURIComponent(slug)}?per_page=${CATEGORY_PER_PAGE}&page=${page}`,
+  );
+
+// Author archive, paginated — `slug` is the CMS author slug, e.g. "rojgar-manch"
+export const AUTHOR_PER_PAGE = 25;
+
+export const getAuthorPosts = (slug: string, page = 1) =>
+  apiFetch<AuthorPostsData>(
+    `/author/${encodeURIComponent(slug)}?per_page=${AUTHOR_PER_PAGE}&page=${page}`,
   );
 
 // Publication

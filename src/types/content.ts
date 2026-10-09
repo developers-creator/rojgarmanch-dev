@@ -10,6 +10,8 @@ export type Post = {
   imageAlt?: string;
   category?: string;
   author?: string;
+  /** CMS author slug; links the byline to `/author/<slug>/`. */
+  authorSlug?: string;
   authorAvatar?: string;
   dateLabel?: string;
   dateIso?: string;

@@ -3,6 +3,7 @@ import type { HighlightStory } from "@/types/content";
 import Image from "next/image";
 import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import Link from "next/link";
+import { AuthorLink } from "@/components/ui/AuthorLink";
 import type { LongHighlightAd } from "@/types/ads";
 import type { BannerNewsData, BannerNewsItem } from "@/types/bannerNews";
 
@@ -26,6 +27,7 @@ function toHighlightStory(item: BannerNewsItem): HighlightStory {
     imageAlt: item.title,
     category: item.category_name,
     author: item.author_name ?? undefined,
+    authorSlug: item.author_slug ?? undefined,
     authorAvatar: item.author_image ?? undefined,
   };
 }
@@ -53,6 +55,7 @@ function HighlightItem({
 
       <div className="highlight__meta">
         {story.authorAvatar ? (
+          <AuthorLink slug={story.authorSlug} label={story.author}>
           <Image
             className="highlight__avatar"
             src={story.authorAvatar}
@@ -61,9 +64,12 @@ function HighlightItem({
             height={28}
             loading={priority ? "eager" : "lazy"}
           />
+          </AuthorLink>
         ) : null}
         {story.author ? (
-          <span className="highlight__author">{story.author}</span>
+          <AuthorLink slug={story.authorSlug}>
+            <span className="highlight__author">{story.author}</span>
+          </AuthorLink>
         ) : null}
       </div>
 

@@ -12,6 +12,8 @@ type CategoryPageProps = {
   pagination?: PaginationData;
   /** Overrides `/category/<slug>` for pagination links (used by search). */
   basePath?: string;
+  /** Use `<basePath>/page/N/` pagination links (default for category pages). */
+  pathStyle?: boolean;
   /** Query params kept on pagination links. */
   query?: Record<string, string>;
   /** Shown instead of the post grid when there are no posts. */
@@ -20,6 +22,8 @@ type CategoryPageProps = {
   ad?: CategoryAds | null;
   /** Site name from settings, used as the ad image alt text. */
   siteName?: string;
+  /** Author archives: photo and bio shown beside the title. */
+  profile?: { image?: string | null; description?: string };
 };
 
 function AuthorByline({ item }: { item: Post }) {
@@ -82,10 +86,12 @@ export function CategoryPage({
   posts,
   pagination,
   basePath,
+  pathStyle,
   query,
   emptyMessage,
   ad,
   siteName = "",
+  profile,
 }: CategoryPageProps) {
   const featured = posts[0];
   const rest = posts.slice(1);
@@ -101,8 +107,22 @@ export function CategoryPage({
           className="category-inline-ad"
         />
 
-        <header className="category-head">
-          <h1 id="category-title">{category.name}</h1>
+        <header className={`category-head${profile ? " category-head--profile" : ""}`}>
+          {profile?.image ? (
+            <img
+              className="category-head__avatar"
+              src={profile.image}
+              alt={category.name}
+              width={96}
+              height={96}
+            />
+          ) : null}
+          <div className="category-head__copy">
+            <h1 id="category-title">{category.name}</h1>
+            {profile?.description ? (
+              <p className="category-head__desc">{profile.description}</p>
+            ) : null}
+          </div>
         </header>
 
         {!featured && emptyMessage ? (
@@ -160,7 +180,7 @@ export function CategoryPage({
           pagination={pagination}
           basePath={basePath ?? `/category/${category.slug}`}
           query={query}
-          pathStyle={!basePath}
+          pathStyle={pathStyle ?? !basePath}
         />
       </div>
     </main>

@@ -227,6 +227,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
           <div className="article-layout">
             <ArticleMetaRail
               author={article.author}
+              authorSlug={article.authorSlug}
               authorAvatar={article.authorAvatar}
               dateLabel={article.dateLabel}
               dateIso={article.dateIso}

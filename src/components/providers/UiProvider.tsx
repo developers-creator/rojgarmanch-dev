@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 type UiState = {
   menuOpen: boolean;
@@ -84,6 +85,16 @@ export function UiProvider({ children }: { children: ReactNode }) {
       document.body.style.paddingRight = "";
     };
   }, [menuOpen, searchOpen, notifyOpen]);
+
+  // Each page renders its own header, so the menu/search that started a
+  // navigation is remounted open on the new page; close everything instead.
+  const pathname = usePathname();
+  useEffect(() => {
+    setMenuOpen(false);
+    setSearchOpen(false);
+    setNotifyOpen(false);
+    setShortsOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
