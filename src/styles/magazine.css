@@ -10688,8 +10688,14 @@ body.menu-open {
 
 .author-link:hover,
 .author-link:focus-visible {
-  color: var(--color-accent);
-  text-decoration: underline;
+  color: #c50010;
+  text-decoration: none;
+}
+
+/* Beat the more specific name/author rules that set their own colours. */
+.author-link:hover .highlight__author,
+.author-link:focus-visible .highlight__author {
+  color: inherit;
 }
 
 .article-meta__avatar-link {
