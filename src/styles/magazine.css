@@ -10733,3 +10733,53 @@ body.menu-open {
   font-size: var(--fs-md, 1rem);
   line-height: 1.6;
 }
+
+/* Homepage: news titles turn brand red on hover */
+.home-page [class*="__title"] a:hover,
+.home-page [class*="-title"] a:hover,
+.home-page [class*="__headline"] a:hover,
+.home-page .highlight__title a:hover,
+.home-page .lead-list__lead a:hover,
+.home-page .samachar-feature__link:hover .samachar-feature__title,
+.home-page .spotlight__item:hover strong,
+.home-page .notify-flash:hover .notify-flash__title,
+.home-page .notify-trend:hover .notify-trend__title,
+.home-page .yt-block__side:hover .yt-block__side-title,
+.home-page .feature-spot__item:hover .feature-spot__item-title,
+.home-page .biz-item:hover .biz-item__title {
+  color: #c50010;
+}
+
+/* Homepage hero titles (interview, business, news lead) */
+.home-page .iv-hero__title a:hover,
+.home-page .biz-hero__title a:hover,
+.home-page .samachar-feature__link:hover .samachar-feature__title {
+  color: #c50010 !important;
+}
+
+/* Business hero panel is brand red, so it turns white to keep the red title visible */
+.home-page .biz-hero__panel:hover {
+  background: #fff;
+}
+
+/* Homepage NRN + Pravas rail titles */
+.home-page .duo-rail__lead-title a:hover,
+.home-page .duo-rail__item:hover,
+.home-page .duo-rail__item:hover span {
+  color: #c50010 !important;
+}
+
+/* Article related/additional news, category, author and search listings: titles turn brand red on hover */
+.article-related__item:hover .article-related__title,
+.article-more__title a:hover,
+.category-feature__title a:hover,
+.category-card__link:hover .category-card__title {
+  color: #c50010;
+}
+
+/* Header notification panel (ताजा / लोकप्रिय): titles turn brand red on hover */
+.notify-flash:hover,
+.notify-flash:hover .notify-flash__title,
+.notify-trend:hover .notify-trend__title {
+  color: #c50010;
+}

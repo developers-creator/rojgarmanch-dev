@@ -43,7 +43,7 @@ export function HomePage({
   siteName,
 }: HomePageProps) {
   return (
-    <main id="main">
+    <main id="main" className="home-page">
       <h1 className="sr-only">रोजगार मञ्च — करियर र रोजगार पत्रिका</h1>
 
       <BelowMenuAds ads={belowMenuAds} siteName={siteName} />
