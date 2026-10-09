@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { useSettings } from "@/components/providers/SettingsProvider";
-import type { PopupAds } from "@/types/ads";
+import type { MobilePopupAd, PopupAds, WebPopupAd } from "@/types/ads";
 
 const SHOW_DELAY_MS = 1200;
 
@@ -15,6 +15,13 @@ type PopupAdProps = {
 };
 
 type Creative = { src: string; href: string };
+
+/** The CMS sends `false`, an object keyed by index, or an array — normalise to an array. */
+function toList<T>(value: unknown): T[] {
+  if (Array.isArray(value)) return value as T[];
+  if (value && typeof value === "object") return Object.values(value) as T[];
+  return [];
+}
 
 /**
  * Popup ads, shown on every visit: mobile ads on small screens (falling back to
@@ -34,11 +41,11 @@ export function PopupAd({ ads }: PopupAdProps) {
   useEffect(() => {
     if (!ads || !allowed) return;
 
-    const web: Creative[] = (ads.wen_popup_ads ?? [])
-      .filter((a) => a.web)
+    const web: Creative[] = toList<WebPopupAd>(ads.wen_popup_ads)
+      .filter((a) => a?.web)
       .map((a) => ({ src: a.web as string, href: a.web_link }));
-    const mobile: Creative[] = (ads.mobile_popup_ads ?? [])
-      .filter((a) => a.mobile)
+    const mobile: Creative[] = toList<MobilePopupAd>(ads.mobile_popup_ads)
+      .filter((a) => a?.mobile)
       .map((a) => ({ src: a.mobile as string, href: a.mobile_link }));
 
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
