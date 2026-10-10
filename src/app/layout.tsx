@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Mukta } from "next/font/google";
+import Script from "next/script";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { SettingsProvider } from "@/components/providers/SettingsProvider";
 import { getSettingsOrEmpty } from "@/lib/api";
@@ -73,7 +74,9 @@ export default async function RootLayout({
         {process.env.NODE_ENV === "development" && (
           // Dev only: Bitdefender-style extensions stamp `bis_skin_checked` on
           // every element before hydration, which triggers a false mismatch.
-          <script
+          <Script
+            id="strip-extension-attrs"
+            strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
               __html: `new MutationObserver(function(m){m.forEach(function(r){if(r.type==="attributes"&&r.target.removeAttribute)r.target.removeAttribute("bis_skin_checked")})}).observe(document,{attributes:true,attributeFilter:["bis_skin_checked"],subtree:true});`,
             }}
