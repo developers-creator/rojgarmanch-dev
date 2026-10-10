@@ -21,7 +21,7 @@ export async function Feature() {
         className="feature-spot"
         aria-labelledby="feature-title"
       >
-        <SectionTitle href={`/category/${category?.slug ?? "feature"}`} more={false}>
+        <SectionTitle href={`/${category?.slug ?? "feature"}`} more={false}>
           <span id="feature-title">{category?.name}</span>
         </SectionTitle>
 

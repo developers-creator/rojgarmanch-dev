@@ -6,7 +6,7 @@ export function DeshSamaj() {
     <CategoryColumn
       id="desh-samaj"
       title="देश/समाज"
-      href="/category/desh-samaj"
+      href="/desh-samaj"
       leadImage="1517245386807-bb43f82c33c4"
       leadTitle="गाउँ फर्केर उद्यम थालेका युवा — केले टिक्छ, केले टुट्छ"
       items={[

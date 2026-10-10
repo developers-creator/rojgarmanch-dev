@@ -10,7 +10,7 @@ type CategoryPageProps = {
   category: NewsCategory;
   posts: Post[];
   pagination?: PaginationData;
-  /** Overrides `/category/<slug>` for pagination links (used by search). */
+  /** Overrides `/<slug>` for pagination links (used by search). */
   basePath?: string;
   /** Use `<basePath>/page/N/` pagination links (default for category pages). */
   pathStyle?: boolean;
@@ -178,7 +178,7 @@ export function CategoryPage({
 
         <Pagination
           pagination={pagination}
-          basePath={basePath ?? `/category/${category.slug}`}
+          basePath={basePath ?? `/${category.slug}`}
           query={query}
           pathStyle={pathStyle ?? !basePath}
         />

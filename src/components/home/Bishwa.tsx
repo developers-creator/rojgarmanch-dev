@@ -13,7 +13,7 @@ export async function Bishwa() {
     <LeadListColumn
       id="bishwa"
       title={category.name}
-      href={`/category/${category.slug}`}
+      href={`/${category.slug}`}
       lead={items[0]}
       posts={items.slice(1, 4)}
       delay={1}

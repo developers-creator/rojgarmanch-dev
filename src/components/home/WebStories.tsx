@@ -62,7 +62,7 @@ export async function WebStories({ more = true }: WebStoriesProps = {}) {
   return (
     <WebStoriesRail
       title={res?.data?.category.name || "वेबस्टोरिज"}
-      href={more && slug ? `/category/${slug}` : undefined}
+      href={more && slug ? `/${slug}` : undefined}
       items={items}
     />
   );

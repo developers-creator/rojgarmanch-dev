@@ -11,7 +11,7 @@ function toRail(res: NewsCategoryData | null) {
   if (!category || !items.length) return null;
   return {
     heading: category.name,
-    href: `/category/${category.slug}`,
+    href: `/${category.slug}`,
     lead: items[0],
     items: items.slice(1, 4),
   };

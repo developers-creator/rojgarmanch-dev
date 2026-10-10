@@ -322,7 +322,7 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
         {/* Bottom Link */}
         <div className="notify__footer">
           <Link
-            href="/category/news"
+            href="/news"
             className="notify__footer-link"
             onClick={closeNotify}
           >
@@ -588,9 +588,9 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
 
             <Link
               className={`mobile-dock__item${
-                pathname.startsWith("/category/rojgar") ? " is-active" : ""
+                pathname.startsWith("/rojgar") ? " is-active" : ""
               }`}
-              href="/category/rojgar"
+              href="/rojgar"
             >
               <span className="mobile-dock__icon">
                 <Icon name="briefcase" size={20} />

@@ -20,7 +20,7 @@ export async function Business() {
         className="biz-board"
         aria-labelledby="business-title"
       >
-        <SectionTitle href="/category/business">
+        <SectionTitle href="/business">
           <span id="business-title">{category?.name}</span>
         </SectionTitle>
 

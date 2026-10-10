@@ -21,7 +21,10 @@ const urlEntry = (loc: string, modified?: string | null) =>
   `<url><loc>${escapeXml(loc)}</loc>${lastmod(modified)}</url>`;
 
 const toUrl = (i: SitemapItem) =>
-  urlEntry(`${SITE_URL}/${i.slug.replace(/^\/+|\/+$/g, "")}/`, i.modified);
+  urlEntry(
+    `${SITE_URL}/${i.slug.replace(/^\/+|\/+$/g, "").replace(/^category\//, "")}/`,
+    i.modified,
+  );
 
 /** Child sitemap (<urlset>) for one section of the API sitemap payload. */
 export async function sitemapResponse(type: SitemapType) {

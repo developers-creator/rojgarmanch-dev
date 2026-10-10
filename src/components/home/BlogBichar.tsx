@@ -22,7 +22,7 @@ export async function BlogBichar({ ad, siteName }: BlogBicharProps) {
   return (
     <section className="teasers" id="vichar" aria-label="ब्लग / विचार">
       <div className="container">
-        <SectionTitle href={`/category/${category.slug}`}>{category.name}</SectionTitle>
+        <SectionTitle href={`/${category.slug}`}>{category.name}</SectionTitle>
         <div className="teasers__layout">
         <div className="teasers__grid">
           {items.map((item, index) => (

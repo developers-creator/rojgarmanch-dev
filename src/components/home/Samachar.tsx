@@ -60,7 +60,7 @@ export async function Samachar() {
       <div className="container">
         <div className="samachar__grid">
           <div className="samachar__main">
-            <SectionTitle href="/category/news">
+            <SectionTitle href="/news">
               <span id="samachar-title">{category?.name}</span>
             </SectionTitle>
 

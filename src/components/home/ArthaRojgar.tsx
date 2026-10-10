@@ -14,7 +14,7 @@ export async function ArthaRojgar() {
 
   return (
     <section className="spotlight" id="artha-rojgar" aria-labelledby="artha-rojgar-title">
-      <SectionTitle href="/category/employment">
+      <SectionTitle href="/employment">
         <span id="artha-rojgar-title">{category?.name}</span>
       </SectionTitle>
       <div className="spotlight__grid">

@@ -1,6 +1,6 @@
 import { decodeEntities } from "@/lib/text";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Article, ArticleLink } from "@/data/articles";
 import type { NewsLink } from "@/types/news";
 import { getHomePageData, getSiteInfo } from "@/data/home";
@@ -11,6 +11,12 @@ import { breadcrumbSchema, graph, newsArticleSchema } from "@/lib/schema";
 import { unwrapCmsWrappers } from "@/lib/cmsHtml";
 import { ArticlePage } from "@/components/article/ArticlePage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
+import {
+  CategoryView,
+  categoryMetadata,
+  categoryUrl,
+  parsePage,
+} from "@/components/category/CategoryRoute";
 
 // Always rendered per request so edits show up right away; data fetches
 // still cache for a few seconds (apiFetch).
@@ -18,7 +24,15 @@ export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
+  searchParams: Promise<{ page?: string }>;
 };
+
+/** `/<category>/page/N/` — N is a whole number; returns the category slug and page. */
+function categoryPagePath(segments: string[]) {
+  if (segments.length !== 3 || segments[1] !== "page") return null;
+  if (!/^\d+$/.test(segments[2])) return null;
+  return { slug: segments[0], page: Number(segments[2]) };
+}
 
 const toLink = (item: NewsLink): ArticleLink => ({
   title: decodeEntities(item.title.trim()),
@@ -66,10 +80,21 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const paged = categoryPagePath(slug);
+  if (paged) {
+    return paged.page > 1
+      ? categoryMetadata(paged.slug, paged.page)
+      : { title: "श्रेणी फेला परेन" };
+  }
   const path = slug.join("/");
   // Start the SEO request alongside the article instead of after it.
   const [article] = await Promise.all([loadArticle(slug), loadSeo(path)]);
-  if (!article) return { title: "लेख फेला परेन" };
+  if (!article) {
+    // A single segment that is not an article may be a category (`/news/`).
+    return slug.length === 1
+      ? categoryMetadata(slug[0], 1)
+      : { title: "लेख फेला परेन" };
+  }
 
   return buildPageMetadata(path, {
     title: `${article.title} — रोजगार मञ्च`,
@@ -78,8 +103,16 @@ export async function generateMetadata({
   });
 }
 
-export default async function ArticleRoute({ params }: PageProps) {
+export default async function ArticleRoute({ params, searchParams }: PageProps) {
   const { slug } = await params;
+
+  const paged = categoryPagePath(slug);
+  if (paged) {
+    if (paged.page < 1) notFound();
+    if (paged.page === 1) permanentRedirect(categoryUrl(paged.slug));
+    return <CategoryView slug={paged.slug} page={paged.page} />;
+  }
+
   const [article, ads, settings, seo] = await Promise.all([
     loadArticle(slug),
     getAds()
@@ -89,7 +122,13 @@ export default async function ArticleRoute({ params }: PageProps) {
     // Memoized with generateMetadata; supplies the ISO publish/modify times.
     loadSeo(slug.join("/")),
   ]);
-  if (!article) notFound();
+  if (!article) {
+    if (slug.length !== 1) notFound();
+    // Old `?page=N` links move to the `/page/N/` form.
+    const legacyPage = parsePage((await searchParams).page);
+    if (legacyPage > 1) permanentRedirect(categoryUrl(slug[0], legacyPage));
+    return <CategoryView slug={slug[0]} page={1} />;
+  }
 
   const home = getHomePageData();
   const site = getSiteInfo();

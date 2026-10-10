@@ -13,7 +13,7 @@ export async function Khel() {
     <CategoryColumn
       id="khel"
       title={category.name}
-      href={`/category/${category.slug}`}
+      href={`/${category.slug}`}
       lead={items[0]}
       posts={items.slice(1, 3)}
     />

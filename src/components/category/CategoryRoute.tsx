@@ -20,9 +20,9 @@ export const parsePage = (raw?: string) =>
 const loadCategory = (slug: string, page: number) =>
   getCategoryPosts(slug, page).catch(() => null);
 
-/** Page 1 lives at `/category/<slug>/`, later pages at `/category/<slug>/page/N/`. */
+/** Page 1 lives at `/<slug>/`, later pages at `/<slug>/page/N/`. */
 export const categoryUrl = (slug: string, page = 1) =>
-  page > 1 ? `/category/${slug}/page/${page}/` : `/category/${slug}/`;
+  page > 1 ? `/${slug}/page/${page}/` : `/${slug}/`;
 
 export async function categoryMetadata(slug: string, page: number): Promise<Metadata> {
   // Start the SEO request alongside the category instead of after it.

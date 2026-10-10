@@ -22,7 +22,7 @@ export async function Antarwarta() {
         className="iv-board"
         aria-labelledby="antarwarta-title"
       >
-        <SectionTitle href={`/category/${category?.slug ?? "interview"}`}>
+        <SectionTitle href={`/${category?.slug ?? "interview"}`}>
           <span id="antarwarta-title">{category?.name}</span>
         </SectionTitle>
 

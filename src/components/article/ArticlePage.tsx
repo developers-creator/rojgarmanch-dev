@@ -326,7 +326,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
               aria-labelledby="article-more-title"
             >
               <SectionTitle
-                href={`/category/${article.categorySlug}`}
+                href={`/${article.categorySlug}`}
                 more={Boolean(article.categorySlug)}
                 moreLabel="सबै हेर्नुहोस्"
               >

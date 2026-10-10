@@ -12,8 +12,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: "/category/samaj", destination: "/category/desh-samaj", permanent: true },
-      { source: "/category/desh-ramailo-sansar", destination: "/category/ramailo-sansar", permanent: true },
+      { source: "/category/samaj", destination: "/desh-samaj", permanent: true },
+      { source: "/category/desh-ramailo-sansar", destination: "/ramailo-sansar", permanent: true },
+      { source: "/category/:slug", destination: "/:slug", permanent: true },
+      { source: "/category/:slug/page/:page", destination: "/:slug/page/:page", permanent: true },
     ];
   },
   webpack: (config) => {

@@ -400,7 +400,7 @@ const siteInfo: SiteInfo = {
     { href: "/contact", label: "सम्पर्क" },
     { href: "/publication", label: "प्रकाशन" },
 
-    { href: "/category/samachar", label: "Archive" },
+    { href: "/samachar", label: "Archive" },
   ],
 };
 
