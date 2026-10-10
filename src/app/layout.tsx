@@ -70,6 +70,15 @@ export default async function RootLayout({
     <html lang="ne" className={mukta.variable} suppressHydrationWarning>
       <head>
         <link rel="preload" as="image" href={LCP_IMAGE} fetchPriority="high" />
+        {process.env.NODE_ENV === "development" && (
+          // Dev only: Bitdefender-style extensions stamp `bis_skin_checked` on
+          // every element before hydration, which triggers a false mismatch.
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `new MutationObserver(function(m){m.forEach(function(r){if(r.type==="attributes"&&r.target.removeAttribute)r.target.removeAttribute("bis_skin_checked")})}).observe(document,{attributes:true,attributeFilter:["bis_skin_checked"],subtree:true});`,
+            }}
+          />
+        )}
       </head>
       <body className={mukta.className} suppressHydrationWarning>
         <ThemeProvider>
