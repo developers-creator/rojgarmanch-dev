@@ -52,12 +52,16 @@ export const ENDPOINTS = {
   sitemap: "/sitemap",
 } as const;
 
+// Homepage, category listings and single articles cache for 15s; every other
+// endpoint uses the 10s default in apiFetch.
+const LISTING_OPTIONS = { revalidate: 15 };
+
 // Response types are `unknown` until the payloads are typed.
 export const getSettings = () => apiFetch<SettingsData>(ENDPOINTS.settings);
 
 // Banner News
 export const getBannerNews = () =>
-  apiFetch<BannerNewsData>(ENDPOINTS.bannerNews);
+  apiFetch<BannerNewsData>(ENDPOINTS.bannerNews, LISTING_OPTIONS);
 
 // Contact
 export const getContact = () => apiFetch<ContactData>(ENDPOINTS.contact);
@@ -65,28 +69,28 @@ export const getContact = () => apiFetch<ContactData>(ENDPOINTS.contact);
 // Single news article — `slug` is the CMS slug as-is, e.g. "news/2026/09/112895"
 // `cache` shares one fetch between generateMetadata and the page.
 export const getNews = cache((slug: string) =>
-  apiFetch<NewsDetailData>(`/${slug}`),
+  apiFetch<NewsDetailData>(`/${slug}`, LISTING_OPTIONS),
 );
 
 // News category listing
 export const getNewsCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.news);
+  apiFetch<NewsCategoryData>(ENDPOINTS.news, LISTING_OPTIONS);
 
 // Homepage समाचार — mixed main news, not the news category.
 export const getMainNews = () =>
-  apiFetch<MainNewsData>(ENDPOINTS.mainNews);
+  apiFetch<MainNewsData>(ENDPOINTS.mainNews, LISTING_OPTIONS);
 
 // Artha-rojgar category listing
 export const getArthaRojgarCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.arthaRojgar);
+  apiFetch<NewsCategoryData>(ENDPOINTS.arthaRojgar, LISTING_OPTIONS);
 
 // Career playbook category listing
 export const getCareerPlaybookCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.careerPlaybook);
+  apiFetch<NewsCategoryData>(ENDPOINTS.careerPlaybook, LISTING_OPTIONS);
 
 // Employment category listing
 export const getEmploymentCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.employment);
+  apiFetch<NewsCategoryData>(ENDPOINTS.employment, LISTING_OPTIONS);
 
 // Any category listing, paginated — `slug` is the CMS category slug, e.g. "employment"
 export const CATEGORY_PER_PAGE = 25;
@@ -94,6 +98,7 @@ export const CATEGORY_PER_PAGE = 25;
 export const getCategoryPosts = (slug: string, page = 1) =>
   apiFetch<NewsCategoryData>(
     `/category/${encodeURIComponent(slug)}?per_page=${CATEGORY_PER_PAGE}&page=${page}`,
+    LISTING_OPTIONS,
   );
 
 // Author archive, paginated — `slug` is the CMS author slug, e.g. "rojgar-manch"
@@ -122,67 +127,67 @@ export const getPublications = (page = 1) =>
 
 // Rojgar TV
 export const getRojgarTV = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.rojgartv);
+  apiFetch<NewsCategoryData>(ENDPOINTS.rojgartv, LISTING_OPTIONS);
 
 // Reels
 export const getReels = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.reels);
+  apiFetch<NewsCategoryData>(ENDPOINTS.reels, LISTING_OPTIONS);
 
 // Business
 export const getBusiness = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.business);
+  apiFetch<NewsCategoryData>(ENDPOINTS.business, LISTING_OPTIONS);
 
 // NRn
 export const getNRN = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.nrn);
+  apiFetch<NewsCategoryData>(ENDPOINTS.nrn, LISTING_OPTIONS);
 
 // Pravas
 export const getPravas = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.pravas);
+  apiFetch<NewsCategoryData>(ENDPOINTS.pravas, LISTING_OPTIONS);
 
 // Webstories
 export const getWebstories = () =>
-  apiFetch<WebstoryData>(ENDPOINTS.webstories);
+  apiFetch<WebstoryData>(ENDPOINTS.webstories, LISTING_OPTIONS);
 
 // interview
 export const getInterview = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.interview);
+  apiFetch<NewsCategoryData>(ENDPOINTS.interview, LISTING_OPTIONS);
 
 // feature
 export const getFeature = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.feature);
+  apiFetch<NewsCategoryData>(ENDPOINTS.feature, LISTING_OPTIONS);
 
 // sports
 export const getSports = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.sports);
+  apiFetch<NewsCategoryData>(ENDPOINTS.sports, LISTING_OPTIONS);
 
 // travel
 export const getTravel = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.travel);
+  apiFetch<NewsCategoryData>(ENDPOINTS.travel, LISTING_OPTIONS);
 
 // kala
 export const getKala = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.kala);
+  apiFetch<NewsCategoryData>(ENDPOINTS.kala, LISTING_OPTIONS);
 
 // sahitya
 export const getSahitya = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.sahitya);
+  apiFetch<NewsCategoryData>(ENDPOINTS.sahitya, LISTING_OPTIONS);
 
 // opinion
 export const getOpinion = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.opinion);
+  apiFetch<NewsCategoryData>(ENDPOINTS.opinion, LISTING_OPTIONS);
 
 // ramailoSansar
 export const getRamailoSansar = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.ramailoSansar);
+  apiFetch<NewsCategoryData>(ENDPOINTS.ramailoSansar, LISTING_OPTIONS);
 
 // world
 export const getWorld = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.world);
+  apiFetch<NewsCategoryData>(ENDPOINTS.world, LISTING_OPTIONS);
 
 // englishHeadline
 export const getEnglishHeadline = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.englishHeadline);
+  apiFetch<NewsCategoryData>(ENDPOINTS.englishHeadline, LISTING_OPTIONS);
 
 // headerMenu
 export const getHeaderMenu = () =>

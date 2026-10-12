@@ -72,13 +72,13 @@ export default async function RootLayout({
       <head>
         <link rel="preload" as="image" href={LCP_IMAGE} fetchPriority="high" />
         {process.env.NODE_ENV === "development" && (
-          // Dev only: Bitdefender-style extensions stamp `bis_skin_checked` on
+          // Dev only: Bitdefender-style extensions stamp `bis_skin_checked`/`bis_size`/`bis_id` on
           // every element before hydration, which triggers a false mismatch.
           <Script
             id="strip-extension-attrs"
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
-              __html: `new MutationObserver(function(m){m.forEach(function(r){if(r.type==="attributes"&&r.target.removeAttribute)r.target.removeAttribute("bis_skin_checked")})}).observe(document,{attributes:true,attributeFilter:["bis_skin_checked"],subtree:true});`,
+              __html: `(function(){var A=["bis_skin_checked","bis_size","bis_id"];function strip(e){if(e&&e.removeAttribute)A.forEach(function(a){e.removeAttribute(a)})}new MutationObserver(function(m){m.forEach(function(r){strip(r.target)})}).observe(document,{attributes:true,attributeFilter:A,subtree:true});document.querySelectorAll("[bis_skin_checked],[bis_size],[bis_id]").forEach(strip)})();`,
             }}
           />
         )}
