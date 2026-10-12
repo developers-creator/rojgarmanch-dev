@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
@@ -33,7 +34,7 @@ export async function Feature() {
             aria-hidden="true"
           >
             {lead.imageUrl ? (
-              <img
+              <Image
                 className="feature-spot__cover"
                 src={lead.imageUrl}
                 alt={lead.title}
@@ -60,7 +61,7 @@ export async function Feature() {
               <Link className="feature-spot__item" href={item.href}>
                 {item.imageUrl ? (
                   <span className="feature-spot__thumb">
-                    <img
+                    <Image
                       src={item.imageUrl}
                       alt={item.title}
                       width={88}

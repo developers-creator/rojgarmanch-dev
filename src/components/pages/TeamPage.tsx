@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { fillImgAlt } from "@/lib/cmsHtml";
 import { Reveal } from "@/components/motion/Reveal";
 import { getTeam } from "@/lib/api/endpoints";
@@ -27,7 +28,7 @@ export async function TeamPage() {
             >
               <div className="team-card__media">
                 {member.image ? (
-                  <img
+                  <Image
                     src={member.image}
                     alt={member.title}
                     width={480}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { getExchangeRates } from "@/lib/api";
@@ -76,7 +77,7 @@ export async function VinimayaDar() {
                     <th scope="row">
                       <span className="fx-widget__currency">
                         {FLAGS[row.code] ? (
-                          <img
+                          <Image
                             className="fx-widget__flag"
                             src={`https://flagcdn.com/w40/${FLAGS[row.code]}.png`}
                             alt={`${row.name} flag`}

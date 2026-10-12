@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { Icon } from "@/components/ui/Icon";
@@ -38,12 +39,12 @@ export function ArticleHeroImage({ src, alt }: ArticleHeroImageProps) {
   return (
     <>
       <div className="article-hero__media">
-        <img
+        <Image
           src={src}
           alt={alt}
           width={900}
           height={720}
-          fetchPriority="high"
+          preload
         />
         <button
           type="button"
@@ -77,7 +78,7 @@ export function ArticleHeroImage({ src, alt }: ArticleHeroImageProps) {
               >
                 <Icon name="xmark" size={20} />
               </button>
-              <img
+              <Image
                 className="article-lightbox__img"
                 src={src}
                 alt={alt}

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { CategoryAds } from "@/types/ads";
 import type { Post } from "@/types/content";
 import type { NewsCategory, Pagination as PaginationData } from "@/types/news";
@@ -32,7 +33,7 @@ function AuthorByline({ item }: { item: Post }) {
   return (
     <span className="category-author">
       {item.authorAvatar ? (
-        <img
+        <Image
           className="category-author__avatar"
           src={item.authorAvatar}
           alt={item.author || item.title}
@@ -63,7 +64,7 @@ function PostCard({
       <Link className="category-card__link" href={item.href}>
         <span className="category-card__media">
           {item.imageUrl ? (
-            <img
+            <Image
               className="img-cover"
               src={item.imageUrl}
               alt={item.imageAlt || item.title}
@@ -109,7 +110,7 @@ export function CategoryPage({
 
         <header className={`category-head${profile ? " category-head--profile" : ""}`}>
           {profile?.image ? (
-            <img
+            <Image
               className="category-head__avatar"
               src={profile.image}
               alt={category.name}
@@ -149,13 +150,13 @@ export function CategoryPage({
               aria-hidden="true"
             >
               {featured.imageUrl ? (
-                <img
+                <Image
                   className="img-cover"
                   src={featured.imageUrl}
                   alt={featured.imageAlt || featured.title}
                   width={1200}
                   height={675}
-                  fetchPriority="high"
+                  preload
                 />
               ) : null}
             </Link>

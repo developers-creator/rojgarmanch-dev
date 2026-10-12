@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Post } from "@/types/content";
 import { ADS } from "@/lib/ads";
 import { Reveal } from "@/components/motion/Reveal";
@@ -5,8 +6,8 @@ import { AdUnit } from "@/components/ui/AdUnit";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CareerPlaybook } from "./CareerPlaybook";
 import Link from "next/link";
-import { getNewsCategories } from "@/lib/api/endpoints";
-import { toPost } from "@/lib/posts";
+import { getMainNews } from "@/lib/api/endpoints";
+import { searchToPost } from "@/lib/posts";
 
 function NewsRow({ items }: { items: Post[] }) {
   if (!items.length) return null;
@@ -25,7 +26,7 @@ function NewsRow({ items }: { items: Post[] }) {
             aria-hidden="true"
           >
             {item.imageUrl ? (
-              <img
+              <Image
                 className="img-cover"
                 src={item.imageUrl}
                 alt={item.imageAlt || item.title}
@@ -46,9 +47,8 @@ function NewsRow({ items }: { items: Post[] }) {
 
 /** समाचार col-8 board + करियर प्लेबुक col-4 */
 export async function Samachar() {
-  const newsCategories = await getNewsCategories().catch(() => null);
-  const category = newsCategories?.data?.category;
-  const items = (newsCategories?.data?.posts ?? []).map(toPost);
+  const mainNews = await getMainNews().catch(() => null);
+  const items = (mainNews?.data ?? []).map(searchToPost);
 
   const featured = items[0];
   const side = items.slice(1, 3);
@@ -66,7 +66,7 @@ export async function Samachar() {
           {items.length ? (
             <div className="samachar__main">
               <SectionTitle href="/news">
-                <span id="samachar-title">{category?.name}</span>
+                <span id="samachar-title">समाचार</span>
               </SectionTitle>
 
               <div className="samachar-board">
@@ -79,7 +79,7 @@ export async function Samachar() {
                       >
                         <span className="samachar-feature__media">
                           {featured.imageUrl ? (
-                            <img
+                            <Image
                               className="img-cover"
                               src={featured.imageUrl}
                               alt={featured.imageAlt || featured.title}
@@ -110,7 +110,7 @@ export async function Samachar() {
                       >
                         <Link className="samachar-side__media" href={item.href}>
                           {item.imageUrl ? (
-                            <img
+                            <Image
                               className="img-cover"
                               src={item.imageUrl}
                               alt={item.imageAlt || item.title}

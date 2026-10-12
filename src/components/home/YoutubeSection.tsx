@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -38,7 +39,7 @@ function WatchEmbed({
       onClick={onPlay}
       aria-label={`${video.title} प्ले गर्नुहोस्`}
     >
-      <img
+      <Image
         src={thumb(video.youtubeId, "hq")}
         alt={video.title}
         width={1280}
@@ -77,7 +78,7 @@ function SideVideo({
       aria-current={active ? "true" : undefined}
     >
       <span className="yt-block__side-media">
-        <img
+        <Image
           src={thumb(video.youtubeId, "mq")}
           alt={video.title}
           width={320}
@@ -187,7 +188,7 @@ function VideoPopup({
                     onClick={() => onSelect(video.id)}
                   >
                     <span className="yt-popup__side-thumb">
-                      <img
+                      <Image
                         src={thumb(video.youtubeId, "mq")}
                         alt={video.title}
                         width={320}
@@ -226,7 +227,7 @@ function ShortCard({ item, onOpen }: { item: YtShort; onOpen: () => void }) {
       onClick={onOpen}
       aria-label={`${item.title} — रिल प्ले गर्नुहोस्`}
     >
-      <img
+      <Image
         src={thumb(item.youtubeId, "hq")}
         alt={item.title}
         width={540}
@@ -379,7 +380,7 @@ function ShortsPopup({
                     allowFullScreen
                   />
                 ) : (
-                  <img
+                  <Image
                     className="shorts-popup__player"
                     src={thumb(item.youtubeId, "hq")}
                     alt={item.title}

@@ -1,4 +1,5 @@
 /** Two-category rail (lead + list per category) shared by Pravas and Kala */
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
@@ -48,7 +49,7 @@ export function DuoRail({ id, label, columns }: DuoRailProps) {
                   aria-hidden="true"
                 >
                   {rail.lead.imageUrl ? (
-                    <img
+                    <Image
                       className="img-cover"
                       src={rail.lead.imageUrl}
                       alt={rail.lead.title}
@@ -67,7 +68,7 @@ export function DuoRail({ id, label, columns }: DuoRailProps) {
                   <li key={item.id}>
                     <Link className="duo-rail__item" href={item.href}>
                       {item.imageUrl ? (
-                        <img
+                        <Image
                           src={item.imageUrl}
                           alt={item.title}
                           width={72}

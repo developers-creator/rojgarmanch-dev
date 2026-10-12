@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback } from "react";
 import {
   FacebookShareButton,
@@ -64,7 +65,7 @@ export function ArticleMetaRail({
           <div className="article-meta__author">
             <AuthorLink slug={authorSlug} label={name} className="article-meta__avatar-link">
             {authorAvatar ? (
-              <img
+              <Image
                 className="article-meta__avatar"
                 src={authorAvatar}
                 alt={name}

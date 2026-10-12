@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
@@ -34,7 +35,7 @@ export async function Antarwarta() {
             aria-hidden="true"
           >
             {lead.imageUrl ? (
-              <img
+              <Image
                 src={lead.imageUrl}
                 alt={lead.title}
                 width={640}
@@ -67,7 +68,7 @@ export async function Antarwarta() {
                 aria-hidden="true"
               >
                 {item.imageUrl ? (
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.title}
                     width={320}

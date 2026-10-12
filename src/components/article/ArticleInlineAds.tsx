@@ -1,4 +1,6 @@
+import Image from "next/image";
 import type { AdCreative } from "@/lib/ads";
+import { unoptimizedImage } from "@/lib/media";
 import Link from "next/link";
 
 type ArticleInlineAdsProps = {
@@ -14,13 +16,13 @@ export function ArticleInlineAds({ ads }: ArticleInlineAdsProps) {
       <div className="article-ad-break__grid">
         {ads.map((ad) => (
           <Link className="article-ad-break__slot" href={ad.href} key={ad.src}>
-            <img
+            <Image
               src={ad.src}
               alt={ad.alt}
               width={ad.width}
               height={ad.height}
+              unoptimized={unoptimizedImage(ad.src)}
               loading="lazy"
-              decoding="async"
             />
           </Link>
         ))}

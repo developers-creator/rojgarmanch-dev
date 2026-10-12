@@ -69,6 +69,26 @@ export type NewsCategoryData = {
   pagination?: Pagination;
 };
 
+/** Homepage समाचार feed. `data` is a flat list, not a category wrapper. */
+export type MainNewsItem = {
+  id: number;
+  title: string;
+  sub_title: string;
+  slug: string;
+  category_name: string;
+  featured_image: string | null;
+  author_name: string | null;
+  author_slug: string | null;
+  author_image: string | null;
+};
+
+export type MainNewsData = {
+  success: boolean;
+  message: string;
+  data: MainNewsItem[];
+  pagination?: Pagination;
+};
+
 export type Publication = {
   id: number;
   title: string;

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getPublication } from "@/lib/api/endpoints";
 import { Reveal } from "@/components/motion/Reveal";
@@ -24,7 +25,7 @@ export async function Publication() {
             <span className="pub-cover__page pub-cover__page--1" aria-hidden="true" />
             <span className="pub-cover__front">
               {data.featured_image ? (
-                <img src={data.featured_image} alt={title} width={320} height={420} />
+                <Image src={data.featured_image} alt={title} width={320} height={420} />
               ) : null}
               <span className="pub-cover__shade" aria-hidden="true" />
               <span className="pub-cover__meta">

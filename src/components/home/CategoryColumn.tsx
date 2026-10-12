@@ -1,4 +1,5 @@
 /** खेल / पर्यटन — shared column block */
+import Image from "next/image";
 import { unsplash as u } from "@/lib/media";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -78,7 +79,7 @@ export function CategoryColumn({
           aria-hidden="true"
         >
           {leadEntry.image ? (
-            <img
+            <Image
               className="img-cover"
               src={leadEntry.image}
               alt={leadEntry.title}
@@ -104,7 +105,7 @@ export function CategoryColumn({
                 tabIndex={-1}
                 aria-hidden="true"
               >
-                <img
+                <Image
                   className="img-cover"
                   src={entry.image}
                   alt={entry.title}

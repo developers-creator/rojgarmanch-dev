@@ -82,6 +82,7 @@ function HighlightItem({
             width={960}
             height={540}
             sizes="(max-width: 992px) 100vw, 960px"
+            style={{ width: "100%", height: "auto" }}
             preload={priority}
           />
         </Link>
@@ -110,7 +111,7 @@ export function HighlightNews({
     priority?: boolean;
   }[] = [
     { story: first, showImage: true, headingId: "highlight-title", priority: true },
-    ...rest.map((story) => ({ story, showImage: false })),
+    ...rest.map((story) => ({ story, showImage: true })),
   ];
 
   return (

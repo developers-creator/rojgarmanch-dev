@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { IgStory } from "@/types/content";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -283,7 +284,7 @@ export function WebStoriesRail({ title, href, items }: WebStoriesRailProps) {
                   className={`ig-stories__item${isSeen ? " is-seen" : ""}`}
                   onClick={() => openAt(index)}
                 >
-                  <img
+                  <Image
                     className="ig-stories__cover"
                     src={cover}
                     alt={title}
@@ -339,7 +340,7 @@ export function WebStoriesRail({ title, href, items }: WebStoriesRailProps) {
 
             <div className="ig-stories__top">
               <div className="ig-stories__who">
-                <img src={story.avatarUrl} alt={story.label} width={36} height={36} />
+                <Image src={story.avatarUrl} alt={story.label} width={36} height={36} />
                 <span>{story.label}</span>
               </div>
               <button
@@ -352,7 +353,7 @@ export function WebStoriesRail({ title, href, items }: WebStoriesRailProps) {
               </button>
             </div>
 
-            <img
+            <Image
               className="ig-stories__media"
               src={currentSlide.imageUrl}
               alt={currentSlide.title || story.label}

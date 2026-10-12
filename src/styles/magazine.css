@@ -2725,16 +2725,16 @@ body.menu-open {
 .highlight__media {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
   margin-bottom: var(--space-5);
   overflow: hidden;
   border-radius: var(--radius);
 }
 
-.highlight__media img {
+.highlight__media img,
+.highlight__media img.img-cover {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   border-radius: var(--radius);
 }
 
@@ -7712,9 +7712,9 @@ body.menu-open {
 }
 
 /* Only body copy scales — not headings, summary, or hero text */
-:is(.article-fs-root, .article-fs-root > .article-html) > p,
-:is(.article-fs-root, .article-fs-root > .article-html) > ul,
-:is(.article-fs-root, .article-fs-root > .article-html) > ol,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > p,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ul,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ol,
 .article-fs-root .article-quote p,
 .article-fs-root .article-steps p,
 .article-fs-root .article-figure figcaption {
@@ -8898,15 +8898,23 @@ body.menu-open {
   }
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > p {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > p {
   margin: 0 0 1.25em;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > h2,
-:is(.article-fs-root, .article-fs-root > .article-html) > h3,
-:is(.article-fs-root, .article-fs-root > .article-html) > h4,
-:is(.article-fs-root, .article-fs-root > .article-html) > h5,
-:is(.article-fs-root, .article-fs-root > .article-html) > h6 {
+.article-html__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 1.25em;
+  border-radius: var(--radius);
+}
+
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h2,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h3,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h4,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h5,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h6 {
   margin: 1.75em 0 0.7em;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -8915,60 +8923,60 @@ body.menu-open {
   scroll-margin-top: 5.5rem;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > h2 {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h2 {
   font-size: clamp(1.35rem, 2vw, 1.65rem);
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > h3 {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h3 {
   margin-top: 1.5em;
   font-size: clamp(1.2rem, 1.7vw, 1.4rem);
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > h4 {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h4 {
   margin-top: 1.35em;
   font-size: clamp(1.08rem, 1.4vw, 1.22rem);
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > h5,
-:is(.article-fs-root, .article-fs-root > .article-html) > h6 {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h5,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > h6 {
   margin-top: 1.25em;
   font-size: 1.05rem;
   font-weight: 600;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > ul,
-:is(.article-fs-root, .article-fs-root > .article-html) > ol {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ul,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ol {
   margin: 0 0 1.35em;
   padding: 0 0 0 1.35rem;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > ul {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ul {
   list-style: disc;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > ol {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ol {
   list-style: decimal;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > ul li,
-:is(.article-fs-root, .article-fs-root > .article-html) > ol li {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ul li,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ol li {
   /* margin: 0 0 0.55em; */
   padding-left: 0.2em;
   line-height: 1.65;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > ul li:last-child,
-:is(.article-fs-root, .article-fs-root > .article-html) > ol li:last-child {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ul li:last-child,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ol li:last-child {
   margin-bottom: 0;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > ul li::marker,
-:is(.article-fs-root, .article-fs-root > .article-html) > ol li::marker {
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ul li::marker,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > ol li::marker {
   color: var(--rm-primary);
   font-weight: 600;
 }
 
-:is(.article-fs-root, .article-fs-root > .article-html) > hr,
+:is(.article-fs-root, .article-fs-root > .article-html, .article-fs-root > .article-html > .article-html__chunk) > hr,
 .article-hr {
   margin: 2em 0;
   border: 0;
@@ -10776,6 +10784,10 @@ body.menu-open {
 /* Business hero panel is brand red, so it turns white to keep the red title visible */
 .home-page .biz-hero__panel:hover {
   background: #fff;
+}
+
+.home-page .biz-hero__panel:hover .biz-hero__title a {
+  color: #c50010 !important;
 }
 
 /* Homepage NRN + Pravas rail titles */

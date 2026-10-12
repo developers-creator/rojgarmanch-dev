@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState, type ReactNode } from "react";
 import { formatAdBadge, formatBsBadge } from "@/lib/dates";
 import Link from "next/link";
 import { useSettings } from "@/components/providers/SettingsProvider";
+import { unoptimizedImage } from "@/lib/media";
 import { HeaderAds } from "@/types/ads";
 
 
@@ -39,23 +41,29 @@ export function Masthead({ domain, headerAds }: MastheadProps) {
       node
     );
 
+  const colorLogo = dark_logo || "/images/rojgar-manch-logo.svg";
+  const whiteLogo = white_logo || "/images/rojgar-manch-whitelogo.svg";
+
   const leftAd = leftImage ? (
-    <img
+    <Image
       src={leftImage}
       alt={site_title}
+      width={450}
       height={HEADER_AD_HEIGHT}
-      decoding="async"
+      unoptimized={unoptimizedImage(leftImage)}
+      style={{ width: "auto", height: HEADER_AD_HEIGHT, maxWidth: "100%" }}
       loading="lazy"
     />
   ) : null;
 
   const rightAd = rightImage ? (
-    <img
+    <Image
       src={rightImage}
       alt={site_title}
       width={HEADER_AD_WIDTH}
       height={HEADER_AD_HEIGHT}
-      decoding="async"
+      unoptimized={unoptimizedImage(rightImage)}
+      style={{ width: "auto", height: HEADER_AD_HEIGHT, maxWidth: "100%" }}
       loading="lazy"
     />
   ) : null;
@@ -69,23 +77,23 @@ export function Masthead({ domain, headerAds }: MastheadProps) {
             href="/"
             aria-label="रोजगार मञ्च गृहपृष्ठ"
           >
-            <img
+            <Image
               className="logo logo--color"
-              src={`${dark_logo ? dark_logo : "/images/rojgar-manch-logo.svg"}`}
+              src={colorLogo}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
-              decoding="async"
-              fetchPriority="high"
+              unoptimized={unoptimizedImage(colorLogo)}
+              preload
             />
-            <img
+            <Image
               className="logo logo--white"
-              src={`${white_logo ? white_logo : "/images/rojgar-manch-whitelogo.svg"}`}
+              src={whiteLogo}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
-              decoding="async"
-              fetchPriority="high"
+              unoptimized={unoptimizedImage(whiteLogo)}
+              preload
             />
           </Link>
           <div className="masthead__dates" aria-label="मिति">

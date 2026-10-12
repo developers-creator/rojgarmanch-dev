@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Fragment } from "react";
 import type { Article, ArticleBlock } from "@/data/articles";
 import { ARTICLE_INLINE_ADS } from "@/lib/ads";
@@ -19,7 +20,7 @@ import { ArticleRichText } from "./ArticleRichText";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CmsImageAd } from "@/components/ui/CmsImageAd";
 import type { SidebarAds } from "@/types/ads";
-import { fillImgAlt } from "@/lib/cmsHtml";
+import { ArticleHtml } from "./ArticleHtml";
 import Link from "next/link";
 
 type ArticlePageProps = {
@@ -74,7 +75,7 @@ function Block({ block, fallbackAlt }: { block: ArticleBlock; fallbackAlt: strin
     case "figure":
       return (
         <figure className="article-figure">
-          <img
+          <Image
             src={block.src}
             alt={block.alt || fallbackAlt}
             width={1100}
@@ -176,10 +177,7 @@ function Block({ block, fallbackAlt }: { block: ArticleBlock; fallbackAlt: strin
     case "hr":
       return <hr />;
     case "html":
-      return <div
-          className="article-html"
-          dangerouslySetInnerHTML={{ __html: fillImgAlt(block.html, fallbackAlt) }}
-        />;
+      return <ArticleHtml html={block.html} fallbackAlt={fallbackAlt} />;
     default:
       return null;
   }
@@ -293,7 +291,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
                           <Link className="article-related__item" href={item.href}>
                             {item.imageUrl ? (
                               <span className="article-related__thumb">
-                                <img
+                                <Image
                                   src={item.imageUrl}
                                   alt={item.title}
                                   width={72}
@@ -338,7 +336,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
                   <article key={item.href} className="article-more__card">
                     <Link className="article-more__media" href={item.href}>
                       {item.imageUrl ? (
-                        <img
+                        <Image
                           src={item.imageUrl}
                           alt={item.title}
                           width={640}

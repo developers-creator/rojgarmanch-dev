@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { publicationSlug } from "@/lib/publication";
 import { decodeEntities } from "@/lib/text";
@@ -25,7 +26,7 @@ export function PublicationIndex({ issues, pagination }: PublicationIndexProps) 
               <article className="pub-index__card">
                 <div className="pub-index__media">
                   {issue.featured_image ? (
-                    <img
+                    <Image
                       src={issue.featured_image}
                       alt={decodeEntities(issue.title)}
                       width={360}

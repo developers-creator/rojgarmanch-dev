@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { unsplash as u } from "@/lib/media";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -67,7 +68,7 @@ export function LeadListColumn({
         </h3>
         {imageSrc ? (
           <Link className="lead-list__media" href={headlineHref} tabIndex={-1} aria-hidden="true">
-            <img
+            <Image
               className="img-cover"
               src={imageSrc}
               alt={headline}

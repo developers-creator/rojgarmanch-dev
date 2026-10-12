@@ -2,7 +2,7 @@ import type { BannerNewsData } from "@/types/bannerNews";
 import { cache } from "react";
 import type { Settings, SettingsData } from "@/types/settings";
 import { apiFetch } from "./client";
-import type { NewsDetailData, NewsCategoryData, SearchData, TrendingData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
+import type { NewsDetailData, NewsCategoryData, MainNewsData, SearchData, TrendingData, WebstoryData, PublicationData, PublicationDetailData } from "@/types/news";
 import type { ContactData } from "@/types/contact";
 import type { MenuData } from "@/types/menu";
 import type { AdsData } from "@/types/ads";
@@ -18,6 +18,7 @@ export const ENDPOINTS = {
   bannerNews: "/banner-news",
   contact: "/page/contact",
   news: "/category/news?per_page=9",
+  mainNews: "/main-news?per_page=9",
   careerPlaybook: "/category/career-playbook?per_page=5",
   arthaRojgar: "/category/employment?per_page=5",
   employment: "/category/employment?per_page=6",
@@ -70,6 +71,10 @@ export const getNews = cache((slug: string) =>
 // News category listing
 export const getNewsCategories = () =>
   apiFetch<NewsCategoryData>(ENDPOINTS.news);
+
+// Homepage समाचार — mixed main news, not the news category.
+export const getMainNews = () =>
+  apiFetch<MainNewsData>(ENDPOINTS.mainNews);
 
 // Artha-rojgar category listing
 export const getArthaRojgarCategories = () =>

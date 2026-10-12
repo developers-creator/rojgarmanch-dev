@@ -10,6 +10,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import HTMLFlipBook from "react-pageflip";
 import { Icon } from "@/components/ui/Icon";
@@ -401,7 +402,13 @@ export function Flipbook({ issue }: FlipbookProps) {
                           : "pub-sheet--pdf"
                     }
                   >
-                    <img src={src} alt={`${issue.title} — पाना ${index + 1}`} />
+                    <Image
+                      src={src}
+                      alt={`${issue.title} — पाना ${index + 1}`}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
                   </Sheet>
                 ))}
               </HTMLFlipBook>

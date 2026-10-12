@@ -21,7 +21,7 @@ export function ArticleAuthorShare({
     <div className="article-byline-box">
       <aside className="article-author-card" aria-label="लेखक">
         {authorAvatar ? (
-          <img
+          <Image
             className="article-author-card__avatar"
             src={authorAvatar}
             alt={name}
@@ -41,3 +41,4 @@ export function ArticleAuthorShare({
     </div>
   );
 }
+import Image from "next/image";

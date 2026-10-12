@@ -1,4 +1,5 @@
 /** ब्लग / विचार */
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
@@ -37,7 +38,7 @@ export async function BlogBichar({ ad, siteName }: BlogBicharProps) {
                 aria-hidden="true"
               >
                 {item.imageUrl ? (
-                  <img
+                  <Image
                     className="img-cover"
                     src={item.imageUrl}
                     alt={item.imageAlt || item.title}

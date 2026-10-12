@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { getNavBarLinks, getNavMoreLinks } from "@/lib/nav";
@@ -92,19 +93,21 @@ export function FullscreenMenu({
         <div className="fs-menu__inner container">
           <div className="fs-menu__top">
             <Link className="fs-menu__brand" href="/">
-              <img
+              <Image
                 className="logo logo--color"
                 src="/images/rojgar-manch-logo.svg"
                 alt="रोजगार मञ्च"
                 width={283}
                 height={87}
+                unoptimized
               />
-              <img
+              <Image
                 className="logo logo--white"
                 src="/images/rojgar-manch-whitelogo.svg"
                 alt="रोजगार मञ्च"
                 width={283}
                 height={87}
+                unoptimized
               />
             </Link>
             <button

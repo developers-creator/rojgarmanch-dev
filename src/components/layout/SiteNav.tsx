@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Post } from "@/types/content";
@@ -9,6 +10,7 @@ import { formatAdBadge, formatBsBadge } from "@/lib/dates";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { useUi } from "@/components/providers/UiProvider";
 import { Icon } from "@/components/ui/Icon";
+import { unoptimizedImage } from "@/lib/media";
 import Link from "next/link";
 import { useSettings } from "@/components/providers/SettingsProvider";
 
@@ -288,7 +290,7 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
                       onClick={closeNotify}
                     >
                       {item.imageUrl ? (
-                        <img
+                        <Image
                           className="notify__thumb"
                           src={item.imageUrl}
                           alt={item.imageAlt || item.title || ""}
@@ -381,19 +383,21 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
                   aria-label="रोजगार मञ्च"
                   ref={logoRef}
                 >
-                  <img
+                  <Image
                     className="logo logo--color"
-                    src={dark_logo ? dark_logo : "/images/rojgar-manch-logo.svg"}
+                    src={dark_logo || "/images/rojgar-manch-logo.svg"}
                     alt="रोजगार मञ्च"
                     width={283}
                     height={87}
+                    unoptimized={unoptimizedImage(dark_logo || "/images/rojgar-manch-logo.svg")}
                   />
-                  <img
+                  <Image
                     className="logo logo--white"
-                    src={white_logo ? white_logo : "/images/rojgar-manch-whitelogo.svg"}
+                    src={white_logo || "/images/rojgar-manch-whitelogo.svg"}
                     alt="रोजगार मञ्च"
                     width={283}
                     height={87}
+                    unoptimized={unoptimizedImage(white_logo || "/images/rojgar-manch-whitelogo.svg")}
                   />
                 </Link>
 

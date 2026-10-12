@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import Link from "next/link";
@@ -30,7 +31,7 @@ export async function ArthaRojgar() {
                 aria-hidden="true"
               >
                 {lead.imageUrl ? (
-                  <img
+                  <Image
                     className="img-cover"
                     src={lead.imageUrl}
                     alt={lead.title}
@@ -55,7 +56,7 @@ export async function ArthaRojgar() {
               <li key={item.id}>
                 <Link className="spotlight__item" href={item.href}>
                   {item.imageUrl ? (
-                    <img
+                    <Image
                       src={item.imageUrl}
                       alt={item.title}
                       width={100}

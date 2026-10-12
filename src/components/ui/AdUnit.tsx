@@ -1,4 +1,6 @@
+import Image from "next/image";
 import type { AdCreative } from "@/lib/ads";
+import { unoptimizedImage } from "@/lib/media";
 import Link from "next/link";
 
 const MOBILE_STATIC_AD_SRC = "/images/Mob-Banner_710x125_img.jpg.jpeg";
@@ -20,13 +22,13 @@ export function AdUnit({
     .filter(Boolean)
     .join(" ");
   const image = (
-    <img
+    <Image
       src={ad.src}
       alt={ad.alt}
       width={ad.width}
       height={ad.height}
+      unoptimized={unoptimizedImage(ad.src)}
       loading="lazy"
-      decoding="async"
     />
   );
 

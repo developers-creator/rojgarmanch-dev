@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { SiteInfo } from "@/types/content";
 import { toNepaliDigits } from "@/lib/dates";
 import { Icon, socialIconName } from "@/components/ui/Icon";
 import Link from "next/link";
 import { useSettings } from "@/components/providers/SettingsProvider";
+import { unoptimizedImage } from "@/lib/media";
 import { SocialHandle } from "@/types/settings";
 import type { MenuItem } from "@/types/menu";
 
@@ -176,23 +178,23 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
             href="/"
             aria-label="रोजगार मञ्च गृहपृष्ठ"
           >
-            <img
+            <Image
               className="logo logo--color"
-              src={dark_logo ? dark_logo : "/images/rojgar-manch-logo.svg"}
+              src={dark_logo || "/images/rojgar-manch-logo.svg"}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
+              unoptimized={unoptimizedImage(dark_logo || "/images/rojgar-manch-logo.svg")}
               loading="lazy"
-              decoding="async"
             />
-            <img
+            <Image
               className="logo logo--white"
-              src={white_logo ? white_logo : "/images/rojgar-manch-whitelogo.svg"}
+              src={white_logo || "/images/rojgar-manch-whitelogo.svg"}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
+              unoptimized={unoptimizedImage(white_logo || "/images/rojgar-manch-whitelogo.svg")}
               loading="lazy"
-              decoding="async"
             />
           </Link>
           <p className="footer__copy footer__copy--end">

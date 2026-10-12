@@ -1,4 +1,5 @@
 /** एनआरएन — NRN (2-col stack list) */
+import Image from "next/image";
 import { unsplash as u } from "@/lib/media";
 import Link from "next/link";
 
@@ -29,7 +30,7 @@ function StackColumn({
             tabIndex={-1}
             aria-hidden="true"
           >
-            <img
+            <Image
               className="img-cover"
               src={u(image, 200, 160)}
               alt={title}
