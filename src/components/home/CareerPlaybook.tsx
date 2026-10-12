@@ -21,46 +21,54 @@ export async function CareerPlaybook() {
   const ads = sidebarAds.filter((ad) => ad.top_ads);
   const category = res?.data?.category;
   const posts = res?.data?.posts ?? [];
+  if (!posts.length && !ads.length) return null;
 
   return (
     <Reveal className="career-playbook reveal reveal-delay-2">
       <aside>
-        <div className="career-playbook__panel">
-          <SectionTitle href="#article" more={false}>
-            {category?.name}
-          </SectionTitle>
-          <ul className="career-playbook__list">
-            {posts.map((post, index) =>
-              index === 0 ? (
-                <li
-                  key={post.id}
-                  className="career-playbook__item career-playbook__item--feature"
-                >
-                  <Link className="career-playbook__feature" href={`/${post.slug}`}>
-                    {post.featured_image ? (
-                      <span className="career-playbook__feature-media">
-                        <img
-                          src={post.featured_image}
-                          alt={decodeEntities(post.title) || settings.site_title}
-                          width={640}
-                          height={360}
-                          loading="lazy"
-                        />
-                      </span>
-                    ) : null}
-                    <p>{decodeEntities(post.title)}</p>
-                  </Link>
-                </li>
-              ) : (
-                <li key={post.id} className="career-playbook__item">
-                  <Link href={`/${post.slug}`}>
-                    <p>{decodeEntities(post.title)}</p>
-                  </Link>
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
+        {posts.length ? (
+          <div className="career-playbook__panel">
+            <SectionTitle href="#article" more={false}>
+              {category?.name}
+            </SectionTitle>
+            <ul className="career-playbook__list">
+              {posts.map((post, index) =>
+                index === 0 ? (
+                  <li
+                    key={post.id}
+                    className="career-playbook__item career-playbook__item--feature"
+                  >
+                    <Link
+                      className="career-playbook__feature"
+                      href={`/${post.slug}`}
+                    >
+                      {post.featured_image ? (
+                        <span className="career-playbook__feature-media">
+                          <img
+                            src={post.featured_image}
+                            alt={
+                              decodeEntities(post.title) || settings.site_title
+                            }
+                            width={640}
+                            height={360}
+                            loading="lazy"
+                          />
+                        </span>
+                      ) : null}
+                      <p>{decodeEntities(post.title)}</p>
+                    </Link>
+                  </li>
+                ) : (
+                  <li key={post.id} className="career-playbook__item">
+                    <Link href={`/${post.slug}`}>
+                      <p>{decodeEntities(post.title)}</p>
+                    </Link>
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
+        ) : null}
 
         {ads.length ? (
           <div className="career-playbook__ads" aria-label="विज्ञापन">

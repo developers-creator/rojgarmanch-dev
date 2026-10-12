@@ -56,76 +56,83 @@ export async function Samachar() {
   const rowExtra = items.slice(6, 9);
 
   return (
-    <section className="samachar" id="samachar" aria-labelledby="samachar-title">
+    <section
+      className="samachar"
+      id="samachar"
+      aria-labelledby="samachar-title"
+    >
       <div className="container">
         <div className="samachar__grid">
-          <div className="samachar__main">
-            <SectionTitle href="/news">
-              <span id="samachar-title">{category?.name}</span>
-            </SectionTitle>
+          {items.length ? (
+            <div className="samachar__main">
+              <SectionTitle href="/news">
+                <span id="samachar-title">{category?.name}</span>
+              </SectionTitle>
 
-            <div className="samachar-board">
-              <div className="samachar-board__top">
-                {featured ? (
-                  <Reveal className="samachar-feature">
-                    <Link className="samachar-feature__link" href={featured.href}>
-                      <span className="samachar-feature__media">
-                        {featured.imageUrl ? (
-                          <img
-                            className="img-cover"
-                            src={featured.imageUrl}
-                            alt={featured.imageAlt || featured.title}
-                            width={960}
-                            height={540}
-                          />
-                        ) : null}
-                      </span>
-                      <span className="samachar-feature__body">
-                        <span className="samachar-feature__title">
-                          {featured.title}
+              <div className="samachar-board">
+                <div className="samachar-board__top">
+                  {featured ? (
+                    <Reveal className="samachar-feature">
+                      <Link
+                        className="samachar-feature__link"
+                        href={featured.href}
+                      >
+                        <span className="samachar-feature__media">
+                          {featured.imageUrl ? (
+                            <img
+                              className="img-cover"
+                              src={featured.imageUrl}
+                              alt={featured.imageAlt || featured.title}
+                              width={960}
+                              height={540}
+                            />
+                          ) : null}
                         </span>
-                        {featured.excerpt ? (
-                          <span className="samachar-feature__excerpt">
-                            {featured.excerpt}
+                        <span className="samachar-feature__body">
+                          <span className="samachar-feature__title">
+                            {featured.title}
                           </span>
-                        ) : null}
-                      </span>
-                    </Link>
-                  </Reveal>
-                ) : null}
-
-                <div className="samachar-side">
-                  {side.map((item, index) => (
-                    <Reveal
-                      key={item.id}
-                      className={`samachar-side__item${index ? ` reveal-delay-${index}` : ""}`}
-                    >
-                      <Link className="samachar-side__media" href={item.href}>
-                        {item.imageUrl ? (
-                          <img
-                            className="img-cover"
-                            src={item.imageUrl}
-                            alt={item.imageAlt || item.title}
-                            width={400}
-                            height={240}
-                            loading="lazy"
-                          />
-                        ) : null}
+                          {featured.excerpt ? (
+                            <span className="samachar-feature__excerpt">
+                              {featured.excerpt}
+                            </span>
+                          ) : null}
+                        </span>
                       </Link>
-                      <h3 className="samachar-side__title line-2">
-                        <Link href={item.href}>{item.title}</Link>
-                      </h3>
                     </Reveal>
-                  ))}
+                  ) : null}
+
+                  <div className="samachar-side">
+                    {side.map((item, index) => (
+                      <Reveal
+                        key={item.id}
+                        className={`samachar-side__item${index ? ` reveal-delay-${index}` : ""}`}
+                      >
+                        <Link className="samachar-side__media" href={item.href}>
+                          {item.imageUrl ? (
+                            <img
+                              className="img-cover"
+                              src={item.imageUrl}
+                              alt={item.imageAlt || item.title}
+                              width={400}
+                              height={240}
+                              loading="lazy"
+                            />
+                          ) : null}
+                        </Link>
+                        <h3 className="samachar-side__title line-2">
+                          <Link href={item.href}>{item.title}</Link>
+                        </h3>
+                      </Reveal>
+                    ))}
+                  </div>
                 </div>
+
+                <NewsRow items={row} />
+                <NewsRow items={rowExtra} />
               </div>
-
-              <NewsRow items={row} />
-              <NewsRow items={rowExtra} />
             </div>
-
-            
-          </div>
+          ) : null}
 
           <CareerPlaybook />
         </div>

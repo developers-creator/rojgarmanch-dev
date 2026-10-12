@@ -11,6 +11,8 @@ type LokpriyaProps = {
 };
 
 export function Lokpriya({ items }: LokpriyaProps) {
+  if (!items.length) return null;
+
   return (
     <section id="popular" aria-labelledby="popular-title">
       <SectionTitle more={false}>

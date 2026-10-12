@@ -11,6 +11,8 @@ type TajaSamacharProps = {
 };
 
 export function TajaSamachar({ items }: TajaSamacharProps) {
+  if (!items.length) return null;
+
   return (
     <Reveal className="recent">
       <div>

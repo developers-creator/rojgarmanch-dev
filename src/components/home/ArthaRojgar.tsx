@@ -11,6 +11,7 @@ export async function ArthaRojgar() {
   const items = (arthaRojgarCategories?.data?.posts ?? []).map(toPost);
   const lead = items[0];
   const list = items.slice(1, 5);
+  if (!lead) return null;
 
   return (
     <section className="spotlight" id="artha-rojgar" aria-labelledby="artha-rojgar-title">
