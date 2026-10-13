@@ -24,3 +24,10 @@ export function decodeEntities(text: string): string {
     return NAMED[name.toLowerCase()] ?? match;
   });
 }
+
+/** Decode an excerpt and drop the WordPress "read more" marker (`[&hellip;]` / `[…]`). */
+export function cleanExcerpt(text: string): string {
+  return decodeEntities(text)
+    .replace(/\s*\[\s*(?:…|\.{3})\s*\]\s*$/, "")
+    .trim();
+}

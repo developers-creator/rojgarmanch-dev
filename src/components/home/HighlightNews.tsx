@@ -1,4 +1,5 @@
 /** मुख्य समाचार — Highlight news */
+import { cleanExcerpt } from "@/lib/text";
 import type { HighlightStory } from "@/types/content";
 import Image from "next/image";
 import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
@@ -21,7 +22,7 @@ function toHighlightStory(item: BannerNewsItem): HighlightStory {
     id: item.id,
     slug: item.slug,
     title: item.title,
-    excerpt: item.sub_title || undefined,
+    excerpt: item.sub_title ? cleanExcerpt(item.sub_title) : undefined,
     href: `/${item.slug}`,
     imageUrl: item.featured_image ?? undefined,
     imageAlt: item.title,

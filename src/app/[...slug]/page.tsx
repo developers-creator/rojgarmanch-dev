@@ -1,4 +1,4 @@
-import { decodeEntities } from "@/lib/text";
+import { cleanExcerpt, decodeEntities } from "@/lib/text";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Article, ArticleLink } from "@/data/articles";
@@ -51,7 +51,7 @@ async function loadArticle(segments: string[]): Promise<Article | null> {
       id: news.id,
       slug: news.slug,
       title: decodeEntities(news.title),
-      excerpt: news.excerpt,
+      excerpt: news.excerpt ? cleanExcerpt(news.excerpt) : news.excerpt,
       href: `/${news.slug}`,
       imageUrl: news.featured_image ?? undefined,
       imageAlt: decodeEntities(news.title),
