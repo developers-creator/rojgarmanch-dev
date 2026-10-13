@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import { getPublicationDetail } from "@/lib/api/endpoints";
 import { decodeEntities } from "@/lib/text";
 import { Flipbook } from "@/components/publication/Flipbook";
@@ -41,13 +41,12 @@ export default async function PublicationFlipbookPage({ params }: PageProps) {
   const issue = await loadIssue(slug);
   if (!issue || !issue.pdf) notFound();
 
-  const home = getHomePageData();
   const site = getSiteInfo();
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <Flipbook

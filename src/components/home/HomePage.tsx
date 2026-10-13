@@ -1,4 +1,3 @@
-import type { HomePageData } from "@/types/content";
 import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import { CmsBannerAdPair } from "@/components/ui/CmsBannerAdPair";
 import { BelowMenuAds } from "./BelowMenuAds";
@@ -26,7 +25,6 @@ import type { BannerNewsData } from "@/types/bannerNews";
 import type { BelowMenuHomeAd, LongAds, LongHighlightAd } from "@/types/ads";
 
 type HomePageProps = {
-  data: HomePageData;
   bannerNewsData?: BannerNewsData;
   belowMenuAds?: BelowMenuHomeAd[];
   highlightAds?: LongHighlightAd[] | false;
@@ -35,7 +33,6 @@ type HomePageProps = {
 };
 
 export function HomePage({
-  data,
   bannerNewsData,
   belowMenuAds,
   highlightAds,
@@ -93,7 +90,7 @@ export function HomePage({
       />
 
       {/* युट्युब — २:१ भिडियो + Shorts */}
-      <Youtube data={data.youtube} />
+      <Youtube />
 
       <CmsBannerAd
         image={longAds?.below_rojgar_tv_ad}

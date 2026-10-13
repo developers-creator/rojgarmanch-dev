@@ -2,14 +2,10 @@ import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import { SchemaScript } from "@/components/seo/SchemaScript";
 import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import { HomePage } from "@/components/home/HomePage";
 import { getAds, getBannerNews, getSettingsOrEmpty } from "@/lib/api";
 import { SiteChrome } from "@/components/layout/SiteChrome";
-
-// Rendered per request: a statically cached homepage kept serving stale posts
-// and ads on Vercel. Data fetches still cache for a few seconds (apiFetch).
-export const dynamic = "force-dynamic";
 
 // Falls back to the defaults in layout.tsx when the SEO API is unreachable.
 export const generateMetadata = (): Promise<Metadata> =>
@@ -25,20 +21,18 @@ export default async function Home() {
   ]);
   // console.log("banner-news:", bannerNews);
 
-  const home = getHomePageData();
   const site = getSiteInfo();
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <SchemaScript
         data={graph(organizationSchema(settings), websiteSchema(settings))}
       />
       <HomePage
-        data={home}
         bannerNewsData={bannerNews}
         belowMenuAds={ads?.header_ads.below_menu_home_page}
         highlightAds={ads?.long_ads.long_ads_for_highlight_news}

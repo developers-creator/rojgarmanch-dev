@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import {
   getAds,
   getCategoryPosts,
@@ -59,13 +59,12 @@ export async function CategoryView({ slug, page }: { slug: string; page: number 
   // A page past the end of the listing is a 404, not an empty category.
   if (page > 1 && !res.data.posts.length) notFound();
 
-  const home = getHomePageData();
   const site = getSiteInfo();
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <SchemaScript

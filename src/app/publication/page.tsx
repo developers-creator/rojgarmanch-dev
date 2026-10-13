@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import { getPublications } from "@/lib/api/endpoints";
 import { PublicationIndex } from "@/components/publication/PublicationIndex";
 import { SiteChrome } from "@/components/layout/SiteChrome";
@@ -17,7 +17,6 @@ type PageProps = {
 export default async function PublicationArchivePage({ searchParams }: PageProps) {
   const { page: pageRaw } = await searchParams;
   const page = Math.max(1, Number.parseInt(pageRaw ?? "1", 10) || 1);
-  const home = getHomePageData();
   const site = getSiteInfo();
   const issues = await getPublications(page).catch(() => null);
   const data = issues?.data ?? [];
@@ -25,8 +24,8 @@ export default async function PublicationArchivePage({ searchParams }: PageProps
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <PublicationIndex issues={data} pagination={pagination} />

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import {
   getAds,
   getAuthorPosts,
@@ -78,13 +78,12 @@ export async function AuthorView({ slug, page }: { slug: string; page: number })
   const { author, posts } = res.data;
   const name = decodeEntities(author.name);
   const description = plainText(author.description);
-  const home = getHomePageData();
   const site = getSiteInfo();
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <SchemaScript

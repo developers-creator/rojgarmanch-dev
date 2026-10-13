@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import { TeamPage } from "@/components/pages/TeamPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
@@ -15,13 +15,12 @@ export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("team", fallbackMetadata);
 
 export default function TeamRoute() {
-  const home = getHomePageData();
   const site = getSiteInfo();
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <TeamPage />

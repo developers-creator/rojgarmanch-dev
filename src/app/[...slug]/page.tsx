@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Article, ArticleLink } from "@/data/articles";
 import type { NewsLink } from "@/types/news";
-import { getHomePageData, getSiteInfo } from "@/data/home";
+import { getSiteInfo } from "@/data/home";
 import { getAds, getNews, getSettingsOrEmpty } from "@/lib/api";
 import { buildPageMetadata, loadSeo, pageUrlFor } from "@/lib/seo";
 import { SchemaScript } from "@/components/seo/SchemaScript";
@@ -17,10 +17,6 @@ import {
   categoryUrl,
   parsePage,
 } from "@/components/category/CategoryRoute";
-
-// Always rendered per request so edits show up right away; data fetches
-// still cache for a few seconds (apiFetch).
-export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
@@ -130,13 +126,12 @@ export default async function ArticleRoute({ params, searchParams }: PageProps) 
     return <CategoryView slug={slug[0]} page={1} />;
   }
 
-  const home = getHomePageData();
   const site = getSiteInfo();
 
   return (
     <SiteChrome
-      flashNews={home.flashNews}
-      trending={home.trending}
+      flashNews={[]}
+      trending={[]}
       site={site}
     >
       <SchemaScript

@@ -3,8 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   trailingSlash: true,
   images: {
-    // Default is 4 hours, which keeps replaced CMS images stale for too long.
-    minimumCacheTTL: 60,
+    // Re-optimizing runs sharp in-process; keep optimized images for a day.
+    minimumCacheTTL: 86400,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "cms.rojgarmanch.com" },

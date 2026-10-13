@@ -1,12 +1,9 @@
-import type { YoutubeBlock, YtShort, YtVideo } from "@/types/content";
+import type { YtShort, YtVideo } from "@/types/content";
 import { getReels, getRojgarTV } from "@/lib/api/endpoints";
 import { decodeEntities } from "@/lib/text";
 import { YoutubeSection } from "./YoutubeSection";
 
-type YoutubeProps = {
-  /** Supplies the channel link; videos and reels come from the CMS. */
-  data: YoutubeBlock;
-};
+const CHANNEL_URL = "https://www.youtube.com/@rojgarmanch";
 
 /** Pull the video id out of youtu.be, watch?v=, embed/ and shorts/ URLs. */
 function youtubeId(url: string | null | undefined): string | null {
@@ -24,7 +21,7 @@ function youtubeId(url: string | null | undefined): string | null {
 }
 
 /** रोजगार टिभी and रिल्स — videos and reels from the CMS `rojgar-tv` and `reels` categories */
-export async function Youtube({ data }: YoutubeProps) {
+export async function Youtube() {
   const [res, reelsRes] = await Promise.all([
     getRojgarTV().catch(() => null),
     getReels().catch(() => null),
@@ -50,7 +47,7 @@ export async function Youtube({ data }: YoutubeProps) {
     <YoutubeSection
       title={category?.name ?? "रोजगार टिभी"}
       reelsTitle={reelsRes?.data?.category.name ?? "रिल्स"}
-      data={{ ...data, videos, featuredId: videos[0]?.id ?? "", shorts }}
+      data={{ channelUrl: CHANNEL_URL, videos, featuredId: videos[0]?.id ?? "", shorts }}
     />
   );
 }
