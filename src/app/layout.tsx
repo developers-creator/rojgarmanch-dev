@@ -14,28 +14,12 @@ const mukta = Mukta({
   preload: true,
 });
 
-const LCP_IMAGE =
-  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=960&h=540&q=70";
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://rojgarmanch.com"),
   title: "रोजगार मञ्च — करियर र रोजगार पत्रिका",
   description:
     "रोजगार मञ्च — नेपालको करियर र रोजगार पत्रिका। रोजगार समाचार, अन्तर्वार्ता, सीप, वैदेशिक रोजगार र कार्यस्थल मार्गदर्शन।",
-  keywords: [
-    "रोजगार",
-    "करियर",
-    "जागिर",
-    "नेपाल",
-    "सीप",
-    "अन्तर्वार्ता",
-    "वैदेशिक रोजगार",
-    "लोक सेवा",
-    "तलब",
-  ],
-  authors: [{ name: "रोजगार मञ्च" }],
   robots: "index, follow, max-image-preview:large",
-  alternates: { canonical: "https://rojgarmanch.com/" },
   openGraph: {
     type: "website",
     locale: "ne_NP",
@@ -43,14 +27,13 @@ export const metadata: Metadata = {
     title: "रोजगार मञ्च — करियर र रोजगार पत्रिका",
     description:
       "रोजगार समाचार, अन्तर्वार्ता, सीप र करियर मार्गदर्शन — एकै ठाउँमा।",
-    url: "https://rojgarmanch.com/",
-    images: ["/images/rojgar-manch-logo.svg"],
+    images: ["/images/rojgar-manch-logo.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "रोजगार मञ्च — करियर र रोजगार पत्रिका",
     description: "रोजगार समाचार, अन्तर्वार्ता, सीप र करियर मार्गदर्शन।",
-    images: ["/images/rojgar-manch-logo.svg"],
+    images: ["/images/rojgar-manch-logo.png"],
   },
   icons: {
     icon: [{ url: "/images/favicon.png", type: "image/png" }],
@@ -68,9 +51,6 @@ export default async function RootLayout({
 
   return (
     <html lang="ne" className={mukta.variable} suppressHydrationWarning>
-      <head>
-        <link rel="preload" as="image" href={LCP_IMAGE} fetchPriority="high" />
-      </head>
       <body className={mukta.className} suppressHydrationWarning>
         <ThemeProvider>
           <SettingsProvider settings={settings}>
