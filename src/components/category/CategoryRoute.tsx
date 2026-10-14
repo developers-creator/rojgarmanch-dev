@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import {
   getAds,
@@ -16,8 +17,10 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 export const parsePage = (raw?: string) =>
   Math.max(1, Number.parseInt(raw ?? "1", 10) || 1);
 
-const loadCategory = (slug: string, page: number) =>
-  getCategoryPosts(slug, page).catch(() => null);
+/** Memoized per request so the route, metadata and view share one CMS call. */
+export const loadCategory = cache((slug: string, page: number) =>
+  getCategoryPosts(slug, page).catch(() => null),
+);
 
 /** Page 1 lives at `/<slug>/`, later pages at `/<slug>/page/N/`. */
 export const categoryUrl = (slug: string, page = 1) =>

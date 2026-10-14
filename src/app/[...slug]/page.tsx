@@ -14,13 +14,19 @@ import {
   CategoryView,
   categoryMetadata,
   categoryUrl,
-  parsePage,
+  loadCategory,
 } from "@/components/category/CategoryRoute";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
-  searchParams: Promise<{ page?: string }>;
 };
+
+// No paths are prebuilt; each is rendered on first visit, then served from the
+// ISR cache. Reading `searchParams` here would force every request dynamic, so
+// legacy `?page=N` links are redirected in next.config.ts instead.
+export function generateStaticParams() {
+  return [];
+}
 
 /** `/<category>/page/N/` — N is a whole number; returns the category slug and page. */
 function categoryPagePath(segments: string[]) {
@@ -81,6 +87,11 @@ export async function generateMetadata({
       ? categoryMetadata(paged.slug, paged.page)
       : { title: "श्रेणी फेला परेन" };
   }
+  // A single segment is almost always a category: check it first rather than
+  // paying for a failed article lookup before the category request.
+  if (slug.length === 1 && (await loadCategory(slug[0], 1))?.data?.category) {
+    return categoryMetadata(slug[0], 1);
+  }
   const path = slug.join("/");
   // Start the SEO request alongside the article instead of after it.
   const [article] = await Promise.all([loadArticle(slug), loadSeo(path)]);
@@ -98,7 +109,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function ArticleRoute({ params, searchParams }: PageProps) {
+export default async function ArticleRoute({ params }: PageProps) {
   const { slug } = await params;
 
   const paged = categoryPagePath(slug);
@@ -106,6 +117,10 @@ export default async function ArticleRoute({ params, searchParams }: PageProps) 
     if (paged.page < 1) notFound();
     if (paged.page === 1) permanentRedirect(categoryUrl(paged.slug));
     return <CategoryView slug={paged.slug} page={paged.page} />;
+  }
+
+  if (slug.length === 1 && (await loadCategory(slug[0], 1))?.data) {
+    return <CategoryView slug={slug[0]} page={1} />;
   }
 
   const [article, ads, settings, seo] = await Promise.all([
@@ -118,11 +133,7 @@ export default async function ArticleRoute({ params, searchParams }: PageProps) 
     loadSeo(slug.join("/")),
   ]);
   if (!article) {
-    if (slug.length !== 1) notFound();
-    // Old `?page=N` links move to the `/page/N/` form.
-    const legacyPage = parsePage((await searchParams).page);
-    if (legacyPage > 1) permanentRedirect(categoryUrl(slug[0], legacyPage));
-    return <CategoryView slug={slug[0]} page={1} />;
+    notFound();
   }
 
   return (

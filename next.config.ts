@@ -14,6 +14,13 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Old `?page=N` category links move to the `/page/N/` form.
+      {
+        source: "/:slug((?!search|publication|api).*)",
+        has: [{ type: "query", key: "page", value: "(?<page>[2-9]|[1-9][0-9]+)" }],
+        destination: "/:slug/page/:page/",
+        permanent: true,
+      },
       { source: "/category/samaj", destination: "/desh-samaj", permanent: true },
       { source: "/category/desh-ramailo-sansar", destination: "/ramailo-sansar", permanent: true },
       { source: "/category/:slug", destination: "/:slug", permanent: true },
