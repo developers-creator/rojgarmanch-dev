@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { getSiteInfo } from "@/data/home";
 import { searchNews } from "@/lib/api/endpoints";
 import { searchToPost } from "@/lib/posts";
 import { CategoryPage } from "@/components/category/CategoryPage";
@@ -28,14 +27,8 @@ export default async function SearchRoute({ searchParams }: PageProps) {
   const page = parsePage(sp.page);
   const res = q ? await searchNews(q, page).catch(() => null) : null;
 
-  const site = getSiteInfo();
-
   return (
-    <SiteChrome
-      flashNews={[]}
-      trending={[]}
-      site={site}
-    >
+    <SiteChrome flashNews={[]} trending={[]}>
       <CategoryPage
         category={{
           id: 0,

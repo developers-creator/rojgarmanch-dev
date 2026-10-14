@@ -523,13 +523,6 @@ article:hover .img-cover {
   display: none !important;
 }
 
-.masthead__domain {
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  color: var(--color-text-muted);
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-}
 
 /* Masthead: static date design (visual only, not sticky) */
 .masthead-date {

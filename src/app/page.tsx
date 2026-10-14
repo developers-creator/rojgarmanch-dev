@@ -1,44 +1,18 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
-import { SchemaScript } from "@/components/seo/SchemaScript";
-import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
-import { getSiteInfo } from "@/data/home";
 import { HomePage } from "@/components/home/HomePage";
-import { getAds, getBannerNews, getSettingsOrEmpty } from "@/lib/api";
+import { getBannerNews } from "@/lib/api";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
-// Falls back to the defaults in layout.tsx when the SEO API is unreachable.
 export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("/", {});
 
 export default async function Home() {
-  const [bannerNews, ads, settings] = await Promise.all([
-    getBannerNews().catch(() => undefined),
-    getAds()
-      .then((res) => res.data)
-      .catch(() => null),
-    getSettingsOrEmpty(),
-  ]);
-  // console.log("banner-news:", bannerNews);
-
-  const site = getSiteInfo();
+  const bannerNews = await getBannerNews().catch(() => undefined);
 
   return (
-    <SiteChrome
-      flashNews={[]}
-      trending={[]}
-      site={site}
-    >
-      <SchemaScript
-        data={graph(organizationSchema(settings), websiteSchema(settings))}
-      />
-      <HomePage
-        bannerNewsData={bannerNews}
-        belowMenuAds={ads?.header_ads.below_menu_home_page}
-        highlightAds={ads?.long_ads.long_ads_for_highlight_news}
-        longAds={ads?.long_ads}
-        siteName={settings.site_title || site.name}
-      />
+    <SiteChrome flashNews={[]} trending={[]}>
+      <HomePage bannerNewsData={bannerNews} />
     </SiteChrome>
   );
 }

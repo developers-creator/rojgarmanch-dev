@@ -10,7 +10,6 @@ import { HeaderAds } from "@/types/ads";
 
 
 type MastheadProps = {
-  domain: string;
   headerAds?: HeaderAds | null;
 };
 
@@ -18,7 +17,7 @@ type MastheadProps = {
 const HEADER_AD_WIDTH = 810;
 const HEADER_AD_HEIGHT = 100;
 
-export function Masthead({ domain, headerAds }: MastheadProps) {
+export function Masthead({ headerAds }: MastheadProps) {
   const [dates, setDates] = useState({ ad: "—", bs: "—" });
   const [showBs, setShowBs] = useState(true);
 

@@ -1,3 +1,4 @@
+import { SchemaScript } from "@/components/seo/SchemaScript";
 import { CmsBannerAd } from "@/components/ui/CmsBannerAd";
 import { CmsBannerAdPair } from "@/components/ui/CmsBannerAdPair";
 import { BelowMenuAds } from "./BelowMenuAds";
@@ -19,29 +20,36 @@ import { Paryatan } from "./Paryatan";
 import { RamailoSansar } from "./RamailoSansar";
 import { Bishwa } from "./Bishwa";
 import { EnglishHeadline } from "./EnglishHeadline";
-import { TV } from "./TV";
 import { Youtube } from "./Youtube";
 import type { BannerNewsData } from "@/types/bannerNews";
-import type { BelowMenuHomeAd, LongAds, LongHighlightAd } from "@/types/ads";
+import { getAds, getSettingsOrEmpty } from "@/lib/api";
+import { getSiteInfo } from "@/data/home";
+import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
 
 type HomePageProps = {
   bannerNewsData?: BannerNewsData;
-  belowMenuAds?: BelowMenuHomeAd[];
-  highlightAds?: LongHighlightAd[] | false;
-  longAds?: LongAds;
-  siteName: string;
 };
 
-export function HomePage({
-  bannerNewsData,
-  belowMenuAds,
-  highlightAds,
-  longAds,
-  siteName,
-}: HomePageProps) {
+export async function HomePage({ bannerNewsData }: HomePageProps) {
+  
+  const [settings, ads] = await Promise.all([
+    getSettingsOrEmpty(),
+    getAds()
+      .then((res) => res.data)
+      .catch(() => null),
+  ]);
+  
+  const siteName = settings.site_title || getSiteInfo().name;
+  const belowMenuAds = ads?.header_ads.below_menu_home_page;
+  const highlightAds = ads?.long_ads.long_ads_for_highlight_news;
+  const longAds = ads?.long_ads;
+
   return (
     <main id="main" className="home-page">
-      <h1 className="sr-only">रोजगार मञ्च — करियर र रोजगार पत्रिका</h1>
+      <SchemaScript
+        data={graph(organizationSchema(settings), websiteSchema(settings))}
+      />
+      <h1 className="sr-only">{siteName}</h1>
 
       <BelowMenuAds ads={belowMenuAds} siteName={siteName} />
 

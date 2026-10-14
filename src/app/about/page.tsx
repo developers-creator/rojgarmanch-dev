@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getSiteInfo } from "@/data/home";
 import { AboutPage } from "@/components/pages/AboutPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
@@ -16,14 +15,8 @@ export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("about", fallbackMetadata);
 
 export default function AboutRoute() {
-  const site = getSiteInfo();
-
   return (
-    <SiteChrome
-      flashNews={[]}
-      trending={[]}
-      site={site}
-    >
+    <SiteChrome flashNews={[]} trending={[]}>
       <AboutPage />
       <JsonLd path="about" />
     </SiteChrome>

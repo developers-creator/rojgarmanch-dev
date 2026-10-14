@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getSiteInfo } from "@/data/home";
 import { getPrivacyPolicy } from "@/lib/api";
 import { LegalPage } from "@/components/pages/LegalPage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
@@ -16,14 +15,8 @@ export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("privacy-policy", fallbackMetadata);
 
 export default function PrivacyPolicyRoute() {
-  const site = getSiteInfo();
-
   return (
-    <SiteChrome
-      flashNews={[]}
-      trending={[]}
-      site={site}
-    >
+    <SiteChrome flashNews={[]} trending={[]}>
       <JsonLd path="privacy-policy" />
       <LegalPage eyebrow="Privacy Policy" load={getPrivacyPolicy} />
     </SiteChrome>

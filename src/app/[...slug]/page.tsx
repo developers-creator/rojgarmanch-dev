@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Article, ArticleLink } from "@/data/articles";
 import type { NewsLink } from "@/types/news";
-import { getSiteInfo } from "@/data/home";
 import { getAds, getNews, getSettingsOrEmpty } from "@/lib/api";
 import { buildPageMetadata, loadSeo, pageUrlFor } from "@/lib/seo";
 import { SchemaScript } from "@/components/seo/SchemaScript";
@@ -126,14 +125,8 @@ export default async function ArticleRoute({ params, searchParams }: PageProps) 
     return <CategoryView slug={slug[0]} page={1} />;
   }
 
-  const site = getSiteInfo();
-
   return (
-    <SiteChrome
-      flashNews={[]}
-      trending={[]}
-      site={site}
-    >
+    <SiteChrome flashNews={[]} trending={[]}>
       <SchemaScript
         data={graph(
           newsArticleSchema(
