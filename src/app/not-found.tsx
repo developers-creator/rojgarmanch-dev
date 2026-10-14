@@ -37,6 +37,7 @@ export default function NotFound() {
               aria-label="खोज्नुहोस्"
               required
             />
+            
             <button type="submit" className="btn btn--dark">
               खोज्नुहोस्
             </button>
