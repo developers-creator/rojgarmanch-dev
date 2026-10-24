@@ -32,6 +32,14 @@ const pathOf = (url: string) => {
 
 export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) {
   const { dark_logo, white_logo } = useSettings();
+  const [colorLogoFailed, setColorLogoFailed] = useState(false);
+  const [whiteLogoFailed, setWhiteLogoFailed] = useState(false);
+  const colorLogo = dark_logo || "/images/rojgar-manch-logo.svg";
+  const whiteLogo = white_logo || "/images/rojgar-manch-whitelogo.svg";
+  const colorLogoSrc = colorLogoFailed ? "/images/rojgar-manch-logo.svg" : colorLogo;
+  const whiteLogoSrc = whiteLogoFailed
+    ? "/images/rojgar-manch-whitelogo.svg"
+    : whiteLogo;
   // Prefer the CMS header menu; fall back to the static nav links if it is empty.
   const navLinks: { id: string | number; href: string; label: string; target?: string }[] =
     headerMenu.length
@@ -385,19 +393,21 @@ export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) 
                 >
                   <Image
                     className="logo logo--color"
-                    src={dark_logo || "/images/rojgar-manch-logo.svg"}
+                    src={colorLogoSrc}
                     alt="रोजगार मञ्च"
                     width={283}
                     height={87}
-                    unoptimized={unoptimizedImage(dark_logo || "/images/rojgar-manch-logo.svg")}
+                    unoptimized={unoptimizedImage(colorLogoSrc)}
+                    onError={() => setColorLogoFailed(true)}
                   />
                   <Image
                     className="logo logo--white"
-                    src={white_logo || "/images/rojgar-manch-whitelogo.svg"}
+                    src={whiteLogoSrc}
                     alt="रोजगार मञ्च"
                     width={283}
                     height={87}
-                    unoptimized={unoptimizedImage(white_logo || "/images/rojgar-manch-whitelogo.svg")}
+                    unoptimized={unoptimizedImage(whiteLogoSrc)}
+                    onError={() => setWhiteLogoFailed(true)}
                   />
                 </Link>
 
