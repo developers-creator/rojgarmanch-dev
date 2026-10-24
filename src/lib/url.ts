@@ -1,6 +1,11 @@
 const CMS_ORIGIN = new URL(
   process.env.NEXT_PUBLIC_API_URL ?? "https://cms.rojgarmanch.com",
 ).origin;
+const INTERNAL_ORIGINS = new Set([
+  CMS_ORIGIN,
+  "https://rojgarmanch.com",
+  "https://www.rojgarmanch.com",
+]);
 
 /** Adds the trailing slash the site's routes use (`trailingSlash: true`). */
 function withTrailingSlash(pathname: string): string {
@@ -19,11 +24,10 @@ const stripCategory = (pathname: string) => pathname.replace(/^\/category\//, "/
 export function toFrontUrl(url: string): string {
   if (!url) return url;
   try {
-    const u = new URL(url);
-    if (u.origin !== CMS_ORIGIN) return url;
+    const u = new URL(url, CMS_ORIGIN);
+    if (!INTERNAL_ORIGINS.has(u.origin)) return url;
     return `${withTrailingSlash(stripCategory(u.pathname))}${u.search}${u.hash}`;
   } catch {
-    // Not absolute: a root-relative CMS path such as `/category/news`.
-    return url.startsWith("/category/") ? stripCategory(url) : url;
+    return url;
   }
 }

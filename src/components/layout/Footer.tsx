@@ -28,6 +28,14 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
     columnists,
     correspondents,
   } = useSettings();
+  const [colorLogoFailed, setColorLogoFailed] = useState(false);
+  const [whiteLogoFailed, setWhiteLogoFailed] = useState(false);
+  const colorLogo = dark_logo || "/images/rojgar-manch-logo.svg";
+  const whiteLogo = white_logo || "/images/rojgar-manch-whitelogo.svg";
+  const colorLogoSrc = colorLogoFailed ? "/images/rojgar-manch-logo.svg" : colorLogo;
+  const whiteLogoSrc = whiteLogoFailed
+    ? "/images/rojgar-manch-whitelogo.svg"
+    : whiteLogo;
 
   // Prefer the CMS footer menu; fall back to the static links if it is empty.
   const quickLinks: Pick<MenuItem, "id" | "title" | "url" | "target">[] =
@@ -180,20 +188,22 @@ export function Footer({ site, footerMenu = [] }: FooterProps) {
           >
             <Image
               className="logo logo--color"
-              src={dark_logo || "/images/rojgar-manch-logo.svg"}
+              src={colorLogoSrc}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
-              unoptimized={unoptimizedImage(dark_logo || "/images/rojgar-manch-logo.svg")}
+              unoptimized={unoptimizedImage(colorLogoSrc)}
+              onError={() => setColorLogoFailed(true)}
               loading="lazy"
             />
             <Image
               className="logo logo--white"
-              src={white_logo || "/images/rojgar-manch-whitelogo.svg"}
+              src={whiteLogoSrc}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
-              unoptimized={unoptimizedImage(white_logo || "/images/rojgar-manch-whitelogo.svg")}
+              unoptimized={unoptimizedImage(whiteLogoSrc)}
+              onError={() => setWhiteLogoFailed(true)}
               loading="lazy"
             />
           </Link>
