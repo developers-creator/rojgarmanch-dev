@@ -13,9 +13,10 @@ type MastheadProps = {
   headerAds?: HeaderAds | null;
 };
 
-/** Display size of the header banner (matches the uploaded HBL creative). */
-const HEADER_AD_WIDTH = 810;
-const HEADER_AD_HEIGHT = 100;
+const FALLBACK_HEADER_AD_LEFT =
+  "/images/Classic-Tech-450x200.jpg";
+const FALLBACK_HEADER_AD_RIGHT =
+  "/images/IME_ONLINE.jpg";
 
 export function Masthead({ headerAds }: MastheadProps) {
   const [dates, setDates] = useState({ ad: "—", bs: "—" });
@@ -28,8 +29,10 @@ export function Masthead({ headerAds }: MastheadProps) {
   }, []);
 
   const { dark_logo, white_logo, site_title } = useSettings();
-  const rightImage = headerAds?.header_ad_right || null;
-  const leftImage = headerAds?.header_ad_left || null;
+  const leftImage = headerAds?.header_ad_left || FALLBACK_HEADER_AD_LEFT;
+  const rightImage = headerAds?.header_ad_right || FALLBACK_HEADER_AD_RIGHT;
+  const [leftAdFailed, setLeftAdFailed] = useState(false);
+  const [rightAdFailed, setRightAdFailed] = useState(false);
 
   const wrapLink = (node: ReactNode, href?: string) =>
     href ? (
@@ -42,27 +45,33 @@ export function Masthead({ headerAds }: MastheadProps) {
 
   const colorLogo = dark_logo || "/images/rojgar-manch-logo.svg";
   const whiteLogo = white_logo || "/images/rojgar-manch-whitelogo.svg";
+  const [colorLogoFailed, setColorLogoFailed] = useState(false);
+  const [whiteLogoFailed, setWhiteLogoFailed] = useState(false);
+  const colorLogoSrc = colorLogoFailed ? "/images/rojgar-manch-logo.svg" : colorLogo;
+  const whiteLogoSrc = whiteLogoFailed
+    ? "/images/rojgar-manch-whitelogo.svg"
+    : whiteLogo;
 
   const leftAd = leftImage ? (
     <Image
-      src={leftImage}
+      src={leftAdFailed ? FALLBACK_HEADER_AD_LEFT : leftImage}
       alt={site_title}
       width={450}
-      height={HEADER_AD_HEIGHT}
-      unoptimized={unoptimizedImage(leftImage)}
-      style={{ width: "auto", height: HEADER_AD_HEIGHT, maxWidth: "100%" }}
+      height={200}
+      unoptimized={unoptimizedImage(leftAdFailed ? FALLBACK_HEADER_AD_LEFT : leftImage)}
+      onError={() => setLeftAdFailed(true)}
       loading="lazy"
     />
   ) : null;
 
   const rightAd = rightImage ? (
     <Image
-      src={rightImage}
+      src={rightAdFailed ? FALLBACK_HEADER_AD_RIGHT : rightImage}
       alt={site_title}
-      width={HEADER_AD_WIDTH}
-      height={HEADER_AD_HEIGHT}
-      unoptimized={unoptimizedImage(rightImage)}
-      style={{ width: "auto", height: HEADER_AD_HEIGHT, maxWidth: "100%" }}
+      width={350}
+      height={200}
+      unoptimized={unoptimizedImage(rightAdFailed ? FALLBACK_HEADER_AD_RIGHT : rightImage)}
+      onError={() => setRightAdFailed(true)}
       loading="lazy"
     />
   ) : null;
@@ -78,20 +87,22 @@ export function Masthead({ headerAds }: MastheadProps) {
           >
             <Image
               className="logo logo--color"
-              src={colorLogo}
+              src={colorLogoSrc}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
-              unoptimized={unoptimizedImage(colorLogo)}
+              unoptimized={unoptimizedImage(colorLogoSrc)}
+              onError={() => setColorLogoFailed(true)}
               preload
             />
             <Image
               className="logo logo--white"
-              src={whiteLogo}
+              src={whiteLogoSrc}
               alt="रोजगार मञ्च"
               width={283}
               height={87}
-              unoptimized={unoptimizedImage(whiteLogo)}
+              unoptimized={unoptimizedImage(whiteLogoSrc)}
+              onError={() => setWhiteLogoFailed(true)}
               preload
             />
           </Link>

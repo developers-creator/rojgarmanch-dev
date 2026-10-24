@@ -614,12 +614,8 @@ article:hover .img-cover {
   margin-top: 2px;
 }
 
-/* Mobile: show masthead logo with date below (compact, non-sticky) */
+/* Mobile masthead keeps the logo visible and moves ads below it. */
 @media (max-width: 991.98px) {
-  /* On mobile keep masthead compact: only show ads here */
-  .masthead__brand {
-    display: none !important;
-  }
  .article-body__sticky-title{
   top: 0 !important;
  }
@@ -728,10 +724,12 @@ article:hover .img-cover {
 }
 
 .masthead__ads img {
+  display: block;
   border-radius: var(--radius);
-  /* height: 115px; */
+  height: 100px;
   width: auto;
   max-width: 100%;
+  object-fit: contain;
 }
 
 .masthead__ad {
@@ -756,6 +754,7 @@ article:hover .img-cover {
   .masthead__ads img {
     width: 100%;
     height: auto;
+    max-height: 100px;
   }
 }
 
