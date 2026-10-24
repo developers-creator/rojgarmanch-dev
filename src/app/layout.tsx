@@ -14,6 +14,7 @@ const mukta = Mukta({
   preload: true,
 });
 
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://rojgarmanch.com"),
   title: "रोजगार मञ्च — करियर र रोजगार पत्रिका",
