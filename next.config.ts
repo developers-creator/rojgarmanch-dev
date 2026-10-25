@@ -3,8 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   trailingSlash: true,
   images: {
-    // Re-optimizing runs sharp in-process; keep optimized images for a day.
-    minimumCacheTTL: 86400,
+    // Keep optimized CMS images cached longer to reduce repeat transformations.
+    minimumCacheTTL: 2592000,
+    formats: ["image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [32, 48, 64, 96, 128, 256],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "cms.rojgarmanch.com" },
