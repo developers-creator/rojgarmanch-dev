@@ -45,7 +45,7 @@ export default SiteNavComponent;
 
 export const getNavMenu = () =>
     apiFetch<MenuData>(ENDPOINTS.headerMenu, {
-      revalidate: 300,
+      revalidate: 1800,
       tags: ["header-menu"],
     })
       .then((res) => res.data.items.map(toFrontItem))
@@ -53,7 +53,7 @@ export const getNavMenu = () =>
   
 export const getLatestNews = () =>
     apiFetch<NewsCategoryData>(ENDPOINTS.news, {
-      revalidate: 60,
+      revalidate: 300,
       tags: ["flash-news"],
     })
       .then((res) => (res.data?.posts ?? []).map(toPost))
@@ -61,7 +61,7 @@ export const getLatestNews = () =>
   
 export const getPopularNews = () =>
     apiFetch<TrendingData>(ENDPOINTS.trending, {
-      revalidate: 60,
+      revalidate: 300,
       tags: ["trending"],
     })
       .then((res) => res.data.map(searchToPost))

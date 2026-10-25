@@ -52,12 +52,15 @@ export const ENDPOINTS = {
   sitemap: "/sitemap",
 } as const;
 
-// Homepage, category listings and single articles cache for 15s; every other
-// endpoint uses the 10s default in apiFetch.
-const LISTING_OPTIONS = { revalidate: 15 };
+// Keep content fresh within five minutes without making every route regenerate
+// on a one-minute interval.
+const LISTING_OPTIONS = { revalidate: 300 };
+const SITE_CONFIG_OPTIONS = { revalidate: 1800 };
+const SITEMAP_OPTIONS = { revalidate: 3600 };
 
 // Response types are `unknown` until the payloads are typed.
-export const getSettings = () => apiFetch<SettingsData>(ENDPOINTS.settings);
+export const getSettings = () =>
+  apiFetch<SettingsData>(ENDPOINTS.settings, SITE_CONFIG_OPTIONS);
 
 // Banner News
 export const getBannerNews = () =>
@@ -203,7 +206,9 @@ export const getAdditionalMenu = () =>
 
 // ads
 // `cache` dedupes the several calls made while rendering one page.
-export const getAds = cache(() => apiFetch<AdsData>(ENDPOINTS.ads));
+export const getAds = cache(() =>
+  apiFetch<AdsData>(ENDPOINTS.ads, SITE_CONFIG_OPTIONS),
+);
 
 // team
 export const getTeam = () =>
@@ -227,7 +232,7 @@ export const getSeo = (path: string) =>
 
 // Sitemap
 export const getSitemap = () =>
-  apiFetch<SitemapResponse>(ENDPOINTS.sitemap);
+  apiFetch<SitemapResponse>(ENDPOINTS.sitemap, SITEMAP_OPTIONS);
 
 const EMPTY_SETTINGS: Settings = {
   site_title: "",
