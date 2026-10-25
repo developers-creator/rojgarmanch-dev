@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   trailingSlash: true,
   images: {
+    // Serve images straight from the CMS; Vercel's optimizer quota ran out.
+    unoptimized: true,
     // Keep optimized CMS images cached longer to reduce repeat transformations.
     minimumCacheTTL: 2592000,
     formats: ["image/webp"],
