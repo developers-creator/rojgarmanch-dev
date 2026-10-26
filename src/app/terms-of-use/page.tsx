@@ -16,7 +16,7 @@ export const generateMetadata = (): Promise<Metadata> =>
 
 export default function TermsOfUseRoute() {
   return (
-    <SiteChrome flashNews={[]} trending={[]}>
+    <SiteChrome flashNews={[]} trending={[]} stable>
       <JsonLd path="terms-of-use" />
       <LegalPage eyebrow="Terms of Use" load={getTermsOfUse} />
     </SiteChrome>

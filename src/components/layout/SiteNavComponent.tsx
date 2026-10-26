@@ -11,6 +11,8 @@ import type { NewsCategoryData, TrendingData } from "@/types/news";
 type SiteNavComponentProps = {
   flashNews?: Post[];
   trending?: Post[];
+  /** Seconds before the nav's latest/trending news refetch; stable pages pass a long one. */
+  newsRevalidate?: number;
 };
 
 export const toFrontItem = (item: MenuItem): MenuItem => ({
@@ -24,11 +26,12 @@ export const toFrontItem = (item: MenuItem): MenuItem => ({
 const SiteNavComponent = async ({
   flashNews = [],
   trending = [],
+  newsRevalidate = 300,
 }: SiteNavComponentProps) => {
   const [headerMenu, latest, popular] = await Promise.all([
     getNavMenu(),
-    getLatestNews(),
-    getPopularNews(),
+    getLatestNews(newsRevalidate),
+    getPopularNews(newsRevalidate),
   ]);
 
   return (
@@ -45,23 +48,23 @@ export default SiteNavComponent;
 
 export const getNavMenu = () =>
     apiFetch<MenuData>(ENDPOINTS.headerMenu, {
-      revalidate: 1800,
+      revalidate: 86400,
       tags: ["header-menu"],
     })
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
   
-export const getLatestNews = () =>
+export const getLatestNews = (revalidate = 300) =>
     apiFetch<NewsCategoryData>(ENDPOINTS.news, {
-      revalidate: 300,
+      revalidate,
       tags: ["flash-news"],
     })
       .then((res) => (res.data?.posts ?? []).map(toPost))
       .catch(() => []);
   
-export const getPopularNews = () =>
+export const getPopularNews = (revalidate = 300) =>
     apiFetch<TrendingData>(ENDPOINTS.trending, {
-      revalidate: 300,
+      revalidate,
       tags: ["trending"],
     })
       .then((res) => res.data.map(searchToPost))

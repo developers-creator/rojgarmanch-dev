@@ -55,7 +55,9 @@ export const ENDPOINTS = {
 // Keep content fresh within five minutes without making every route regenerate
 // on a one-minute interval.
 const LISTING_OPTIONS = { revalidate: 300 };
-const SITE_CONFIG_OPTIONS = { revalidate: 1800 };
+const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
+// Static pages (about, team, contact, legal) and SEO rarely change.
+const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
 const SITEMAP_OPTIONS = { revalidate: 3600 };
 
 // Response types are `unknown` until the payloads are typed.
@@ -67,7 +69,8 @@ export const getBannerNews = () =>
   apiFetch<BannerNewsData>(ENDPOINTS.bannerNews, LISTING_OPTIONS);
 
 // Contact
-export const getContact = () => apiFetch<ContactData>(ENDPOINTS.contact);
+export const getContact = () =>
+  apiFetch<ContactData>(ENDPOINTS.contact, STATIC_PAGE_OPTIONS);
 
 // Single news article — `slug` is the CMS slug as-is, e.g. "news/2026/09/112895"
 // `cache` shares one fetch between generateMetadata and the page.
@@ -212,23 +215,23 @@ export const getAds = cache(() =>
 
 // team
 export const getTeam = () =>
-  apiFetch<TeamPageResponse>(ENDPOINTS.team);
+  apiFetch<TeamPageResponse>(ENDPOINTS.team, STATIC_PAGE_OPTIONS);
 
 // about
 export const getAbout = () =>
-  apiFetch<AboutPageResponse>(ENDPOINTS.about);
+  apiFetch<AboutPageResponse>(ENDPOINTS.about, STATIC_PAGE_OPTIONS);
 
 // privacy-policy
 export const getPrivacyPolicy = () =>
-  apiFetch<DefaultPageResponse>(ENDPOINTS.privacyPolicy);
+  apiFetch<DefaultPageResponse>(ENDPOINTS.privacyPolicy, STATIC_PAGE_OPTIONS);
 
 // terms of use
 export const getTermsOfUse = () =>
-  apiFetch<DefaultPageResponse>(ENDPOINTS.termsAndConditions);
+  apiFetch<DefaultPageResponse>(ENDPOINTS.termsAndConditions, STATIC_PAGE_OPTIONS);
 
 // SEO — `path` is the page's path on the CMS (e.g. "about", "category/news").
 export const getSeo = (path: string) =>
-  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`);
+  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, STATIC_PAGE_OPTIONS);
 
 // Sitemap
 export const getSitemap = () =>

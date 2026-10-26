@@ -20,7 +20,7 @@ export default FullscreenMenuComponent;
 
 export const getHeaderMenu = () =>
     apiFetch<MenuData>(ENDPOINTS.headerMenu, {
-      revalidate: 1800,
+      revalidate: 86400,
       tags: ["header-menu"],
     })
       .then((res) => res.data.items.map(toFrontItem))
@@ -28,7 +28,7 @@ export const getHeaderMenu = () =>
   
 export const getAdditionalMenu = () =>
     apiFetch<MenuData>(ENDPOINTS.additionalMenu, {
-      revalidate: 1800,
+      revalidate: 86400,
       tags: ["additional-menu"],
     })
       .then((res) => res.data.items.map(toFrontItem))
