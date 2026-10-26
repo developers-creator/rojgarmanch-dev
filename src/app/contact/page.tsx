@@ -11,8 +11,6 @@ const fallbackMetadata: Metadata = {
   alternates: { canonical: "https://rojgarmanch.com/contact/" },
 };
 
-
-
 export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("contact", fallbackMetadata);
 

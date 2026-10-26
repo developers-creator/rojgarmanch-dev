@@ -4,7 +4,7 @@ import { SiteNav } from "./SiteNav";
 import { toFrontUrl } from "@/lib/url";
 import { searchToPost, toPost } from "@/lib/posts";
 import { apiFetch } from "@/lib/api/client";
-import { ENDPOINTS } from "@/lib/api/endpoints";
+import { ENDPOINTS, NEWS_TAG } from "@/lib/api/endpoints";
 import type { MenuData } from "@/types/menu";
 import type { NewsCategoryData, TrendingData } from "@/types/news";
 
@@ -47,13 +47,19 @@ export const getNavMenu = () =>
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
   
-// Uncached here: only called from /api/nav-news, which the CDN caches.
+// Called from /api/nav-news; refreshed on demand through the `news` tag.
 export const getLatestNews = () =>
-    apiFetch<NewsCategoryData>(ENDPOINTS.news, { revalidate: 0 })
+    apiFetch<NewsCategoryData>(ENDPOINTS.news, {
+      revalidate: 3600,
+      tags: [NEWS_TAG],
+    })
       .then((res) => (res.data?.posts ?? []).map(toPost))
       .catch(() => []);
   
 export const getPopularNews = () =>
-    apiFetch<TrendingData>(ENDPOINTS.trending, { revalidate: 0 })
+    apiFetch<TrendingData>(ENDPOINTS.trending, {
+      revalidate: 3600,
+      tags: [NEWS_TAG],
+    })
       .then((res) => res.data.map(searchToPost))
       .catch(() => []);

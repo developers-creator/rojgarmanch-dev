@@ -52,9 +52,15 @@ export const ENDPOINTS = {
   sitemap: "/sitemap",
 } as const;
 
-// Keep content fresh within five minutes without making every route regenerate
-// on a one-minute interval.
-const LISTING_OPTIONS = { revalidate: 300 };
+// Posts and ads are refreshed on demand: the CMS calls /api/revalidate when they
+// change, which expires the `news` / `article:<slug>` / `ads` tags. The timers are
+// only a safety net in case a webhook is missed.
+export const NEWS_TAG = "news";
+export const ADS_TAG = "ads";
+export const articleTag = (slug: string) => `article:${slug}`;
+
+const LISTING_OPTIONS = { revalidate: 3600, tags: [NEWS_TAG] };
+const ADS_OPTIONS = { revalidate: 86400, tags: [ADS_TAG] };
 const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
 // Static pages (about, team, contact, legal) and SEO rarely change.
 const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
@@ -75,7 +81,10 @@ export const getContact = () =>
 // Single news article — `slug` is the CMS slug as-is, e.g. "news/2026/09/112895"
 // `cache` shares one fetch between generateMetadata and the page.
 export const getNews = cache((slug: string) =>
-  apiFetch<NewsDetailData>(`/${slug}`, LISTING_OPTIONS),
+  apiFetch<NewsDetailData>(`/${slug}`, {
+    revalidate: 86400,
+    tags: [articleTag(slug)],
+  }),
 );
 
 // News category listing
@@ -113,6 +122,7 @@ export const AUTHOR_PER_PAGE = 25;
 export const getAuthorPosts = (slug: string, page = 1) =>
   apiFetch<AuthorPostsData>(
     `/author/${encodeURIComponent(slug)}?per_page=${AUTHOR_PER_PAGE}&page=${page}`,
+    LISTING_OPTIONS,
   );
 
 // Publication
@@ -210,7 +220,7 @@ export const getAdditionalMenu = () =>
 // ads
 // `cache` dedupes the several calls made while rendering one page.
 export const getAds = cache(() =>
-  apiFetch<AdsData>(ENDPOINTS.ads, SITE_CONFIG_OPTIONS),
+  apiFetch<AdsData>(ENDPOINTS.ads, ADS_OPTIONS),
 );
 
 // team
@@ -231,7 +241,11 @@ export const getTermsOfUse = () =>
 
 // SEO — `path` is the page's path on the CMS (e.g. "about", "category/news").
 export const getSeo = (path: string) =>
-  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, STATIC_PAGE_OPTIONS);
+  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, {
+    ...STATIC_PAGE_OPTIONS,
+    // Lets an edited article refresh its SEO along with its body.
+    tags: [articleTag(path.replace(/^\/+|\/+$/g, ""))],
+  });
 
 // Sitemap
 export const getSitemap = () =>
