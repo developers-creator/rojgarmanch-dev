@@ -16,7 +16,7 @@ export const generateMetadata = (): Promise<Metadata> =>
 
 export default function PrivacyPolicyRoute() {
   return (
-    <SiteChrome flashNews={[]} trending={[]} stable>
+    <SiteChrome flashNews={[]} trending={[]}>
       <JsonLd path="privacy-policy" />
       <LegalPage eyebrow="Privacy Policy" load={getPrivacyPolicy} />
     </SiteChrome>

@@ -16,7 +16,7 @@ export const generateMetadata = (): Promise<Metadata> =>
 
 export default function AboutRoute() {
   return (
-    <SiteChrome flashNews={[]} trending={[]} stable>
+    <SiteChrome flashNews={[]} trending={[]}>
       <AboutPage />
       <JsonLd path="about" />
     </SiteChrome>

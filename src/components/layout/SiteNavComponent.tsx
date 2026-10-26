@@ -11,8 +11,6 @@ import type { NewsCategoryData, TrendingData } from "@/types/news";
 type SiteNavComponentProps = {
   flashNews?: Post[];
   trending?: Post[];
-  /** Seconds before the nav's latest/trending news refetch; stable pages pass a long one. */
-  newsRevalidate?: number;
 };
 
 export const toFrontItem = (item: MenuItem): MenuItem => ({
@@ -26,18 +24,13 @@ export const toFrontItem = (item: MenuItem): MenuItem => ({
 const SiteNavComponent = async ({
   flashNews = [],
   trending = [],
-  newsRevalidate = 300,
 }: SiteNavComponentProps) => {
-  const [headerMenu, latest, popular] = await Promise.all([
-    getNavMenu(),
-    getLatestNews(newsRevalidate),
-    getPopularNews(newsRevalidate),
-  ]);
+  const headerMenu = await getNavMenu();
 
   return (
     <SiteNav
-      flashNews={latest.length ? latest : flashNews}
-      trending={popular.length ? popular : trending}
+      flashNews={flashNews}
+      trending={trending}
       headerMenu={headerMenu}
     />
   );
@@ -54,18 +47,13 @@ export const getNavMenu = () =>
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
   
-export const getLatestNews = (revalidate = 300) =>
-    apiFetch<NewsCategoryData>(ENDPOINTS.news, {
-      revalidate,
-      tags: ["flash-news"],
-    })
+// Uncached here: only called from /api/nav-news, which the CDN caches.
+export const getLatestNews = () =>
+    apiFetch<NewsCategoryData>(ENDPOINTS.news, { revalidate: 0 })
       .then((res) => (res.data?.posts ?? []).map(toPost))
       .catch(() => []);
   
-export const getPopularNews = (revalidate = 300) =>
-    apiFetch<TrendingData>(ENDPOINTS.trending, {
-      revalidate,
-      tags: ["trending"],
-    })
+export const getPopularNews = () =>
+    apiFetch<TrendingData>(ENDPOINTS.trending, { revalidate: 0 })
       .then((res) => res.data.map(searchToPost))
       .catch(() => []);

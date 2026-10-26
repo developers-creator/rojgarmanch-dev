@@ -15,7 +15,7 @@ export const generateMetadata = (): Promise<Metadata> =>
 
 export default function TeamRoute() {
   return (
-    <SiteChrome flashNews={[]} trending={[]} stable>
+    <SiteChrome flashNews={[]} trending={[]}>
       <TeamPage />
       <JsonLd path="team" />
     </SiteChrome>

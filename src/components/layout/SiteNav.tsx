@@ -30,7 +30,31 @@ const pathOf = (url: string) => {
   }
 };
 
-export function SiteNav({ flashNews, trending, headerMenu = [] }: SiteNavProps) {
+export function SiteNav({
+  flashNews: initialFlashNews,
+  trending: initialTrending,
+  headerMenu = [],
+}: SiteNavProps) {
+  const [{ flashNews, trending }, setNews] = useState({
+    flashNews: initialFlashNews,
+    trending: initialTrending,
+  });
+  // Loaded after mount so the news never forces the page itself to regenerate.
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/nav-news", { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { flashNews: Post[]; trending: Post[] } | null) => {
+        if (!data) return;
+        setNews((prev) => ({
+          flashNews: data.flashNews.length ? data.flashNews : prev.flashNews,
+          trending: data.trending.length ? data.trending : prev.trending,
+        }));
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
+
   const { dark_logo, white_logo } = useSettings();
   const [colorLogoFailed, setColorLogoFailed] = useState(false);
   const [whiteLogoFailed, setWhiteLogoFailed] = useState(false);

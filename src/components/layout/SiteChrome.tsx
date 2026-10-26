@@ -13,17 +13,12 @@ type SiteChromeProps = {
   children: ReactNode;
   flashNews: Post[];
   trending: Post[];
-  /** Pass for pages whose content rarely changes, so they regenerate less often. */
-  stable?: boolean;
 };
-
-const STABLE_NEWS_REVALIDATE = 86400;
 
 export async function SiteChrome({
   children,
   flashNews,
   trending,
-  stable = false,
 }: SiteChromeProps) {
   const popupAds = await getAds()
     .then((res) => res.data.popup_ads)
@@ -32,11 +27,7 @@ export async function SiteChrome({
   return (
     <>
       <MastheadComponent />
-      <SiteNavComponent
-        flashNews={flashNews}
-        trending={trending}
-        newsRevalidate={stable ? STABLE_NEWS_REVALIDATE : undefined}
-      />
+      <SiteNavComponent flashNews={flashNews} trending={trending} />
       <FullscreenMenuComponent />
       <SearchOverlay />
       {children}
