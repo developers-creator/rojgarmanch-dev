@@ -12,6 +12,7 @@ const fallbackMetadata: Metadata = {
 };
 
 
+
 export const generateMetadata = (): Promise<Metadata> =>
   buildPageMetadata("contact", fallbackMetadata);
 
