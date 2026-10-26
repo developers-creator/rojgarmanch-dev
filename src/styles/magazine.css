@@ -614,7 +614,7 @@ article:hover .img-cover {
   margin-top: 2px;
 }
 
-/* Mobile masthead keeps the logo visible and moves ads below it. */
+/* Mobile masthead shows only the ads; the nav bar carries the logo. */
 @media (max-width: 991.98px) {
  .article-body__sticky-title{
   top: 0 !important;
@@ -632,6 +632,11 @@ article:hover .img-cover {
 
   .masthead__brand-wrap {
     width: 100%;
+  }
+
+  /* The nav bar already shows the logo on mobile; drop the masthead copy. */
+  .masthead__brand {
+    display: none;
   }
 
   .masthead__ads {
