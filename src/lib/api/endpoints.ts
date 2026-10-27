@@ -65,6 +65,8 @@ const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
 // Static pages (about, team, contact, legal) and SEO rarely change.
 const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
 const SITEMAP_OPTIONS = { revalidate: 3600 };
+// Magazine issues are published rarely and aren't covered by the post webhook.
+const PUBLICATION_OPTIONS = { revalidate: 3600 };
 
 // Response types are `unknown` until the payloads are typed.
 export const getSettings = () =>
@@ -127,11 +129,14 @@ export const getAuthorPosts = (slug: string, page = 1) =>
 
 // Publication
 export const getPublication = () =>
-  apiFetch<PublicationData>(ENDPOINTS.publication);
+  apiFetch<PublicationData>(ENDPOINTS.publication, PUBLICATION_OPTIONS);
 
 // Single publication — `slug` is the bare slug, e.g. "year-16-issue-1-2083-shrawan-issue"
 export const getPublicationDetail = (slug: string) =>
-  apiFetch<PublicationDetailData>(`/magazine/${encodeURIComponent(slug)}`);
+  apiFetch<PublicationDetailData>(
+    `/magazine/${encodeURIComponent(slug)}`,
+    STATIC_PAGE_OPTIONS,
+  );
 
 // Publications
 export const PUBLICATIONS_PER_PAGE = 12;
@@ -139,6 +144,7 @@ export const PUBLICATIONS_PER_PAGE = 12;
 export const getPublications = (page = 1) =>
   apiFetch<PublicationData>(
     `/magazine?per_page=${PUBLICATIONS_PER_PAGE}&page=${page}`,
+    PUBLICATION_OPTIONS,
   );
 
 // Rojgar TV
@@ -278,12 +284,17 @@ export const getSettingsOrEmpty = () =>
     .then((res) => res.data)
     .catch(() => EMPTY_SETTINGS);
 
-// Search — results are not cached long since queries are arbitrary.
-export const searchNews = (q: string, page = 1, perPage = 10) =>
-  apiFetch<SearchData>(
-    `${ENDPOINTS.search}?q=${encodeURIComponent(q)}&page=${page}&per_page=${perPage}`,
+// Search — results are not cached long since queries are arbitrary. The query is
+// normalised first so "  Job  ", "Job" and "Job " share one cache entry, and its
+// length is capped so junk queries can't create ever-larger entries.
+const SEARCH_QUERY_MAX = 100;
+export const searchNews = (q: string, page = 1, perPage = 10) => {
+  const query = q.replace(/\s+/g, " ").trim().slice(0, SEARCH_QUERY_MAX);
+  return apiFetch<SearchData>(
+    `${ENDPOINTS.search}?q=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`,
     { revalidate: 60 },
   );
+};
 
 // Trending (popular) news
 export const getTrending = () => apiFetch<TrendingData>(ENDPOINTS.trending);

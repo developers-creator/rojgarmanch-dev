@@ -48,6 +48,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unknown type" }, { status: 400 });
   }
 
-  tags.forEach(expire);
+  [...new Set(tags)].forEach(expire);
   return Response.json({ revalidated: tags });
 }

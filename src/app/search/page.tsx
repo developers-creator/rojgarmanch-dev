@@ -8,8 +8,10 @@ type PageProps = {
   searchParams: Promise<{ q?: string; page?: string }>;
 };
 
+// Capped so crawling `?page=999999` can't create endless cache entries.
+const MAX_PAGE = 100;
 const parsePage = (raw?: string) =>
-  Math.max(1, Number.parseInt(raw ?? "1", 10) || 1);
+  Math.min(MAX_PAGE, Math.max(1, Number.parseInt(raw ?? "1", 10) || 1));
 
 export async function generateMetadata({
   searchParams,
