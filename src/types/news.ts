@@ -69,6 +69,14 @@ export type NewsCategoryData = {
   pagination?: Pagination;
 };
 
+/** Latest posts across all categories (the "ताजा" tab). `data` is a flat list. */
+export type LatestNewsData = {
+  success: boolean;
+  message: string;
+  data: NewsCategoryPost[];
+  pagination?: Pagination;
+};
+
 /** Homepage समाचार feed. `data` is a flat list, not a category wrapper. */
 export type MainNewsItem = {
   id: number;

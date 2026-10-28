@@ -6,7 +6,7 @@ import { searchToPost, toPost } from "@/lib/posts";
 import { apiFetch } from "@/lib/api/client";
 import { ENDPOINTS, NEWS_TAG } from "@/lib/api/endpoints";
 import type { MenuData } from "@/types/menu";
-import type { NewsCategoryData, TrendingData } from "@/types/news";
+import type { LatestNewsData, TrendingData } from "@/types/news";
 
 type SiteNavComponentProps = {
   flashNews?: Post[];
@@ -49,11 +49,11 @@ export const getNavMenu = () =>
   
 // Called from /api/nav-news; refreshed on demand through the `news` tag.
 export const getLatestNews = () =>
-    apiFetch<NewsCategoryData>(ENDPOINTS.news, {
+    apiFetch<LatestNewsData>(ENDPOINTS.latestNews, {
       revalidate: 3600,
       tags: [NEWS_TAG],
     })
-      .then((res) => (res.data?.posts ?? []).map(toPost))
+      .then((res) => (res.data ?? []).map(toPost))
       .catch(() => []);
   
 export const getPopularNews = () =>

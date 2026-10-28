@@ -19,6 +19,7 @@ export const ENDPOINTS = {
   contact: "/page/contact",
   news: "/category/news?per_page=9",
   mainNews: "/main-news?per_page=9",
+  latestNews: "/latest-news?page=1&per_page=9",
   careerPlaybook: "/category/career-playbook?per_page=5",
   arthaRojgar: "/category/employment?per_page=5",
   employment: "/category/employment?per_page=6",
