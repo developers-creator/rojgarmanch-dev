@@ -73,6 +73,7 @@ const PUBLICATION_OPTIONS = { revalidate: 3600 };
 export const getSettings = () =>
   apiFetch<SettingsData>(ENDPOINTS.settings, SITE_CONFIG_OPTIONS);
 
+
 // Banner News
 export const getBannerNews = () =>
   apiFetch<BannerNewsData>(ENDPOINTS.bannerNews, LISTING_OPTIONS);
