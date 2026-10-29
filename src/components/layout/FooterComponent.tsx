@@ -8,7 +8,7 @@ import { ENDPOINTS } from "@/lib/api/endpoints";
 // Falls back to the static links in Footer when the menu can't be loaded.
 const getFooterMenu = () =>
   apiFetch<MenuData>(ENDPOINTS.footerMenu, {
-    revalidate: 86400,
+    revalidate: false,
     tags: ["footer-menu"],
   })
     .then((res) => res.data.items.map(toFrontItem))

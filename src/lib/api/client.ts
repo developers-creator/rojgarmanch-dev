@@ -1,8 +1,8 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type ApiOptions = {
-  /** Seconds before Next.js refetches this endpoint in the background; `0` never caches. */
-  revalidate?: number;
+  /** Seconds before Next.js refetches this endpoint in the background; `0` never caches, `false` caches until a tag is expired. */
+  revalidate?: number | false;
   tags?: string[];
 };
 

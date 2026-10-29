@@ -41,7 +41,7 @@ export default SiteNavComponent;
 
 export const getNavMenu = () =>
     apiFetch<MenuData>(ENDPOINTS.headerMenu, {
-      revalidate: 86400,
+      revalidate: false,
       tags: ["header-menu"],
     })
       .then((res) => res.data.items.map(toFrontItem))

@@ -1,11 +1,12 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
-import { ADS_TAG, NEWS_TAG, articleTag } from "@/lib/api/endpoints";
+import { ADS_TAG, MENU_TAGS, NEWS_TAG, articleTag } from "@/lib/api/endpoints";
 
 // CMS webhook. Send `POST /api/revalidate` with header `x-revalidate-secret` and a
 // JSON body:
 //   { "type": "post", "slug": "news/2026/09/112895" }  — post added/edited/deleted
 //   { "type": "ad" }                                    — ads changed
+//   { "type": "menu" }                                  — header/footer/additional menu changed
 // `slug` may also be the post's full URL.
 
 const secretMatches = (given: string | null) => {
@@ -44,6 +45,8 @@ export async function POST(request: Request) {
     if (slug) tags.push(articleTag(slug));
   } else if (type === "ad") {
     tags.push(ADS_TAG);
+  } else if (type === "menu") {
+    tags.push(...MENU_TAGS);
   } else {
     return Response.json({ error: "Unknown type" }, { status: 400 });
   }

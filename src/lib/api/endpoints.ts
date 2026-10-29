@@ -60,8 +60,12 @@ export const NEWS_TAG = "news";
 export const ADS_TAG = "ads";
 export const articleTag = (slug: string) => `article:${slug}`;
 
-const LISTING_OPTIONS = { revalidate: 3600, tags: [NEWS_TAG] };
-const ADS_OPTIONS = { revalidate: 86400, tags: [ADS_TAG] };
+// ISR writes are billed, and every listing fetch on a page is written again each
+// time it expires, so the timer is a long safety net; freshness comes from the webhook.
+const LISTING_OPTIONS = { revalidate: 21600, tags: [NEWS_TAG] };
+// `false` = cached until the webhook expires the tag (no timer-driven rewrites).
+export const MENU_TAGS = ["header-menu", "footer-menu", "additional-menu"] as const;
+const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
 const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
 // Static pages (about, team, contact, legal) and SEO rarely change.
 const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
@@ -86,7 +90,7 @@ export const getContact = () =>
 // `cache` shares one fetch between generateMetadata and the page.
 export const getNews = cache((slug: string) =>
   apiFetch<NewsDetailData>(`/${slug}`, {
-    revalidate: 86400,
+    revalidate: false,
     tags: [articleTag(slug)],
   }),
 );
@@ -294,7 +298,8 @@ export const searchNews = (q: string, page = 1, perPage = 10) => {
   const query = q.replace(/\s+/g, " ").trim().slice(0, SEARCH_QUERY_MAX);
   return apiFetch<SearchData>(
     `${ENDPOINTS.search}?q=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`,
-    { revalidate: 60 },
+    // Arbitrary queries would each write a cache entry; hit the CMS directly instead.
+    { revalidate: 0 },
   );
 };
 
