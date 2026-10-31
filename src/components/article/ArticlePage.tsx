@@ -206,11 +206,11 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
               <div className="article-hero__sticky">
                 <h1 id="article-title">{article.title}</h1>
 
-                {article.deck ? (
-                  <p className="article-hero__deck">{article.deck}</p>
-                ) : (
-                  <p className="article-hero__deck">{article.excerpt}</p>
-                )}
+                {article.deck || article.excerpt ? (
+                  <p className="article-hero__deck">
+                    {article.deck || article.excerpt}
+                  </p>
+                ) : null}
               </div>
             </div>
 

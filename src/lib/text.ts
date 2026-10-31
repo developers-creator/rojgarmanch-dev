@@ -25,6 +25,16 @@ export function decodeEntities(text: string): string {
   });
 }
 
+/**
+ * The excerpt an editor actually wrote, or "" when the CMS auto-trimmed one from
+ * the body (WordPress ends those with a `[&hellip;]` / `[…]` marker).
+ */
+export function editorExcerpt(text: string | null | undefined): string {
+  if (!text) return "";
+  const decoded = decodeEntities(text).trim();
+  return /\[\s*(?:…|\.{3})\s*\]$/.test(decoded) ? "" : decoded;
+}
+
 /** Decode an excerpt and drop the WordPress "read more" marker (`[&hellip;]` / `[…]`). */
 export function cleanExcerpt(text: string): string {
   return decodeEntities(text)
