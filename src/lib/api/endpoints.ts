@@ -63,6 +63,10 @@ export const articleTag = (slug: string) => `article:${slug}`;
 // ISR writes are billed, and every listing fetch on a page is written again each
 // time it expires, so the timer is a long safety net; freshness comes from the webhook.
 const LISTING_OPTIONS = { revalidate: 21600, tags: [NEWS_TAG] };
+// Archive pages 2+ only shift by a post per publish, but crawlers walk all of them,
+// so expiring them with `news` rewrote every page of every archive on each publish.
+// They refresh on the timer alone.
+const pagedListingOptions = (page: number) => page > 1 ? { revalidate: LISTING_OPTIONS.revalidate } : LISTING_OPTIONS;
 // `false` = cached until the webhook expires the tag (no timer-driven rewrites).
 export const MENU_TAGS = ["header-menu", "footer-menu", "additional-menu"] as const;
 const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
@@ -121,7 +125,7 @@ export const CATEGORY_PER_PAGE = 25;
 export const getCategoryPosts = (slug: string, page = 1) =>
   apiFetch<NewsCategoryData>(
     `/category/${encodeURIComponent(slug)}?per_page=${CATEGORY_PER_PAGE}&page=${page}`,
-    LISTING_OPTIONS,
+    pagedListingOptions(page),
   );
 
 // Author archive, paginated — `slug` is the CMS author slug, e.g. "rojgar-manch"
@@ -130,7 +134,7 @@ export const AUTHOR_PER_PAGE = 25;
 export const getAuthorPosts = (slug: string, page = 1) =>
   apiFetch<AuthorPostsData>(
     `/author/${encodeURIComponent(slug)}?per_page=${AUTHOR_PER_PAGE}&page=${page}`,
-    LISTING_OPTIONS,
+    pagedListingOptions(page),
   );
 
 // Publication

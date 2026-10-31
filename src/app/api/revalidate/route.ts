@@ -7,7 +7,9 @@ import { ADS_TAG, MENU_TAGS, NEWS_TAG, articleTag } from "@/lib/api/endpoints";
 //   { "type": "post", "slug": "news/2026/09/112895" }  — post added/edited/deleted
 //   { "type": "ad" }                                    — ads changed
 //   { "type": "menu" }                                  — header/footer/additional menu changed
-// `slug` may also be the post's full URL.
+// `slug` may also be the post's full URL. Add `"listings": false` to a post event when
+// only the article body changed: home and category listings then stay cached
+// (they still refresh on their timer).
 
 const secretMatches = (given: string | null) => {
   const expected = process.env.REVALIDATE_SECRET;
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
   const tags: string[] = [];
 
   if (type === "post") {
-    tags.push(NEWS_TAG);
+    if (body.listings !== false) tags.push(NEWS_TAG);
     const slug = toSlug(body.slug);
     if (slug) tags.push(articleTag(slug));
   } else if (type === "ad") {
