@@ -4,7 +4,7 @@ import { SiteNav } from "./SiteNav";
 import { toFrontUrl } from "@/lib/url";
 import { searchToPost, toPost } from "@/lib/posts";
 import { apiFetch } from "@/lib/api/client";
-import { ENDPOINTS, NEWS_TAG } from "@/lib/api/endpoints";
+import { CACHE_TAGS, ENDPOINTS } from "@/lib/api/endpoints";
 import type { MenuData } from "@/types/menu";
 import type { LatestNewsData, TrendingData } from "@/types/news";
 
@@ -42,24 +42,24 @@ export default SiteNavComponent;
 export const getNavMenu = () =>
     apiFetch<MenuData>(ENDPOINTS.headerMenu, {
       revalidate: false,
-      tags: ["header-menu"],
+      tags: [CACHE_TAGS.headerMenu],
     })
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
   
-// Called from /api/nav-news; refreshed on demand through the `news` tag.
+// Called from /api/nav-news; post webhooks refresh this listing independently.
 export const getLatestNews = () =>
     apiFetch<LatestNewsData>(ENDPOINTS.latestNews, {
       revalidate: 3600,
-      tags: [NEWS_TAG],
+      tags: [CACHE_TAGS.latestNews],
     })
       .then((res) => (res.data ?? []).map(toPost))
       .catch(() => []);
   
 export const getPopularNews = () =>
     apiFetch<TrendingData>(ENDPOINTS.trending, {
-      revalidate: 3600,
-      tags: [NEWS_TAG],
+      revalidate: 1800,
+      tags: [CACHE_TAGS.trending],
     })
       .then((res) => res.data.map(searchToPost))
       .catch(() => []);

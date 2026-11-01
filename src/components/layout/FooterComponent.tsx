@@ -3,13 +3,13 @@ import { Footer } from "./Footer";
 import { toFrontItem } from "./SiteNavComponent";
 import { getSiteInfo } from "@/data/home";
 import { apiFetch } from "@/lib/api/client";
-import { ENDPOINTS } from "@/lib/api/endpoints";
+import { CACHE_TAGS, ENDPOINTS } from "@/lib/api/endpoints";
 
 // Falls back to the static links in Footer when the menu can't be loaded.
 const getFooterMenu = () =>
   apiFetch<MenuData>(ENDPOINTS.footerMenu, {
     revalidate: false,
-    tags: ["footer-menu"],
+    tags: [CACHE_TAGS.footerMenu],
   })
     .then((res) => res.data.items.map(toFrontItem))
     .catch(() => []);

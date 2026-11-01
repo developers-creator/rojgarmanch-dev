@@ -104,6 +104,7 @@ export async function AuthorView({ slug, page }: { slug: string; page: number })
         basePath={`/author/${author.slug}`}
         pathStyle
         profile={{ image: author.profile_image, description }}
+        lazyFeaturedImage
         emptyMessage="यस लेखकका कुनै समाचार फेला परेनन्।"
         ad={ads}
         siteName={settings.site_title}

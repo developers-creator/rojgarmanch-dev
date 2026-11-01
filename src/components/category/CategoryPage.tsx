@@ -25,6 +25,8 @@ type CategoryPageProps = {
   siteName?: string;
   /** Author archives: photo and bio shown beside the title. */
   profile?: { image?: string | null; description?: string };
+  /** Author archives lazy-load the featured news image like the rest of the list. */
+  lazyFeaturedImage?: boolean;
 };
 
 function AuthorByline({ item }: { item: Post }) {
@@ -39,6 +41,7 @@ function AuthorByline({ item }: { item: Post }) {
           alt={item.author || item.title}
           width={36}
           height={36}
+          loading="lazy"
         />
       ) : (
         <span className="category-author__avatar category-author__avatar--empty" />
@@ -93,6 +96,7 @@ export function CategoryPage({
   ad,
   siteName = "",
   profile,
+  lazyFeaturedImage = false,
 }: CategoryPageProps) {
   const featured = posts[0];
   const rest = posts.slice(1);
@@ -116,6 +120,7 @@ export function CategoryPage({
               alt={category.name}
               width={96}
               height={96}
+              loading="lazy"
             />
           ) : null}
           <div className="category-head__copy">
@@ -156,7 +161,9 @@ export function CategoryPage({
                   alt={featured.imageAlt || featured.title}
                   width={1200}
                   height={675}
-                  preload
+                  {...(lazyFeaturedImage
+                    ? { loading: "lazy" as const }
+                    : { preload: true })}
                 />
               ) : null}
             </Link>

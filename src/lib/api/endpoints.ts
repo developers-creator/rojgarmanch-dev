@@ -53,22 +53,37 @@ export const ENDPOINTS = {
   sitemap: "/sitemap",
 } as const;
 
-// Posts and ads are refreshed on demand: the CMS calls /api/revalidate when they
-// change, which expires the `news` / `article:<slug>` / `ads` tags. The timers are
-// only a safety net in case a webhook is missed.
-export const NEWS_TAG = "news";
+// Posts and ads are refreshed on demand. Keep listing tags scoped to the data
+// each endpoint returns so a post does not expire unrelated homepage sections.
+export const CACHE_TAGS = {
+  bannerNews: "home-banner-news",
+  mainNews: "home-main-news",
+  latestNews: "home-latest-news",
+  trending: "trending",
+  headerMenu: "header-menu",
+  footerMenu: "footer-menu",
+  additionalMenu: "additional-menu",
+} as const;
 export const ADS_TAG = "ads";
 export const articleTag = (slug: string) => `article:${slug}`;
+export const categoryTag = (slug: string) => `category:${slug}`;
+export const authorTag = (slug: string) => `author:${slug}`;
 
-// ISR writes are billed, and every listing fetch on a page is written again each
-// time it expires, so the timer is a long safety net; freshness comes from the webhook.
-const LISTING_OPTIONS = { revalidate: 21600, tags: [NEWS_TAG] };
-// Archive pages 2+ only shift by a post per publish, but crawlers walk all of them,
-// so expiring them with `news` rewrote every page of every archive on each publish.
-// They refresh on the timer alone.
-const pagedListingOptions = (page: number) => page > 1 ? { revalidate: LISTING_OPTIONS.revalidate } : LISTING_OPTIONS;
+// ISR writes are billed, so the timer is a safety net and webhooks expire only
+// listings affected by a post. Archive pages 2+ refresh on the timer alone.
+const LISTING_REVALIDATE = 21600;
+const listingOptions = (tag: string) => ({
+  revalidate: LISTING_REVALIDATE,
+  tags: [tag],
+});
+const pagedListingOptions = (page: number, tag: string) =>
+  page > 1 ? { revalidate: LISTING_REVALIDATE } : listingOptions(tag);
 // `false` = cached until the webhook expires the tag (no timer-driven rewrites).
-export const MENU_TAGS = ["header-menu", "footer-menu", "additional-menu"] as const;
+export const MENU_TAGS = [
+  CACHE_TAGS.headerMenu,
+  CACHE_TAGS.footerMenu,
+  CACHE_TAGS.additionalMenu,
+] as const;
 const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
 const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
 // Static pages (about, team, contact, legal) and SEO rarely change.
@@ -76,6 +91,11 @@ const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
 const SITEMAP_OPTIONS = { revalidate: 3600 };
 // Magazine issues are published rarely and aren't covered by the post webhook.
 const PUBLICATION_OPTIONS = { revalidate: 3600 };
+const MENU_OPTIONS = {
+  header: { revalidate: false as const, tags: [CACHE_TAGS.headerMenu] },
+  footer: { revalidate: false as const, tags: [CACHE_TAGS.footerMenu] },
+  additional: { revalidate: false as const, tags: [CACHE_TAGS.additionalMenu] },
+};
 
 // Response types are `unknown` until the payloads are typed.
 export const getSettings = () =>
@@ -84,7 +104,10 @@ export const getSettings = () =>
 
 // Banner News
 export const getBannerNews = () =>
-  apiFetch<BannerNewsData>(ENDPOINTS.bannerNews, LISTING_OPTIONS);
+  apiFetch<BannerNewsData>(
+    ENDPOINTS.bannerNews,
+    listingOptions(CACHE_TAGS.bannerNews),
+  );
 
 // Contact
 export const getContact = () =>
@@ -101,23 +124,38 @@ export const getNews = cache((slug: string) =>
 
 // News category listing
 export const getNewsCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.news, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.news,
+    listingOptions(categoryTag("news")),
+  );
 
 // Homepage समाचार — mixed main news, not the news category.
 export const getMainNews = () =>
-  apiFetch<MainNewsData>(ENDPOINTS.mainNews, LISTING_OPTIONS);
+  apiFetch<MainNewsData>(
+    ENDPOINTS.mainNews,
+    listingOptions(CACHE_TAGS.mainNews),
+  );
 
 // Artha-rojgar category listing
 export const getArthaRojgarCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.arthaRojgar, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.arthaRojgar,
+    listingOptions(categoryTag("employment")),
+  );
 
 // Career playbook category listing
 export const getCareerPlaybookCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.careerPlaybook, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.careerPlaybook,
+    listingOptions(categoryTag("career-playbook")),
+  );
 
 // Employment category listing
 export const getEmploymentCategories = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.employment, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.employment,
+    listingOptions(categoryTag("employment")),
+  );
 
 // Any category listing, paginated — `slug` is the CMS category slug, e.g. "employment"
 export const CATEGORY_PER_PAGE = 25;
@@ -125,7 +163,7 @@ export const CATEGORY_PER_PAGE = 25;
 export const getCategoryPosts = (slug: string, page = 1) =>
   apiFetch<NewsCategoryData>(
     `/category/${encodeURIComponent(slug)}?per_page=${CATEGORY_PER_PAGE}&page=${page}`,
-    pagedListingOptions(page),
+    pagedListingOptions(page, categoryTag(slug)),
   );
 
 // Author archive, paginated — `slug` is the CMS author slug, e.g. "rojgar-manch"
@@ -134,7 +172,7 @@ export const AUTHOR_PER_PAGE = 25;
 export const getAuthorPosts = (slug: string, page = 1) =>
   apiFetch<AuthorPostsData>(
     `/author/${encodeURIComponent(slug)}?per_page=${AUTHOR_PER_PAGE}&page=${page}`,
-    pagedListingOptions(page),
+    pagedListingOptions(page, authorTag(slug)),
   );
 
 // Publication
@@ -159,79 +197,127 @@ export const getPublications = (page = 1) =>
 
 // Rojgar TV
 export const getRojgarTV = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.rojgartv, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.rojgartv,
+    listingOptions(categoryTag("rojgar-tv")),
+  );
 
 // Reels
 export const getReels = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.reels, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.reels,
+    listingOptions(categoryTag("reels")),
+  );
 
 // Business
 export const getBusiness = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.business, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.business,
+    listingOptions(categoryTag("business")),
+  );
 
 // NRn
 export const getNRN = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.nrn, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.nrn,
+    listingOptions(categoryTag("nrn")),
+  );
 
 // Pravas
 export const getPravas = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.pravas, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.pravas,
+    listingOptions(categoryTag("abroad")),
+  );
 
 // Webstories
 export const getWebstories = () =>
-  apiFetch<WebstoryData>(ENDPOINTS.webstories, LISTING_OPTIONS);
+  apiFetch<WebstoryData>(
+    ENDPOINTS.webstories,
+    listingOptions(categoryTag("webstories")),
+  );
 
 // interview
 export const getInterview = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.interview, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.interview,
+    listingOptions(categoryTag("interview")),
+  );
 
 // feature
 export const getFeature = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.feature, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.feature,
+    listingOptions(categoryTag("feature")),
+  );
 
 // sports
 export const getSports = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.sports, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.sports,
+    listingOptions(categoryTag("sport")),
+  );
 
 // travel
 export const getTravel = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.travel, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.travel,
+    listingOptions(categoryTag("tourism")),
+  );
 
 // kala
 export const getKala = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.kala, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.kala,
+    listingOptions(categoryTag("art")),
+  );
 
 // sahitya
 export const getSahitya = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.sahitya, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.sahitya,
+    listingOptions(categoryTag("literature")),
+  );
 
 // opinion
 export const getOpinion = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.opinion, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.opinion,
+    listingOptions(categoryTag("opinion")),
+  );
 
 // ramailoSansar
 export const getRamailoSansar = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.ramailoSansar, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.ramailoSansar,
+    listingOptions(categoryTag("fun-world")),
+  );
 
 // world
 export const getWorld = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.world, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.world,
+    listingOptions(categoryTag("world")),
+  );
 
 // englishHeadline
 export const getEnglishHeadline = () =>
-  apiFetch<NewsCategoryData>(ENDPOINTS.englishHeadline, LISTING_OPTIONS);
+  apiFetch<NewsCategoryData>(
+    ENDPOINTS.englishHeadline,
+    listingOptions(categoryTag("english-headline")),
+  );
 
 // headerMenu
 export const getHeaderMenu = () =>
-  apiFetch<MenuData>(ENDPOINTS.headerMenu);
+  apiFetch<MenuData>(ENDPOINTS.headerMenu, MENU_OPTIONS.header);
 
 // footerMenu
 export const getFooterMenu = () =>
-  apiFetch<MenuData>(ENDPOINTS.footerMenu);
+  apiFetch<MenuData>(ENDPOINTS.footerMenu, MENU_OPTIONS.footer);
 
 // additionalMenu
 export const getAdditionalMenu = () =>
-  apiFetch<MenuData>(ENDPOINTS.additionalMenu);
+  apiFetch<MenuData>(ENDPOINTS.additionalMenu, MENU_OPTIONS.additional);
 
 // ads
 // `cache` dedupes the several calls made while rendering one page.
@@ -307,5 +393,9 @@ export const searchNews = (q: string, page = 1, perPage = 10) => {
   );
 };
 
-// Trending (popular) news
-export const getTrending = () => apiFetch<TrendingData>(ENDPOINTS.trending);
+// Trending is independent of post listing invalidation and refreshes every 30 minutes.
+export const getTrending = () =>
+  apiFetch<TrendingData>(ENDPOINTS.trending, {
+    revalidate: 1800,
+    tags: [CACHE_TAGS.trending],
+  });
