@@ -65,13 +65,13 @@ export const CACHE_TAGS = {
   additionalMenu: "additional-menu",
 } as const;
 export const ADS_TAG = "ads";
+export const SITEMAP_TAG = "sitemap";
 export const articleTag = (slug: string) => `article:${slug}`;
 export const categoryTag = (slug: string) => `category:${slug}`;
 export const authorTag = (slug: string) => `author:${slug}`;
 
-// ISR writes are billed, so the timer is a safety net and webhooks expire only
-// listings affected by a post. Archive pages 2+ refresh on the timer alone.
-const LISTING_REVALIDATE = 21600;
+// Webhooks provide freshness for listings; daily revalidation is a safety net.
+const LISTING_REVALIDATE = 86400;
 const listingOptions = (tag: string) => ({
   revalidate: LISTING_REVALIDATE,
   tags: [tag],
@@ -88,9 +88,9 @@ const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
 const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
 // Static pages (about, team, contact, legal) and SEO rarely change.
 const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
-const SITEMAP_OPTIONS = { revalidate: 3600 };
+const SITEMAP_OPTIONS = { revalidate: 86400, tags: [SITEMAP_TAG] };
 // Magazine issues are published rarely and aren't covered by the post webhook.
-const PUBLICATION_OPTIONS = { revalidate: 3600 };
+const PUBLICATION_OPTIONS = { revalidate: 86400 };
 const MENU_OPTIONS = {
   header: { revalidate: false as const, tags: [CACHE_TAGS.headerMenu] },
   footer: { revalidate: false as const, tags: [CACHE_TAGS.footerMenu] },

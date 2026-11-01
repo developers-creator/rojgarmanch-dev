@@ -5,8 +5,8 @@ const NRB_RATES_URL = "https://www.nrb.org.np/api/forex/v1/rates";
 /** NRB doesn't publish every day, so look back a week for the newest entry. */
 const LOOKBACK_DAYS = 7;
 
-// Refetch at most every 3 hours; rates are published once a day.
-const REVALIDATE_SECONDS = 60 * 60 * 3;
+// Rates are published once a day; a 12-hour fallback avoids hourly homepage ISR.
+const REVALIDATE_SECONDS = 60 * 60 * 12;
 
 /** YYYY-MM-DD in Nepal time, `daysAgo` days before today. */
 function nepalDate(daysAgo = 0) {

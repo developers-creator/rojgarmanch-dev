@@ -4,6 +4,7 @@ import {
   ADS_TAG,
   CACHE_TAGS,
   MENU_TAGS,
+  SITEMAP_TAG,
   articleTag,
   authorTag,
   categoryTag,
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
   const tags: string[] = [];
 
   if (type === "post") {
+    tags.push(SITEMAP_TAG);
     if (body.listings !== false) {
       const categories = parseTaxonomySlugs(body.category, body.categories);
       const authors = parseTaxonomySlugs(body.author);

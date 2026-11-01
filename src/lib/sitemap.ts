@@ -5,7 +5,7 @@ export const SITE_URL = "https://rojgarmanch.com";
 
 const XML_HEADERS = {
   "Content-Type": "application/xml; charset=utf-8",
-  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+  "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=172800",
 };
 
 const escapeXml = (s: string) =>
