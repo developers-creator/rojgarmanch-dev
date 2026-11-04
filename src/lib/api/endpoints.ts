@@ -66,6 +66,7 @@ export const CACHE_TAGS = {
 } as const;
 export const ADS_TAG = "ads";
 export const SITEMAP_TAG = "sitemap";
+export const SETTINGS_TAG = "settings";
 export const articleTag = (slug: string) => `article:${slug}`;
 export const categoryTag = (slug: string) => `category:${slug}`;
 export const authorTag = (slug: string) => `author:${slug}`;
@@ -85,7 +86,11 @@ export const MENU_TAGS = [
   CACHE_TAGS.additionalMenu,
 ] as const;
 const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
-const SITE_CONFIG_OPTIONS = { revalidate: 86400 };
+// Site settings feed the root layout, so their lifetime caps every page's ISR
+// lifetime. They almost never change: a week is the safety net, and the tag
+// lets them be expired on demand with `revalidateTag(SETTINGS_TAG)`.
+const LONG_REVALIDATE = 604800;
+const SITE_CONFIG_OPTIONS = { revalidate: LONG_REVALIDATE, tags: [SETTINGS_TAG] };
 // Static pages (about, team, contact, legal) and SEO rarely change.
 const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
 const SITEMAP_OPTIONS = { revalidate: 86400, tags: [SITEMAP_TAG] };
@@ -342,12 +347,19 @@ export const getTermsOfUse = () =>
   apiFetch<DefaultPageResponse>(ENDPOINTS.termsAndConditions, STATIC_PAGE_OPTIONS);
 
 // SEO — `path` is the page's path on the CMS (e.g. "about", "category/news").
-export const getSeo = (path: string) =>
-  apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, {
-    ...STATIC_PAGE_OPTIONS,
+// An article's SEO changes only when the post does, and the post webhook already
+// expires `article:<slug>`, so it needs no timer. Other pages (home, categories,
+// static pages) have no webhook and get the long safety-net lifetime instead.
+const ARTICLE_SEO_PATH = /^[a-z0-9-]+\/\d{4}\/\d{2}\/\d+$/;
+
+export const getSeo = (path: string) => {
+  const clean = path.replace(/^\/+|\/+$/g, "");
+  return apiFetch<SeoResponse>(`/seo?path=${encodeURIComponent(path)}`, {
+    revalidate: ARTICLE_SEO_PATH.test(clean) ? false : LONG_REVALIDATE,
     // Lets an edited article refresh its SEO along with its body.
-    tags: [articleTag(path.replace(/^\/+|\/+$/g, ""))],
+    tags: [articleTag(clean)],
   });
+};
 
 // Sitemap
 export const getSitemap = () =>

@@ -8,6 +8,7 @@ import { buildPageMetadata, loadSeo, pageUrlFor } from "@/lib/seo";
 import { SchemaScript } from "@/components/seo/SchemaScript";
 import { breadcrumbSchema, graph, newsArticleSchema } from "@/lib/schema";
 import { unwrapCmsWrappers } from "@/lib/cmsHtml";
+import { isCatchAllPath } from "@/lib/routes";
 import { ArticlePage } from "@/components/article/ArticlePage";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import {
@@ -81,6 +82,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  // Same check as proxy.ts: never look up a path that cannot be an article or category.
+  if (!isCatchAllPath(slug)) return { title: "लेख फेला परेन" };
   const paged = categoryPagePath(slug);
   if (paged) {
     return paged.page > 1
@@ -127,6 +130,7 @@ export async function generateMetadata({
 
 export default async function ArticleRoute({ params }: PageProps) {
   const { slug } = await params;
+  if (!isCatchAllPath(slug)) notFound();
 
   const paged = categoryPagePath(slug);
   if (paged) {

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { BLOCKED_BOT_PATTERN } from "@/lib/bots";
+import { checkPath } from "@/lib/routes";
 
 // Scanner probes (WordPress, PHP, dotfiles...) would otherwise render the
 // catch-all route, miss in the CMS, and have their 404 written to the ISR cache.
@@ -13,6 +14,22 @@ export function proxy(request: NextRequest) {
   }
   if (JUNK_PATH.test(request.nextUrl.pathname)) {
     return new NextResponse("Not found", { status: 404 });
+  }
+
+  // Paths the site can't serve are answered here, before a page render, so they
+  // never reach the CMS or leave a cached 404 behind (see lib/routes.ts).
+  const check = checkPath(request.nextUrl.pathname);
+  if (!check.ok) {
+    if (check.redirectTo) {
+      const url = request.nextUrl.clone();
+      url.pathname = check.redirectTo;
+      return NextResponse.redirect(url, 308);
+    }
+    return new NextResponse("Not found", {
+      status: 404,
+      // Let the CDN absorb repeat probes of the same bad URL.
+      headers: { "Cache-Control": "public, s-maxage=3600" },
+    });
   }
   return NextResponse.next();
 }
