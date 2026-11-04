@@ -60,9 +60,6 @@ export const CACHE_TAGS = {
   mainNews: "home-main-news",
   latestNews: "home-latest-news",
   trending: "trending",
-  headerMenu: "header-menu",
-  footerMenu: "footer-menu",
-  additionalMenu: "additional-menu",
 } as const;
 export const ADS_TAG = "ads";
 export const SITEMAP_TAG = "sitemap";
@@ -79,12 +76,6 @@ const listingOptions = (tag: string) => ({
 });
 const pagedListingOptions = (page: number, tag: string) =>
   page > 1 ? { revalidate: LISTING_REVALIDATE } : listingOptions(tag);
-// `false` = cached until the webhook expires the tag (no timer-driven rewrites).
-export const MENU_TAGS = [
-  CACHE_TAGS.headerMenu,
-  CACHE_TAGS.footerMenu,
-  CACHE_TAGS.additionalMenu,
-] as const;
 const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
 // Site settings feed the root layout, so their lifetime caps every page's ISR
 // lifetime. They almost never change: a week is the safety net, and the tag
@@ -96,11 +87,9 @@ const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
 const SITEMAP_OPTIONS = { revalidate: 86400, tags: [SITEMAP_TAG] };
 // Magazine issues are published rarely and aren't covered by the post webhook.
 const PUBLICATION_OPTIONS = { revalidate: 86400 };
-const MENU_OPTIONS = {
-  header: { revalidate: false as const, tags: [CACHE_TAGS.headerMenu] },
-  footer: { revalidate: false as const, tags: [CACHE_TAGS.footerMenu] },
-  additional: { revalidate: false as const, tags: [CACHE_TAGS.additionalMenu] },
-};
+// Menus change rarely and have no webhook: refetch every 15 days. Menus render on
+// every page, so a short timer here would rewrite every cached page.
+export const MENU_OPTIONS = { revalidate: 60 * 60 * 24 * 15 };
 
 // Response types are `unknown` until the payloads are typed.
 export const getSettings = () =>
@@ -314,15 +303,15 @@ export const getEnglishHeadline = () =>
 
 // headerMenu
 export const getHeaderMenu = () =>
-  apiFetch<MenuData>(ENDPOINTS.headerMenu, MENU_OPTIONS.header);
+  apiFetch<MenuData>(ENDPOINTS.headerMenu, MENU_OPTIONS);
 
 // footerMenu
 export const getFooterMenu = () =>
-  apiFetch<MenuData>(ENDPOINTS.footerMenu, MENU_OPTIONS.footer);
+  apiFetch<MenuData>(ENDPOINTS.footerMenu, MENU_OPTIONS);
 
 // additionalMenu
 export const getAdditionalMenu = () =>
-  apiFetch<MenuData>(ENDPOINTS.additionalMenu, MENU_OPTIONS.additional);
+  apiFetch<MenuData>(ENDPOINTS.additionalMenu, MENU_OPTIONS);
 
 // ads
 // `cache` dedupes the several calls made while rendering one page.

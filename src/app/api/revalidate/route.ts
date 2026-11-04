@@ -3,7 +3,6 @@ import { revalidateTag } from "next/cache";
 import {
   ADS_TAG,
   CACHE_TAGS,
-  MENU_TAGS,
   SITEMAP_TAG,
   articleTag,
   authorTag,
@@ -16,7 +15,6 @@ import {
 // JSON body:
 //   { "type": "post", "slug": "news/2026/09/112895" }  — post added/edited/deleted
 //   { "type": "ad" }                                    — ads changed
-//   { "type": "menu" }                                  — header/footer/additional menu changed
 // `slug` may also be the post's full URL. Add `"listings": false` to a post event when
 // only the article body changed. For listing changes, include category slug(s) in
 // `category` or `categories` and optionally the author's slug in `author`.
@@ -97,8 +95,6 @@ export async function POST(request: Request) {
     if (slug) tags.push(articleTag(slug));
   } else if (type === "ad") {
     tags.push(ADS_TAG);
-  } else if (type === "menu") {
-    tags.push(...MENU_TAGS);
   } else {
     return Response.json({ error: "Unknown type" }, { status: 400 });
   }

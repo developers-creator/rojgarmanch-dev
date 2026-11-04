@@ -4,7 +4,7 @@ import { SiteNav } from "./SiteNav";
 import { toFrontUrl } from "@/lib/url";
 import { searchToPost, toPost } from "@/lib/posts";
 import { apiFetch } from "@/lib/api/client";
-import { CACHE_TAGS, ENDPOINTS } from "@/lib/api/endpoints";
+import { CACHE_TAGS, ENDPOINTS, MENU_OPTIONS } from "@/lib/api/endpoints";
 import type { MenuData } from "@/types/menu";
 import type { LatestNewsData, TrendingData } from "@/types/news";
 
@@ -40,10 +40,7 @@ export default SiteNavComponent;
 
 
 export const getNavMenu = () =>
-    apiFetch<MenuData>(ENDPOINTS.headerMenu, {
-      revalidate: false,
-      tags: [CACHE_TAGS.headerMenu],
-    })
+    apiFetch<MenuData>(ENDPOINTS.headerMenu, MENU_OPTIONS)
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
   

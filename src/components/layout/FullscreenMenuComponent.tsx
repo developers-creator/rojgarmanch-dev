@@ -2,7 +2,7 @@ import type { MenuData } from "@/types/menu";
 import { FullscreenMenu } from "./FullscreenMenu";
 import { toFrontItem } from "./SiteNavComponent";
 import { apiFetch } from "@/lib/api/client";
-import { CACHE_TAGS, ENDPOINTS } from "@/lib/api/endpoints";
+import { ENDPOINTS, MENU_OPTIONS } from "@/lib/api/endpoints";
 
 
 const FullscreenMenuComponent = async () => {
@@ -19,17 +19,11 @@ const FullscreenMenuComponent = async () => {
 export default FullscreenMenuComponent;
 
 export const getHeaderMenu = () =>
-    apiFetch<MenuData>(ENDPOINTS.headerMenu, {
-      revalidate: false,
-      tags: [CACHE_TAGS.headerMenu],
-    })
+    apiFetch<MenuData>(ENDPOINTS.headerMenu, MENU_OPTIONS)
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
   
 export const getAdditionalMenu = () =>
-    apiFetch<MenuData>(ENDPOINTS.additionalMenu, {
-      revalidate: false,
-      tags: [CACHE_TAGS.additionalMenu],
-    })
+    apiFetch<MenuData>(ENDPOINTS.additionalMenu, MENU_OPTIONS)
       .then((res) => res.data.items.map(toFrontItem))
       .catch(() => []);
