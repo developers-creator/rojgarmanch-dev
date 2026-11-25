@@ -16,6 +16,7 @@ import { ArticleStickyTitle } from "./ArticleStickyTitle";
 import { ArticleAuthorShare } from "./ArticleAuthorShare";
 import { ArticleInlineAds } from "./ArticleInlineAds";
 import { ArticleMetaRail } from "./ArticleMetaRail";
+import { ArticleViewBeacon } from "./ArticleViewBeacon";
 import { ArticleRichText } from "./ArticleRichText";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { CmsImageAd } from "@/components/ui/CmsImageAd";
@@ -192,6 +193,7 @@ export function ArticlePage({ article, ads, siteName }: ArticlePageProps) {
 
   return (
     <main id="main" className="article-page">
+      <ArticleViewBeacon href={article.href} />
       <ArticleFontProvider>
         <div className="container">
           <CmsImageAd

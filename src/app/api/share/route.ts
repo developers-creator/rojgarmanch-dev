@@ -12,13 +12,19 @@ const cleanSlug = (value: unknown) => {
   return slug && slug.length <= 300 && /^[\w\-./%]+$/.test(slug) ? slug : null;
 };
 
-const forward = async (init: RequestInit, query = "") => {
+const forward = async (request: Request, init: RequestInit, query = "") => {
   if (!API_URL) return Response.json({ count: 0 });
   try {
     const res = await fetch(`${API_URL}/share${query}`, {
       ...init,
       cache: "no-store",
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        // Real visitor IP so WordPress rate limits per visitor, not per Next server.
+        "X-Forwarded-For":
+          request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? "",
+      },
     });
     if (!res.ok) return Response.json({ count: 0 });
     const data = await res.json();
@@ -32,12 +38,12 @@ const forward = async (init: RequestInit, query = "") => {
 export async function GET(request: Request) {
   const slug = cleanSlug(new URL(request.url).searchParams.get("slug"));
   if (!slug) return Response.json({ count: 0 });
-  return forward({ method: "GET" }, `?slug=${encodeURIComponent(slug)}`);
+  return forward(request, { method: "GET" }, `?slug=${encodeURIComponent(slug)}`);
 }
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const slug = cleanSlug(body?.slug);
   if (!slug) return Response.json({ error: "Invalid slug" }, { status: 400 });
-  return forward({ method: "POST", body: JSON.stringify({ slug }) });
+  return forward(request, { method: "POST", body: JSON.stringify({ slug }) });
 }
