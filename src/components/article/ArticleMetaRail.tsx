@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -40,7 +40,36 @@ export function ArticleMetaRail({
   const name = author || "सम्पादकीय टोली";
   const pageUrl = `https://rojgarmanch.com${href.startsWith("/") ? href : `/${href}`}${href.endsWith("/") ? "" : "/"}`;
 
+  // Share clicks are counted in WordPress via the /api/share proxy. Fetched in the
+  // browser so the cached page never changes when the count does.
+  const slug = href.replace(/^\/+|\/+$/g, "");
+  const [shareCount, setShareCount] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/share/?slug=${encodeURIComponent(slug)}`, {
+      signal: controller.signal,
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && Number(data.count) > 0) setShareCount(Number(data.count));
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [slug]);
+
+  const countShare = useCallback(() => {
+    setShareCount((n) => n + 1);
+    fetch("/api/share/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+      keepalive: true,
+    }).catch(() => {});
+  }, [slug]);
+
   const onNativeShare = useCallback(async () => {
+    countShare();
     const url =
       typeof window !== "undefined" ? window.location.href : pageUrl;
     try {
@@ -56,7 +85,7 @@ export function ArticleMetaRail({
     } catch {
       /* ignore */
     }
-  }, [pageUrl, title]);
+  }, [pageUrl, title, countShare]);
 
   return (
     <aside className="article-meta" aria-label="लेखक र सेयर">
@@ -99,6 +128,7 @@ export function ArticleMetaRail({
             <FacebookShareButton
               url={pageUrl}
               quote={title}
+              beforeOnClick={countShare}
               aria-label="Facebook मा सेयर"
             >
               <FacebookIcon size={SHARE_ICON_SIZE} round />
@@ -106,17 +136,23 @@ export function ArticleMetaRail({
             <TwitterShareButton
               url={pageUrl}
               title={title}
+              beforeOnClick={countShare}
               aria-label="X मा सेयर"
             >
               <TwitterIcon size={SHARE_ICON_SIZE} round />
             </TwitterShareButton>
-            <LinkedinShareButton url={pageUrl} aria-label="LinkedIn मा सेयर">
+            <LinkedinShareButton
+              url={pageUrl}
+              beforeOnClick={countShare}
+              aria-label="LinkedIn मा सेयर"
+            >
               <LinkedinIcon size={SHARE_ICON_SIZE} round />
             </LinkedinShareButton>
             <WhatsappShareButton
               url={pageUrl}
               title={title}
               separator=" - "
+              beforeOnClick={countShare}
               aria-label="WhatsApp मा सेयर"
             >
               <WhatsappIcon size={SHARE_ICON_SIZE} round />
@@ -129,6 +165,11 @@ export function ArticleMetaRail({
             >
               <Icon name="share-nodes" size={14} />
             </button>
+            {shareCount >= 1 ? (
+              <span className="article-meta__share-count" aria-live="polite">
+                <strong>{shareCount.toLocaleString("ne-NP")}</strong> सेयर
+              </span>
+            ) : null}
           </div>
         </div>
       </div>

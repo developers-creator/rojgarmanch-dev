@@ -8323,6 +8323,18 @@ body.menu-open {
   background: #7cb342;
 }
 
+.article-meta__share-count {
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  color: var(--muted, #666);
+  white-space: nowrap;
+}
+
+.article-meta__share-count strong {
+  color: inherit;
+  font-weight: 700;
+}
+
 .article-rail {
   display: flex;
   flex-direction: column;

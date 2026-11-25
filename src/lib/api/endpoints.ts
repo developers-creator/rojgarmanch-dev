@@ -76,7 +76,9 @@ const listingOptions = (tag: string) => ({
 });
 const pagedListingOptions = (page: number, tag: string) =>
   page > 1 ? { revalidate: LISTING_REVALIDATE } : listingOptions(tag);
-const ADS_OPTIONS = { revalidate: false as const, tags: [ADS_TAG] };
+// The `ad` webhook refreshes ads on edit, but an ad's end date passing fires no
+// event, so an hourly timer is the safety net that removes expired ads.
+const ADS_OPTIONS = { revalidate: 3600, tags: [ADS_TAG] };
 // Site settings feed the root layout, so their lifetime caps every page's ISR
 // lifetime. They almost never change: a week is the safety net, and the tag
 // lets them be expired on demand with `revalidateTag(SETTINGS_TAG)`.

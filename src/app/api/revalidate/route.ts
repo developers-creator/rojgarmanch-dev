@@ -10,15 +10,6 @@ import {
 } from "@/lib/api/endpoints";
 
 
-
-// CMS webhook. Send `POST /api/revalidate` with header `x-revalidate-secret` and a
-// JSON body:
-//   { "type": "post", "slug": "news/2026/09/112895" }  — post added/edited/deleted
-//   { "type": "ad" }                                    — ads changed
-// `slug` may also be the post's full URL. Add `"listings": false` to a post event when
-// only the article body changed. For listing changes, include category slug(s) in
-// `category` or `categories` and optionally the author's slug in `author`.
-
 const secretMatches = (given: string | null) => {
   const expected = process.env.REVALIDATE_SECRET;
   if (!expected || !given) return false;
@@ -93,6 +84,16 @@ export async function POST(request: Request) {
     }
     const slug = toSlug(body.slug);
     if (slug) tags.push(articleTag(slug));
+  } else if (type === "category") {
+    // Refresh category listing(s) only, e.g. after a category change or bulk edit.
+    const categories = parseTaxonomySlugs(body.category, body.categories);
+    if (!categories?.length) {
+      return Response.json(
+        { error: "category or categories must contain valid slugs" },
+        { status: 400 },
+      );
+    }
+    tags.push(...categories.map(categoryTag));
   } else if (type === "ad") {
     tags.push(ADS_TAG);
   } else {
