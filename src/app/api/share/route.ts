@@ -38,7 +38,8 @@ const forward = async (request: Request, init: RequestInit, query = "") => {
 export async function GET(request: Request) {
   const slug = cleanSlug(new URL(request.url).searchParams.get("slug"));
   if (!slug) return Response.json({ count: 0 });
-  return forward(request, { method: "GET" }, `?slug=${encodeURIComponent(slug)}`);
+  const querySlug = encodeURIComponent(slug).replace(/%2F/g, "/");
+  return forward(request, { method: "GET" }, `?slug=${querySlug}`);
 }
 
 export async function POST(request: Request) {

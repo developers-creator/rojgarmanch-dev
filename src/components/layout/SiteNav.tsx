@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Post } from "@/types/content";
 import type { MenuItem } from "@/types/menu";
@@ -39,10 +39,8 @@ export function SiteNav({
     flashNews: initialFlashNews,
     trending: initialTrending,
   });
-  // Loaded after mount so the news never forces the page itself to regenerate.
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/nav-news", { signal: controller.signal })
+  const refreshNews = useCallback((signal?: AbortSignal) => {
+    return fetch("/api/nav-news", { signal, cache: "no-store" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data: { flashNews: Post[]; trending: Post[] } | null) => {
         if (!data) return;
@@ -52,8 +50,14 @@ export function SiteNav({
         }));
       })
       .catch(() => {});
-    return () => controller.abort();
   }, []);
+
+  // Load after mount so the news never forces the page itself to regenerate.
+  useEffect(() => {
+    const controller = new AbortController();
+    void refreshNews(controller.signal);
+    return () => controller.abort();
+  }, [refreshNews]);
 
   const { dark_logo, white_logo } = useSettings();
   const [colorLogoFailed, setColorLogoFailed] = useState(false);
@@ -113,16 +117,23 @@ export function SiteNav({
 
   useEffect(() => {
     if (notifyOpen) {
-      setNotifyMounted(true);
-      const id = window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => setNotifyShown(true));
+      let showFrame: number | undefined;
+      const mountFrame = window.requestAnimationFrame(() => {
+        setNotifyMounted(true);
+        showFrame = window.requestAnimationFrame(() => setNotifyShown(true));
       });
-      return () => window.cancelAnimationFrame(id);
+      return () => {
+        window.cancelAnimationFrame(mountFrame);
+        if (showFrame !== undefined) window.cancelAnimationFrame(showFrame);
+      };
     }
 
-    setNotifyShown(false);
+    const hideFrame = window.requestAnimationFrame(() => setNotifyShown(false));
     const timeout = window.setTimeout(() => setNotifyMounted(false), 320);
-    return () => window.clearTimeout(timeout);
+    return () => {
+      window.cancelAnimationFrame(hideFrame);
+      window.clearTimeout(timeout);
+    };
   }, [notifyOpen]);
 
   useEffect(() => {
@@ -144,11 +155,16 @@ export function SiteNav({
   }, []);
 
   useEffect(() => {
-    setDates({ ad: formatAdBadge(), bs: formatBsBadge() });
-    const id = window.setInterval(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setDates({ ad: formatAdBadge(), bs: formatBsBadge() });
+    });
+    const interval = window.setInterval(() => {
       setShowBs((current) => !current);
     }, 3500);
-    return () => window.clearInterval(id);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -292,7 +308,10 @@ export function SiteNav({
                   notifyTab === "taja" ? " is-active" : ""
                 }`}
                 aria-selected={notifyTab === "taja"}
-                onClick={() => setNotifyTab("taja")}
+                onClick={() => {
+                  setNotifyTab("taja");
+                  void refreshNews();
+                }}
               >
                 ताजा
               </button>
@@ -303,7 +322,10 @@ export function SiteNav({
                   notifyTab === "trending" ? " is-active" : ""
                 }`}
                 aria-selected={notifyTab === "trending"}
-                onClick={() => setNotifyTab("trending")}
+                onClick={() => {
+                  setNotifyTab("trending");
+                  void refreshNews();
+                }}
               >
                 लोकप्रिय
               </button>

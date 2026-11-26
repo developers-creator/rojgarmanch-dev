@@ -1,8 +1,9 @@
 import { timingSafeEqual } from "node:crypto";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
   ADS_TAG,
   CACHE_TAGS,
+  PUBLICATION_TAG,
   SITEMAP_TAG,
   articleTag,
   authorTag,
@@ -18,7 +19,7 @@ const secretMatches = (given: string | null) => {
   return a.length === b.length && timingSafeEqual(a, b);
 };
 
-/** "https://rojgarmanch.com/news/2026/09/1/" or "/news/2026/09/1" → "news/2026/09/1" */
+
 const toSlug = (value: unknown) => {
   if (typeof value !== "string" || !value.trim()) return null;
   let path = value.trim();
@@ -28,23 +29,18 @@ const toSlug = (value: unknown) => {
   return path.replace(/^\/+|\/+$/g, "") || null;
 };
 
+const VALID_TAXONOMY_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** Keep valid lowercase ASCII slugs; ignore empty/non-ASCII values instead of failing the webhook. */
 const parseTaxonomySlugs = (...values: unknown[]): string[] | null => {
   const slugs = values.flatMap((value) =>
     value == null ? [] : Array.isArray(value) ? value : [value],
   );
   if (!slugs.every((value) => typeof value === "string")) return null;
 
-  const normalized = slugs.map((value) => value.trim().toLowerCase());
-  if (
-    normalized.some(
-      (slug) =>
-        slug.length === 0 ||
-        slug.length > 200 ||
-        !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug),
-    )
-  ) {
-    return null;
-  }
+  const normalized = slugs
+    .map((value) => value.trim().toLowerCase())
+    .filter((slug) => slug.length > 0 && slug.length <= 200 && VALID_TAXONOMY_SLUG.test(slug));
 
   return [...new Set(normalized)];
 };
@@ -60,32 +56,42 @@ export async function POST(request: Request) {
   // `expire: 0` makes the next visit rebuild the page right away.
   const expire = (tag: string) => revalidateTag(tag, { expire: 0 });
   const tags: string[] = [];
+  const paths: string[] = [];
+  let revalidateLayout = false;
 
   if (type === "post") {
     tags.push(SITEMAP_TAG);
-    if (body.listings !== false) {
-      const categories = parseTaxonomySlugs(body.category, body.categories);
-      const authors = parseTaxonomySlugs(body.author);
-      if (!categories || !authors) {
-        return Response.json(
-          { error: "Category and author values must be valid slugs" },
-          { status: 400 },
-        );
-      }
-
-      tags.push(
-        CACHE_TAGS.bannerNews,
-        CACHE_TAGS.mainNews,
-        CACHE_TAGS.latestNews,
-        categoryTag("news"),
-        ...categories.map(categoryTag),
-        ...authors.map(authorTag),
+    const categories = parseTaxonomySlugs(body.category, body.categories);
+    const authors = parseTaxonomySlugs(body.author);
+    if (!categories || !authors) {
+      return Response.json(
+        { error: "Category and author values must be strings" },
+        { status: 400 },
       );
     }
+
+    tags.push(
+      CACHE_TAGS.home,
+      CACHE_TAGS.bannerNews,
+      CACHE_TAGS.mainNews,
+      CACHE_TAGS.latestNews,
+      categoryTag("news"),
+      ...categories.map(categoryTag),
+      ...authors.map(authorTag),
+    );
+    paths.push(
+      "/",
+      "/news",
+      ...categories.map((category) => `/${category}`),
+      ...authors.map((author) => `/author/${author}`),
+    );
+
     const slug = toSlug(body.slug);
-    if (slug) tags.push(articleTag(slug));
+    if (slug) {
+      tags.push(articleTag(slug));
+      paths.push(`/${slug}`);
+    }
   } else if (type === "category") {
-    // Refresh category listing(s) only, e.g. after a category change or bulk edit.
     const categories = parseTaxonomySlugs(body.category, body.categories);
     if (!categories?.length) {
       return Response.json(
@@ -93,13 +99,22 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    tags.push(...categories.map(categoryTag));
+    tags.push(CACHE_TAGS.home, ...categories.map(categoryTag));
+    paths.push("/", ...categories.map((category) => `/${category}`));
   } else if (type === "ad") {
     tags.push(ADS_TAG);
+    paths.push("/");
+    revalidateLayout = true;
+  } else if (type === "publication" || type === "magazine") {
+    tags.push(CACHE_TAGS.home, PUBLICATION_TAG);
+    paths.push("/", "/publication");
   } else {
     return Response.json({ error: "Unknown type" }, { status: 400 });
   }
 
   [...new Set(tags)].forEach(expire);
-  return Response.json({ revalidated: tags });
+  [...new Set(paths)].forEach((path) => revalidatePath(path));
+  if (revalidateLayout) revalidatePath("/", "layout");
+
+  return Response.json({ revalidated: [...new Set(tags)] });
 }

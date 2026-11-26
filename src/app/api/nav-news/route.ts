@@ -1,8 +1,6 @@
 import { getLatestNews, getPopularNews } from "@/components/layout/SiteNavComponent";
 
-// Nav "latest"/"trending" news is loaded here instead of during page render, so it
-// stays fresh without making every page regenerate. The data is tagged `news`, so a
-// publish refreshes it; the CDN holds the response for at most a minute.
+// Trending changes as view counts are recorded, so keep this proxy response uncached.
 export async function GET() {
   const [flashNews, trending] = await Promise.all([
     getLatestNews(),
@@ -13,7 +11,7 @@ export async function GET() {
     { flashNews, trending },
     {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+        "Cache-Control": "no-store",
       },
     },
   );

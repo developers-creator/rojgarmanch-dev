@@ -55,8 +55,7 @@ export const getLatestNews = () =>
   
 export const getPopularNews = () =>
     apiFetch<TrendingData>(ENDPOINTS.trending, {
-      revalidate: 1800,
-      tags: [CACHE_TAGS.trending],
+      revalidate: 0,
     })
       .then((res) => res.data.map(searchToPost))
       .catch(() => []);

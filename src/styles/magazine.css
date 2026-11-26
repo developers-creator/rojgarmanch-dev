@@ -8130,7 +8130,11 @@ body.menu-open {
     max-height: calc(100vh - var(--site-sticky-h, 56px) - 40px);
     overflow-y: auto;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+  }
+
+  .article-meta__sticky::-webkit-scrollbar {
+    display: none;
   }
 
   .article-meta__row {
@@ -8282,8 +8286,24 @@ body.menu-open {
   .article-meta__social {
     flex-direction: column;
     flex-wrap: nowrap;
-    gap: 12px;
+    gap: 8px;
     padding-top: 4px;
+  }
+
+  .article-meta__social > button:not(.article-meta__social-btn) {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  .article-meta__social > button:not(.article-meta__social-btn) > svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .article-meta__social .article-meta__social-btn {
+    width: 36px;
+    height: 36px;
   }
 }
 

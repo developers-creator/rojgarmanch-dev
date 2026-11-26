@@ -54,31 +54,42 @@ export const ENDPOINTS = {
 } as const;
 
 // Posts and ads are refreshed on demand. Keep listing tags scoped to the data
-// each endpoint returns so a post does not expire unrelated homepage sections.
+// each endpoint returns so a post does not expire unrelated archive pages.
 export const CACHE_TAGS = {
+  home: "home",
   bannerNews: "home-banner-news",
   mainNews: "home-main-news",
   latestNews: "home-latest-news",
   trending: "trending",
 } as const;
 export const ADS_TAG = "ads";
+export const PUBLICATION_TAG = "publication";
 export const SITEMAP_TAG = "sitemap";
 export const SETTINGS_TAG = "settings";
 export const articleTag = (slug: string) => `article:${slug}`;
 export const categoryTag = (slug: string) => `category:${slug}`;
 export const authorTag = (slug: string) => `author:${slug}`;
 
-// Webhooks provide freshness for listings; daily revalidation is a safety net.
+// Webhooks provide immediate freshness; homepage sections also use a 60s safety net
+// so banner news and homepage category blocks never stay stale for 24h if a webhook
+// is missed or delayed.
+const HOME_REVALIDATE = 60;
 const LISTING_REVALIDATE = 86400;
+const homeListingOptions = (tag: string) => ({
+  revalidate: HOME_REVALIDATE,
+  tags: [CACHE_TAGS.home, tag],
+});
 const listingOptions = (tag: string) => ({
   revalidate: LISTING_REVALIDATE,
   tags: [tag],
 });
 const pagedListingOptions = (page: number, tag: string) =>
-  page > 1 ? { revalidate: LISTING_REVALIDATE } : listingOptions(tag);
+  page > 1
+    ? { revalidate: LISTING_REVALIDATE, tags: [tag] }
+    : listingOptions(tag);
 // The `ad` webhook refreshes ads on edit, but an ad's end date passing fires no
-// event, so an hourly timer is the safety net that removes expired ads.
-const ADS_OPTIONS = { revalidate: 3600, tags: [ADS_TAG] };
+// event, so a 5-minute timer is the safety net that removes expired/updated ads.
+const ADS_OPTIONS = { revalidate: 300, tags: [ADS_TAG] };
 // Site settings feed the root layout, so their lifetime caps every page's ISR
 // lifetime. They almost never change: a week is the safety net, and the tag
 // lets them be expired on demand with `revalidateTag(SETTINGS_TAG)`.
@@ -87,8 +98,11 @@ const SITE_CONFIG_OPTIONS = { revalidate: LONG_REVALIDATE, tags: [SETTINGS_TAG] 
 // Static pages (about, team, contact, legal) and SEO rarely change.
 const STATIC_PAGE_OPTIONS = { revalidate: 86400 };
 const SITEMAP_OPTIONS = { revalidate: 86400, tags: [SITEMAP_TAG] };
-// Magazine issues are published rarely and aren't covered by the post webhook.
-const PUBLICATION_OPTIONS = { revalidate: 86400 };
+const HOME_PUBLICATION_OPTIONS = {
+  revalidate: HOME_REVALIDATE,
+  tags: [CACHE_TAGS.home, PUBLICATION_TAG],
+};
+const PUBLICATION_OPTIONS = { revalidate: 86400, tags: [PUBLICATION_TAG] };
 // Menus change rarely and have no webhook: refetch every 15 days. Menus render on
 // every page, so a short timer here would rewrite every cached page.
 export const MENU_OPTIONS = { revalidate: 60 * 60 * 24 * 15 };
@@ -102,7 +116,7 @@ export const getSettings = () =>
 export const getBannerNews = () =>
   apiFetch<BannerNewsData>(
     ENDPOINTS.bannerNews,
-    listingOptions(CACHE_TAGS.bannerNews),
+    homeListingOptions(CACHE_TAGS.bannerNews),
   );
 
 // Contact
@@ -122,35 +136,35 @@ export const getNews = cache((slug: string) =>
 export const getNewsCategories = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.news,
-    listingOptions(categoryTag("news")),
+    homeListingOptions(categoryTag("news")),
   );
 
 // Homepage समाचार — mixed main news, not the news category.
 export const getMainNews = () =>
   apiFetch<MainNewsData>(
     ENDPOINTS.mainNews,
-    listingOptions(CACHE_TAGS.mainNews),
+    homeListingOptions(CACHE_TAGS.mainNews),
   );
 
 // Artha-rojgar category listing
 export const getArthaRojgarCategories = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.arthaRojgar,
-    listingOptions(categoryTag("employment")),
+    homeListingOptions(categoryTag("employment")),
   );
 
 // Career playbook category listing
 export const getCareerPlaybookCategories = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.careerPlaybook,
-    listingOptions(categoryTag("career-playbook")),
+    homeListingOptions(categoryTag("career-playbook")),
   );
 
 // Employment category listing
 export const getEmploymentCategories = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.employment,
-    listingOptions(categoryTag("employment")),
+    homeListingOptions(categoryTag("employment")),
   );
 
 // Any category listing, paginated — `slug` is the CMS category slug, e.g. "employment"
@@ -173,13 +187,13 @@ export const getAuthorPosts = (slug: string, page = 1) =>
 
 // Publication
 export const getPublication = () =>
-  apiFetch<PublicationData>(ENDPOINTS.publication, PUBLICATION_OPTIONS);
+  apiFetch<PublicationData>(ENDPOINTS.publication, HOME_PUBLICATION_OPTIONS);
 
 // Single publication — `slug` is the bare slug, e.g. "year-16-issue-1-2083-shrawan-issue"
 export const getPublicationDetail = (slug: string) =>
   apiFetch<PublicationDetailData>(
     `/magazine/${encodeURIComponent(slug)}`,
-    STATIC_PAGE_OPTIONS,
+    { ...STATIC_PAGE_OPTIONS, tags: [PUBLICATION_TAG] },
   );
 
 // Publications
@@ -195,112 +209,112 @@ export const getPublications = (page = 1) =>
 export const getRojgarTV = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.rojgartv,
-    listingOptions(categoryTag("rojgar-tv")),
+    homeListingOptions(categoryTag("rojgar-tv")),
   );
 
 // Reels
 export const getReels = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.reels,
-    listingOptions(categoryTag("reels")),
+    homeListingOptions(categoryTag("reels")),
   );
 
 // Business
 export const getBusiness = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.business,
-    listingOptions(categoryTag("business")),
+    homeListingOptions(categoryTag("business")),
   );
 
 // NRn
 export const getNRN = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.nrn,
-    listingOptions(categoryTag("nrn")),
+    homeListingOptions(categoryTag("nrn")),
   );
 
 // Pravas
 export const getPravas = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.pravas,
-    listingOptions(categoryTag("abroad")),
+    homeListingOptions(categoryTag("abroad")),
   );
 
 // Webstories
 export const getWebstories = () =>
   apiFetch<WebstoryData>(
     ENDPOINTS.webstories,
-    listingOptions(categoryTag("webstories")),
+    homeListingOptions(categoryTag("webstories")),
   );
 
 // interview
 export const getInterview = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.interview,
-    listingOptions(categoryTag("interview")),
+    homeListingOptions(categoryTag("interview")),
   );
 
 // feature
 export const getFeature = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.feature,
-    listingOptions(categoryTag("feature")),
+    homeListingOptions(categoryTag("feature")),
   );
 
 // sports
 export const getSports = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.sports,
-    listingOptions(categoryTag("sport")),
+    homeListingOptions(categoryTag("sport")),
   );
 
 // travel
 export const getTravel = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.travel,
-    listingOptions(categoryTag("tourism")),
+    homeListingOptions(categoryTag("tourism")),
   );
 
 // kala
 export const getKala = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.kala,
-    listingOptions(categoryTag("art")),
+    homeListingOptions(categoryTag("art")),
   );
 
 // sahitya
 export const getSahitya = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.sahitya,
-    listingOptions(categoryTag("literature")),
+    homeListingOptions(categoryTag("literature")),
   );
 
 // opinion
 export const getOpinion = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.opinion,
-    listingOptions(categoryTag("opinion")),
+    homeListingOptions(categoryTag("opinion")),
   );
 
 // ramailoSansar
 export const getRamailoSansar = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.ramailoSansar,
-    listingOptions(categoryTag("fun-world")),
+    homeListingOptions(categoryTag("fun-world")),
   );
 
 // world
 export const getWorld = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.world,
-    listingOptions(categoryTag("world")),
+    homeListingOptions(categoryTag("world")),
   );
 
 // englishHeadline
 export const getEnglishHeadline = () =>
   apiFetch<NewsCategoryData>(
     ENDPOINTS.englishHeadline,
-    listingOptions(categoryTag("english-headline")),
+    homeListingOptions(categoryTag("english-headline")),
   );
 
 // headerMenu
