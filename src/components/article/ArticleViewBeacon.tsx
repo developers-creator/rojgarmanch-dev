@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 
-// Counts one view per visitor per article per browser session. Sent from the
-// browser so cached (ISR) pages are still counted; renders nothing, so the
 // cached HTML never changes when views do.
 const BOT = /bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit/i;
 
